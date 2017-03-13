@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#2d5d82</color>
+    <color name="colorPrimaryDark">#21425d</color>
+    <color name="colorAccent">#ef6c00</color>
+    <color name="bgToolbar">#183545</color>
+    <color name="colorWhite">#fff</color>
+    <color name="colorGrey">#CCC</color>
+    <color name="colorLightGrey">#9e9e9e</color>
+    <color name="btn_send_normal">#02c754</color>
+    <color name="btn_send_pressed">#006633</color>
+</resources>

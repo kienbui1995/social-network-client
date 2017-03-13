@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<item android:id="@+id/itChangeAvatar" android:title="Chọn ảnh có sẵn"/>
+<item android:id="@+id/itTakeCamera" android:title="Chụp ảnh mới"/>
+<!--<item android:id="@+id/itChangeAvatar" android:title="Thay đổi Avatar"/>-->
+</menu>

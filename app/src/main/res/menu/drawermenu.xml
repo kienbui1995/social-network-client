@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:title="Home"
+          android:icon="@drawable/icon_home"
+          android:id="@+id/itHome"/>
+    <item android:title="Profile"
+        android:id="@+id/itProfile"
+            android:icon="@drawable/ic_profile"/>
+<item android:title="Groups"
+      android:icon="@drawable/ic_group"
+      android:id="@+id/itGroup"/>
+<item android:title="Pages"
+      android:icon="@drawable/ic_pages"
+      android:id="@+id/itPage"/>
+<item android:title="Study"
+        >
+    <menu>
+        <item android:title="Learning"
+              android:icon="@drawable/ic_school"
+                android:id="@+id/itLearing"/>
+        <item android:title="Time table"
+              android:icon="@drawable/ic_calendar"
+                android:id="@+id/itTimeTable"/>
+        <item android:title="Điểm danh"
+              android:icon="@drawable/ic_calendar"
+              android:id="@+id/itDiemDanh"/>
+    </menu>
+</item>
+    <item>
+        <menu>
+            <item android:title="Setting"
+                    android:id="@+id/itSetting"/>
+            <item android:title="About"
+                    android:id="@+id/itAbout"/>
+        </menu>
+    </item>
+</menu>

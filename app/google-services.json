@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "791431425782",
+    "firebase_url": "https://hoclazada.firebaseio.com",
+    "project_id": "hoclazada",
+    "storage_bucket": "hoclazada.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:791431425782:android:13e5f1808bcb0ebd",
+        "android_client_info": {
+          "package_name": "com.joker.hoclazada"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "791431425782-a6sm9m9frbj8kjk8u5d4bbaaecn3320l.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.joker.hoclazada",
+            "certificate_hash": "b91588ca1f6bf7cff2adeca04cbfdd17e15436b4"
+          }
+        },
+        {
+          "client_id": "791431425782-6br879cn7bf1m0s0vu5i4ljobbjcn13e.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyALeg2ZQ2pKyGgFVj68Bf0KXwAesQZ3dpo"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "791431425782-6br879cn7bf1m0s0vu5i4ljobbjcn13e.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

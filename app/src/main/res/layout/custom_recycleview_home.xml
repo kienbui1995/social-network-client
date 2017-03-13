@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_marginLeft="5dp"
+              android:layout_marginBottom="10dp"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content">
+
+
+    <android.support.v7.widget.CardView
+            android:id="@+id/cvHome"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        <LinearLayout
+                android:padding="5dp"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+            <LinearLayout
+
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                <de.hdodenhof.circleimageview.CircleImageView
+                        android:src="@drawable/demo"
+                        android:layout_width="46dp"
+                        android:layout_height="46dp"/>
+                <LinearLayout
+                        android:orientation="vertical"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+                    <TextView
+                            android:textColor="#000"
+                            android:textSize="15sp"
+                            android:textStyle="normal"
+                            android:paddingTop="5dp"
+                            android:paddingLeft="10dp"
+                            android:paddingBottom="3dp"
+                            android:text="Hoài Nam"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+                    <TextView
+                            android:paddingLeft="10dp"
+                            android:text="5 phút trước"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+                </LinearLayout>
+            </LinearLayout>
+            <TextView
+                    android:text="Xin chào các bác hôm nay em xin được giới thiệu em gái của em"
+                    android:padding="10dp"
+                    android:textColor="#000"
+                    android:textSize="14sp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+            <ImageView
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/imgdemo"
+                    android:layout_width="match_parent"
+                    android:layout_height="250dp"/>
+            <TextView
+                    android:layout_marginTop="5dp"
+                    android:background="#17000000"
+                    android:textSize="0.1dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+            <LinearLayout
+                    android:paddingBottom="3dp"
+                    android:paddingLeft="20dp"
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                <TextView
+                        android:id="@+id/txtLove"
+                        android:text="Love"
+                        android:textColor="#fa3d56"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                <TextView
+                        android:textStyle="bold"
+                        android:textColor="@color/colorGrey"
+                        android:layout_marginLeft="10dp"
+                        android:textSize="25sp"
+                        android:layout_marginRight="10dp"
+                        android:text="."
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                <ImageView
+                        android:layout_marginTop="3dp"
+                        android:layout_gravity="center_vertical"
+                        android:src="@drawable/heart"
+                        android:id="@+id/imgNumberLove"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                <TextView
+                        android:id="@+id/txtNumberLove"
+                        android:textColor="@color/bgToolbar"
+                        android:text="20"
+                        android:layout_weight="2"
+                        android:layout_marginLeft="10dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                <Button
+                        android:id="@+id/btnComment"
+                        android:layout_weight="0.1"
+                        android:background="@android:color/transparent"
+                        android:textColor="#e3464e4d"
+                        android:text="Bình luận"
+                        android:textAllCaps="false"
+                        android:drawableLeft="@drawable/ic_comment"
+                        android:layout_width="wrap_content"
+                        android:layout_height="30dp"/>
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
+</LinearLayout>

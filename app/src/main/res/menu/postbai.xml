@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
+<item android:title="Đăng" android:id="@+id/itPost"
+      app:showAsAction="always"
+      android:icon="@drawable/ic_sentiment_satisfied_black_24dp"
+        app:actionLayout="@layout/custom_button_post"/>
+</menu>
