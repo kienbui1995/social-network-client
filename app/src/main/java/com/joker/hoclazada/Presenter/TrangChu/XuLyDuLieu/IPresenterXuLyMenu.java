@@ -7,5 +7,6 @@ import com.facebook.AccessToken;
  */
 
 public interface IPresenterXuLyMenu {
+    boolean a = false;
     AccessToken LayTenNguoiDungFacebook();
 }

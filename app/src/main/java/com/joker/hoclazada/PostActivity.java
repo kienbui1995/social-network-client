@@ -2,7 +2,9 @@ package com.joker.hoclazada;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
@@ -22,10 +24,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.joker.hoclazada.Ultil.FilePath;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
+import java.io.IOException;
 
 public class PostActivity extends AppCompatActivity {
     private LinearLayout activityPost;
@@ -46,6 +50,28 @@ public class PostActivity extends AppCompatActivity {
         addControl();
         setupTabs();
         addEvent();
+        LoadImage();
+
+
+    }
+
+    private void LoadImage(){
+        StorageReference fileRef = mStorageReference.child("images").child("1489649998_hoainam");
+        fileRef.getMetadata().addOnSuccessListener(new OnSuccessListener<StorageMetadata>() {
+            @Override
+            public void onSuccess(StorageMetadata storageMetadata) {
+//                Glide.with(getApplicationContext()).load(storageMetadata.getDownloadUrl()).into(imgPost);
+                Picasso.with(getApplicationContext())
+                        .load(storageMetadata.getDownloadUrl())
+                        .placeholder( R.drawable.progress_loading )
+                        .into(imgPost);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+
+            }
+        });
     }
 
     private void addEvent() {
@@ -97,7 +123,10 @@ public class PostActivity extends AppCompatActivity {
     private void UploadFile(String selectedImagePath){
         Log.d("PathImage",selectedImagePath+"");
         Uri file = Uri.fromFile(new File(selectedImagePath));
-        StorageReference riversRef = mStorageReference.child("images/rivers.jpg");
+        Long tsLong = System.currentTimeMillis()/1000;
+        String ts = tsLong.toString();
+        String fileName = "images/" +ts+"_hoainam";
+        StorageReference riversRef = mStorageReference.child(fileName);
 
         riversRef.putFile(file)
                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {

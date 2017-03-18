@@ -49,6 +49,50 @@
           "status": 2
         }
       }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:791431425782:android:98d350c8b49c35ce",
+        "android_client_info": {
+          "package_name": "com.novoda.bonfire"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "791431425782-46j0746q2ckv0bojkotou901b2ni6vfo.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.novoda.bonfire",
+            "certificate_hash": "b91588ca1f6bf7cff2adeca04cbfdd17e15436b4"
+          }
+        },
+        {
+          "client_id": "791431425782-6br879cn7bf1m0s0vu5i4ljobbjcn13e.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyALeg2ZQ2pKyGgFVj68Bf0KXwAesQZ3dpo"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "791431425782-6br879cn7bf1m0s0vu5i4ljobbjcn13e.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
     }
   ],
   "configuration_version": "1"

@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/black"
+        >
+    <android.support.design.widget.AppBarLayout
+            android:background="@android:color/transparent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                />
+
+    </android.support.design.widget.AppBarLayout>
+
+    <com.github.piasy.biv.view.BigImageView
+            android:id="@+id/mBigImage"
+            app:initScaleType="centerInside"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            />
+    <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        <LinearLayout
+                android:layout_width="0dp"
+                android:background="#2e000000"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:layout_marginRight="8dp"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginBottom="69dp"
+                app:layout_constraintHorizontal_bias="0.0"
+                android:id="@+id/linearLayout"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp">
+
+            <TextView
+                    android:padding="5dp"
+                    android:text="@string/vailandondua"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:id="@+id/txtShortContent"
+                    android:layout_weight="1"
+                    android:textColor="@color/colorWhite"/>
+        </LinearLayout>
+
+        <TextView
+                android:text="154"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/txtNumberLove"
+                android:textColor="@color/colorWhite"
+                android:textStyle="bold"
+                app:layout_constraintLeft_toRightOf="@+id/imgHeart"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="5dp"
+                app:layout_constraintTop_toBottomOf="@+id/linearLayout"
+                android:layout_marginStart="8dp"/>
+
+        <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/heart"
+                android:id="@+id/imgHeart"
+                android:layout_marginLeft="16dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:layout_marginTop="5dp"
+                app:layout_constraintTop_toBottomOf="@+id/linearLayout"
+                android:layout_marginStart="16dp"/>
+
+        <TextView
+                android:background="@color/colorLightGrey"
+                android:layout_width="344dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/line"
+                android:textSize="1sp"
+                android:layout_marginLeft="8dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:layout_marginRight="8dp"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                android:layout_marginTop="8dp"
+                app:layout_constraintTop_toBottomOf="@+id/txtNumberLove"/>
+
+        <Button
+            android:textAllCaps="false"
+            android:gravity="center_vertical"
+            android:drawablePadding="4dp"
+            android:text="Love"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:id="@+id/btnLove"
+            android:textSize="14sp"
+            android:background="@android:color/transparent"
+            android:drawableLeft="@drawable/heart"
+            android:layout_marginLeft="24dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginBottom="4dp"/>
+
+        <Button
+                android:textAllCaps="false"
+                android:gravity="center_vertical"
+                android:drawablePadding="4dp"
+                android:text="Bình luận "
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:id="@+id/btnComment"
+                android:textSize="14sp"
+                android:background="@android:color/transparent"
+                android:drawableLeft="@drawable/ic_comment_white"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginBottom="4dp"
+                app:layout_constraintLeft_toRightOf="@+id/btnLove"
+                android:layout_marginLeft="24dp"/>
+
+        <Button
+                android:textAllCaps="false"
+                android:gravity="center_vertical"
+                android:drawablePadding="4dp"
+                android:text="Save"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:id="@+id/btnSave"
+                android:textSize="14sp"
+                android:background="@android:color/transparent"
+                android:drawableLeft="@drawable/ic_save_white"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginBottom="4dp"
+                app:layout_constraintLeft_toRightOf="@+id/btnComment"
+                android:layout_marginLeft="24dp"
+                android:layout_marginRight="8dp"
+                app:layout_constraintRight_toRightOf="parent"/>
+
+        <TextView
+                android:text="10 Bình Luận "
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/txtNumberComment"
+                android:textStyle="bold"
+                android:textColor="@color/colorWhite"
+                android:layout_marginRight="8dp"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintBaseline_toBaselineOf="@+id/txtNumberLove"/>
+
+    </android.support.constraint.ConstraintLayout>
+
+</FrameLayout>

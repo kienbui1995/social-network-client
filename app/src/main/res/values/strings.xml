@@ -13,4 +13,35 @@
     </string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="vailandondua">Ai đi theo em mấy lần phố mưa Mưa bay theo em áo dài đón đưa Hồn tựa là mưa mưa vọng hát  Ai đi theo em mấy chiều phố xa Hương hoa bay vây lối về thiết tha Lòng tựa là hoa hoa rực rỡ</string>
+    <string-array name="user_photos">
+        <item>https://data.whicdn.com/images/236325974/large.png</item>
+        <item>http://www.kpopscene.com/wp-content/uploads/2016/04/Sana-Twice-01.jpg</item>
+        <item>https://pbs.twimg.com/profile_images/662073368699469824/5MtA_ds0.jpg</item>
+        <item>http://data.whicdn.com/images/208009660/large.jpg</item>
+        <item>https://upload.wikimedia.org/wikipedia/commons/1/1c/Earth_surface_NGDC_2000.jpg</item>
+        <item>https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcTGGTlPrm_CfftYc14R4rtstHMr2W015_vNw7Mtn8fQyqUsOquk</item>
+        <item>http://pm1.narvii.com/5972/74ad2b4b3e9d160cffd534fc077dcc3c4e3ab90e_hq.jpg</item>
+        <item>http://pm1.narvii.com/5972/6eb927f375075e1055d6aaa205857723c2d05b9d_hq.jpg</item>
+        <item>https://scontent.cdninstagram.com/t51.2885-15/s640x640/sh0.08/e35/12328230_211315315888500_1602863616_n.jpg</item>
+        <item>http://data.whicdn.com/images/206414193/superthumb.png</item>
+        <item>https://pbs.twimg.com/profile_images/664030257482199040/e-h8XMVc.png</item>
+        <item>http://scontent.cdninstagram.com/t51.2885-15/s480x480/e35/12599392_617186835111724_1328644754_n.jpg</item>
+        <item>http://125.235.37.56/media01/5264ee1479c72/2014/01/13/04dbff34-0648-49c7-946c-e961fd09c04a.jpg</item>
+        <item>https://1.bp.blogspot.com/-ls9AczTH6EQ/V0gWUmLuszI/AAAAAAAB6Cw/uDMVdHX7NEQOWn-DndF0Ccnb1EuMaLrTwCLcB/s1600/nayeon2.jpg</item>
+        <item>http://netizens.press/wp-content/uploads/2016/09/The-hardest-moments-for-TWICE8217s-Nayeon-fans-4.jpg</item>
+        <item>http://scontent-b-fra.cdninstagram.com/hphotos-xaf1/t51.2885-15/s306x306/e15/1922172_719849754801056_911351010_n.jpg</item>
+        <item>http://scontent-b-fra.cdninstagram.com/hphotos-xaf1/t51.2885-15/s306x306/e15/10914370_1519297625009641_722250486_n.jpg</item>
+        <item>http://scontent-a-fra.cdninstagram.com/hphotos-xaf1/t51.2885-15/s306x306/e15/10903746_368501953321344_2002746420_n.jpg</item>
+        <item>http://scontent-b-fra.cdninstagram.com/hphotos-xaf1/t51.2885-15/s306x306/e15/10903270_1397263717236338_950192395_n.jpg</item>
+        <item>http://scontent-a-fra.cdninstagram.com/hphotos-xaf1/t51.2885-15/s306x306/e15/10903242_441936642627221_576882729_n.jpg</item>
+        <item>http://scontent-a-fra.cdninstagram.com/hphotos-xaf1/t51.2885-15/s306x306/e15/10899295_796858437028648_664655000_n.jpg</item>
+        <item>http://scontent-b-fra.cdninstagram.com/hphotos-xaf1/t51.2885-15/s306x306/e15/10899139_948470841831743_1406659049_n.jpg</item>
+        <item>http://scontent-a-fra.cdninstagram.com/hphotos-xaf1/t51.2885-15/s306x306/e15/10899123_922231267802027_1123900984_n.jpg</item>
+        <item>http://scontent-b-fra.cdninstagram.com/hphotos-xaf1/t51.2885-15/s306x306/e15/10899087_405295322969722_20422376_n.jpg</item>
+    </string-array>
+    <string-array name="optionImage">
+        <item>Save picture</item>
+    </string-array>
+
 </resources>

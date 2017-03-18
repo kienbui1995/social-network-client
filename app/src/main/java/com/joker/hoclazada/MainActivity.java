@@ -27,12 +27,16 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.facebook.AccessToken;
 import com.facebook.FacebookSdk;
 import com.facebook.login.LoginManager;
-import com.joker.hoclazada.Fragment.GroupFragment;
 import com.joker.hoclazada.Presenter.TrangChu.XuLyDuLieu.PresenterXuLyDuLieu;
 import com.joker.hoclazada.Ultil.PutParamFacebook;
+import com.joker.hoclazada.Ultil.VolleyHelper;
+
+import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOffsetChangedListener {
     private Toolbar toolbar;
@@ -104,12 +108,12 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
 //            startActivity(new Intent(this,SignUpIn.class));
 //        }
 //
-//        btnPostStatus.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                startActivity(new Intent(getApplicationContext(),PostActivity.class));
-//            }
-//        });
+        btnPostStatus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getApplicationContext(),PostActivity.class));
+            }
+        });
 
         //
 //        Bundle params = new Bundle();
@@ -147,6 +151,7 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
 
                         break;
                     case R.id.itPage:
+                        startActivity(new Intent(getApplicationContext(),PagesActivity.class));
                         break;
                     case R.id.itDiemDanh:
                         startActivity(new Intent(getApplicationContext(),TrangChuDiemDanhActivity.class));
@@ -160,6 +165,25 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
                 return false;
             }
         });
+
+        HashMap<String, String> params = new HashMap<String, String>();
+        params.put("username", "assss");
+        params.put("password","undefine");
+        params.put("device","undefifsdfsne");
+
+        VolleyHelper volleyHelper = new VolleyHelper(this,"http://192.168.0.92:8080",params);
+volleyHelper.Post("login", new Response.Listener<String>() {
+    @Override
+    public void onResponse(String response) {
+        Log.d("jsonA",response+"");
+    }
+}, new Response.ErrorListener() {
+    @Override
+    public void onErrorResponse(VolleyError error) {
+        Log.d("jsonA",error+"");
+
+    }
+});
     }
 
     @Override

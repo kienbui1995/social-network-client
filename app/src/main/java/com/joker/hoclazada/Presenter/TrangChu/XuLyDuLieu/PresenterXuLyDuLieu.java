@@ -24,5 +24,6 @@ public class PresenterXuLyDuLieu implements IPresenterXuLyMenu {
     public void HuyToken(){
         ModelDangNhap modelDangNhap = new ModelDangNhap();
         modelDangNhap.huyToken();
+
     }
 }
