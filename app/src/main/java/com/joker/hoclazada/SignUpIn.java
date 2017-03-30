@@ -43,8 +43,6 @@ public class SignUpIn extends AppCompatActivity {
         loginViewPagerAdapter = new LoginViewPagerAdapter(getSupportFragmentManager());
         viewPager.setAdapter(loginViewPagerAdapter);
 
-
-
     }
 
     private void addControll() {
