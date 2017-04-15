@@ -5,7 +5,7 @@ android {
     buildToolsVersion "25.0.1"
     defaultConfig {
         applicationId "com.joker.hoclazada"
-        minSdkVersion 15
+        minSdkVersion 16
         targetSdkVersion 25
         versionCode 1
         versionName "1.0"
@@ -40,11 +40,20 @@ dependencies {
     compile 'com.github.piasy:ProgressPieIndicator:1.2.5'
     compile 'com.github.piasy:GlideImageLoader:1.2.5'
     compile 'com.afollestad.material-dialogs:core:0.9.4.1'
-    compile 'com.google.firebase:firebase-storage:10.0.1'
-    compile 'com.google.firebase:firebase-auth:10.0.1'
+    compile 'com.google.firebase:firebase-storage:10.2.1'
+    compile 'com.google.firebase:firebase-auth:10.2.1'
+    compile 'com.firebaseui:firebase-ui-database:1.2.0'
+    compile 'com.zaihuishou:expandablerecycleradapter:1.0.3'
+    compile 'com.github.fccaikai:BottomMenuTutorial:1.0.1'
     compile 'com.android.volley:volley:1.0.0'
+    compile 'com.google.firebase:firebase-database:10.2.1'
     testCompile 'junit:junit:4.12'
 }
+
+
+
+
+
 
 
 

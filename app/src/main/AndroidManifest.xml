@@ -37,6 +37,8 @@
         </activity>
         <activity android:name=".ImagePostActivity">
         </activity>
+        <activity android:name=".HomeListGroupActivity">
+        </activity>
     </application>
 
 </manifest>

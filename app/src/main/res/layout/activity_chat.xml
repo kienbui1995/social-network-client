@@ -5,7 +5,7 @@
         android:id="@+id/activity_chat"
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:background="@android:color/darker_gray"
+        android:background="#38d7d9da"
         android:layout_height="match_parent"
         tools:context="com.joker.hoclazada.ChatActivity">
     <android.support.design.widget.AppBarLayout
@@ -23,11 +23,12 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1">
-        <ListView
-                android:id="@+id/lvMessages"
+        <android.support.v7.widget.RecyclerView
+                android:background="#36d7d9da"
+                android:id="@+id/rcvMessages"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
-        </ListView>
+        </android.support.v7.widget.RecyclerView>
     </FrameLayout>
     <include layout="@layout/custom_chat_form"/>
 </LinearLayout>

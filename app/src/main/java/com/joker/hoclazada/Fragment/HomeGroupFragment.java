@@ -45,7 +45,6 @@ public class HomeGroupFragment extends Fragment {
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false);
         adapterHome = new AdapterHome(getActivity(), list);
-
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapterHome);
         recyclerView.setNestedScrollingEnabled(false);

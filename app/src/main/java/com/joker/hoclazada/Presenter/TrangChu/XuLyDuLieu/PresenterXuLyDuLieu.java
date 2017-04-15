@@ -1,6 +1,6 @@
 package com.joker.hoclazada.Presenter.TrangChu.XuLyDuLieu;
 
-import android.content.Context;
+import android.app.Activity;
 
 import com.facebook.AccessToken;
 import com.joker.hoclazada.Model.ModelDangNhap;
@@ -11,18 +11,20 @@ import com.joker.hoclazada.Model.ModelDangNhap;
 
 public class PresenterXuLyDuLieu implements IPresenterXuLyMenu {
     String tennguoidung="";
-    public PresenterXuLyDuLieu(Context context) {
+    Activity activity;
 
+    public PresenterXuLyDuLieu(Activity activity) {
+        this.activity = activity;
     }
 
     @Override
     public AccessToken LayTenNguoiDungFacebook() {
-        ModelDangNhap modelDangNhap = new ModelDangNhap();
+        ModelDangNhap modelDangNhap = new ModelDangNhap(activity);
         AccessToken accessToken = modelDangNhap.layTokenFacebookHienTai();
         return accessToken;
     }
     public void HuyToken(){
-        ModelDangNhap modelDangNhap = new ModelDangNhap();
+        ModelDangNhap modelDangNhap = new ModelDangNhap(activity);
         modelDangNhap.huyToken();
 
     }

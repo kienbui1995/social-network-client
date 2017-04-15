@@ -1,5 +1,7 @@
 package com.joker.hoclazada;
 
+import com.google.firebase.database.DatabaseReference;
+
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -57,7 +59,7 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
     private NavigationView nvMenu;
     FragmentManager manager;
     FragmentTransaction transaction;
-
+    DatabaseReference databaseReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,7 +79,6 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
         frContent = (LinearLayout) findViewById(R.id.frContent);
         nvMenu = (NavigationView) findViewById(R.id.nvMenu);
 
-
 //        notification = (TextView) findViewById(R.id.txtNotification);
         //Toolbar
         toolbar.setTitle("");
@@ -94,6 +95,12 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+
+        //Doc thu preferences
+//        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+//        String email = prefs.getString("fb_id",null);
+//        Log.d("emaiL",email);
+
         actionBarDrawerToggle.syncState();
         //Set su kien click cho Appbar layout
         appBarLayout.addOnOffsetChangedListener(this);
@@ -101,7 +108,7 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
         PresenterXuLyDuLieu presenterXuLyDuLieu = new PresenterXuLyDuLieu(this);
         AccessToken accessToken = presenterXuLyDuLieu.LayTenNguoiDungFacebook();
 //        Log.d("token",accessToken.toString());
-        Log.d("tokenn",""+accessToken);
+//        Log.d("tokenn",""+accessToken.getUserId());
 //        //Tam thoi commment de chay
 //        if (accessToken == null){
 //            finish();
@@ -224,7 +231,7 @@ volleyHelper.Post("login", new Response.Listener<String>() {
         }else if (vitri == R.id.itTrangCaNhan){
             startActivity(new Intent(this,UserProfileActivity.class));
         }else if (vitri==R.id.thongBao){
-            startActivity(new Intent(this,CommentPostActivity.class));
+            startActivity(new Intent(this,HomeListGroupActivity.class));
         }else if (vitri == R.id.it_search){
             startActivity(new Intent(this,SearchActivity.class));
         }
