@@ -1,0 +1,106 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:orientation="vertical"
+             android:background="@color/white"
+             xmlns:app="http://schemas.android.com/apk/res-auto"
+             android:layout_height="match_parent"
+             tools:context="com.joker.hoclazada.Fragment.FacebookSignUpFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+
+<LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/vienthanglong">
+
+        <ImageView
+                android:layout_width="74dp"
+                android:layout_height="63dp"
+                app:srcCompat="@drawable/avatar1"
+                android:id="@+id/imgAvatarFacebook"
+                android:layout_marginLeft="10dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginTop="8dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginBottom="8dp"
+                app:layout_constraintVertical_bias="0.0"/>
+
+        <TextView
+                android:textColor="@android:color/black"
+                android:text="Nam Hoài Nam "
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/txtFullNameFacebook"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginTop="16dp"
+                app:layout_constraintLeft_toRightOf="@+id/imgAvatarFacebook"
+                android:layout_marginLeft="25dp"/>
+
+        <TextView
+                android:text="nam@gmai.com "
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/txxEmailFacebook"
+                android:textStyle="italic"
+                android:layout_marginTop="8dp"
+                app:layout_constraintTop_toBottomOf="@+id/txtFullNameFacebook"
+                app:layout_constraintLeft_toRightOf="@+id/imgAvatarFacebook"
+                android:layout_marginLeft="25dp"/>
+
+    </android.support.constraint.ConstraintLayout>
+
+    <TextView
+            android:background="@drawable/viennotice"
+            android:layout_margin="15dp"
+            android:padding="10dp"
+            android:textSize="16sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/noticeFacebookSignup"/>
+    <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            >
+        <com.joker.hoclazada.CustomView.DeleteEditText
+                android:id="@+id/edtUserName"
+                android:maxLines="1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#000"
+                android:inputType="text"
+                android:hint="Tên đăng nhập"/>
+    </android.support.design.widget.TextInputLayout>
+    <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            >
+        <com.joker.hoclazada.CustomView.PasswordEditText
+                android:textColor="#000"
+                android:id="@+id/edtPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Mật khẩu"
+                app:useStrike="true"/>
+    </android.support.design.widget.TextInputLayout>
+    <Button
+            android:id="@+id/btnSignUp"
+            android:layout_margin="10dp"
+            android:layout_width="match_parent"
+            android:text="Đăng kí"
+            android:background="@color/colorAccent"
+            android:layout_height="wrap_content"/>
+
+
+</LinearLayout>
+</FrameLayout>

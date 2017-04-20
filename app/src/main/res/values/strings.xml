@@ -43,6 +43,10 @@
     <string-array name="optionImage">
         <item>Save picture</item>
     </string-array>
-
-
+    <string name="url">http://tlu.cloudapp.net:8080</string>
+    <string name="host">call-ryuzaki95.c9users.io</string>
+    <string name="port">80</string>
+    <string name="registerSuccess">Bạn đã đăng ký thành công, một email đã được gửi tới hòm thư cá nhân của bạn. Xin vui lòng kiểm tra hộp thư và tiến hành xác nhận tài khoản, sau đó bạn có thể đăng nhập</string>
+    <string name="noticeFacebookSignup">Hệ thống đã liên kết với facebook của bạn
+        , mời bạn tạo tài khoản trên hệ thống để có thể đăng nhập bằng tài khoản</string>
 </resources>

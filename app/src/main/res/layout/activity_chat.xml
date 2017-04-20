@@ -30,5 +30,9 @@
                 android:layout_height="match_parent">
         </android.support.v7.widget.RecyclerView>
     </FrameLayout>
-    <include layout="@layout/custom_chat_form"/>
+
+    <include
+            layout="@layout/custom_chat_form"
+            android:layout_width="wrap_content"
+            android:layout_height="55dp"/>
 </LinearLayout>

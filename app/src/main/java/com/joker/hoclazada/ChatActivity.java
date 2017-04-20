@@ -25,7 +25,6 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -47,14 +46,16 @@ import java.util.Map;
 import java.util.TimeZone;
 
 import adapter.ViewHolderChat;
+import hani.momanii.supernova_emoji_library.Actions.EmojIconActions;
+import hani.momanii.supernova_emoji_library.Helper.EmojiconEditText;
 
 public class ChatActivity extends AppCompatActivity {
-
-
+    private EmojIconActions emojIcon;
+    private ImageView emojiButton;
     private LinearLayout activityChat;
     private Toolbar toolbarNotification;
     private RecyclerView rcvMessage;
-    private EditText edtNewMessage;
+    private EmojiconEditText edtNewMessage;
     private ImageView submitButton;
     private DatabaseReference mdatabase;
     private FirebaseRecyclerAdapter<ChatItem,ViewHolderChat> mdapter;
@@ -76,6 +77,7 @@ public class ChatActivity extends AppCompatActivity {
         mdatabase = FirebaseDatabase.getInstance().getReference();
         final MediaPlayer mp = MediaPlayer.create(this, R.raw.coin_2);
         addControll();
+        setupEmoji();
         setupTabs();
         addEvent();
         setupChat();
@@ -85,6 +87,12 @@ public class ChatActivity extends AppCompatActivity {
                 submitChat();
             }
         });
+    }
+
+    private void setupEmoji() {
+        emojIcon = new EmojIconActions(this,activityChat,edtNewMessage,emojiButton,"#495C66","#DCE1E2","#E6EBEF");
+        emojIcon.ShowEmojIcon();
+        emojIcon.addEmojiconEditTextList(edtNewMessage);
     }
 
     private void setupChat() {
@@ -251,10 +259,11 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private void addControll() {
+        emojiButton = (ImageView) findViewById(R.id.emoji_btn);
         activityChat = (LinearLayout) findViewById(R.id.activity_chat);
         toolbarNotification = (Toolbar) findViewById(R.id.toolbarNotification);
         rcvMessage = (RecyclerView) findViewById(R.id.rcvMessages);
-        edtNewMessage = (EditText) findViewById(R.id.edtNewMessage);
+        edtNewMessage = (EmojiconEditText) findViewById(R.id.edtNewMessage);
         submitButton = (ImageView) findViewById(R.id.submit_button);
 
     }

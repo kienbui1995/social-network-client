@@ -2,7 +2,6 @@ package com.joker.hoclazada;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
@@ -24,12 +23,11 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.joker.hoclazada.Ultil.FilePath;
+import com.joker.hoclazada.Ultil.FirebaseHelper;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
-import java.io.IOException;
 
 public class PostActivity extends AppCompatActivity {
     private LinearLayout activityPost;
@@ -128,23 +126,40 @@ public class PostActivity extends AppCompatActivity {
         String fileName = "images/" +ts+"_hoainam";
         StorageReference riversRef = mStorageReference.child(fileName);
 
-        riversRef.putFile(file)
-                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        // Get a URL to the uploaded content
-                        Uri downloadUrl = taskSnapshot.getDownloadUrl();
-                        Toast.makeText(PostActivity.this, "Upload thanh cong", Toast.LENGTH_SHORT).show();
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception exception) {
-                        // Handle unsuccessful uploads
-                        Toast.makeText(PostActivity.this, "Upload fail", Toast.LENGTH_SHORT).show();
-                        // ...
-                    }
-                });
+//        riversRef.putFile(file)
+//                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+//                    @Override
+//                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+//                        // Get a URL to the uploaded content
+//                        Uri downloadUrl = taskSnapshot.getDownloadUrl();
+//                        Toast.makeText(PostActivity.this, "Upload thanh cong", Toast.LENGTH_SHORT).show();
+//                    }
+//                })
+//                .addOnFailureListener(new OnFailureListener() {
+//                    @Override
+//                    public void onFailure(@NonNull Exception exception) {
+//                        // Handle unsuccessful uploads
+//                        Toast.makeText(PostActivity.this, "Upload fail", Toast.LENGTH_SHORT).show();
+//                        // ...
+//                    }
+//                });
+
+        FirebaseHelper firebaseHelper = new FirebaseHelper(this,mStorageReference);
+        firebaseHelper.putFile(riversRef, file, new OnSuccessListener() {
+            @Override
+            public void onSuccess(Object o) {
+
+                UploadTask.TaskSnapshot taskSnapshot = (UploadTask.TaskSnapshot) o;
+                Uri url = taskSnapshot.getDownloadUrl();
+                Log.d("firebaseA",url.toString());
+                Toast.makeText(PostActivity.this, "Upload thanh cong", Toast.LENGTH_SHORT).show();
+            }
+        }, new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(PostActivity.this, "Upload fail", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override

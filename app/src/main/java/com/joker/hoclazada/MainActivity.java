@@ -19,7 +19,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -29,16 +28,10 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.facebook.AccessToken;
 import com.facebook.FacebookSdk;
 import com.facebook.login.LoginManager;
-import com.joker.hoclazada.Presenter.TrangChu.XuLyDuLieu.PresenterXuLyDuLieu;
+import com.joker.hoclazada.Ultil.DeviceUltil;
 import com.joker.hoclazada.Ultil.PutParamFacebook;
-import com.joker.hoclazada.Ultil.VolleyHelper;
-
-import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOffsetChangedListener {
     private Toolbar toolbar;
@@ -78,6 +71,9 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
         collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapToolbar);
         frContent = (LinearLayout) findViewById(R.id.frContent);
         nvMenu = (NavigationView) findViewById(R.id.nvMenu);
+//        TelephonyManager telephonyManager = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE);
+//        Log.d("imei",telephonyManager.getDeviceId().toString());
+
 
 //        notification = (TextView) findViewById(R.id.txtNotification);
         //Toolbar
@@ -105,8 +101,8 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
         //Set su kien click cho Appbar layout
         appBarLayout.addOnOffsetChangedListener(this);
         //Presenter
-        PresenterXuLyDuLieu presenterXuLyDuLieu = new PresenterXuLyDuLieu(this);
-        AccessToken accessToken = presenterXuLyDuLieu.LayTenNguoiDungFacebook();
+//        PresenterXuLyDuLieu presenterXuLyDuLieu = new PresenterXuLyDuLieu(this);
+//        AccessToken accessToken = presenterXuLyDuLieu.LayTenNguoiDungFacebook();
 //        Log.d("token",accessToken.toString());
 //        Log.d("tokenn",""+accessToken.getUserId());
 //        //Tam thoi commment de chay
@@ -173,24 +169,7 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
             }
         });
 
-        HashMap<String, String> params = new HashMap<String, String>();
-        params.put("username", "assss");
-        params.put("password","undefine");
-        params.put("device","undefifsdfsne");
 
-        VolleyHelper volleyHelper = new VolleyHelper(this,"http://192.168.0.92:8080",params);
-volleyHelper.Post("login", new Response.Listener<String>() {
-    @Override
-    public void onResponse(String response) {
-        Log.d("jsonA",response+"");
-    }
-}, new Response.ErrorListener() {
-    @Override
-    public void onErrorResponse(VolleyError error) {
-        Log.d("jsonA",error+"");
-
-    }
-});
     }
 
     @Override
@@ -231,7 +210,7 @@ volleyHelper.Post("login", new Response.Listener<String>() {
         }else if (vitri == R.id.itTrangCaNhan){
             startActivity(new Intent(this,UserProfileActivity.class));
         }else if (vitri==R.id.thongBao){
-            startActivity(new Intent(this,HomeListGroupActivity.class));
+//            startActivity(new Intent(this,RtcActivity.class));
         }else if (vitri == R.id.it_search){
             startActivity(new Intent(this,SearchActivity.class));
         }

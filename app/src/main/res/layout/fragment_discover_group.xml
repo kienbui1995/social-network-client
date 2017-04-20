@@ -11,7 +11,7 @@
     <TextView
             android:textColor="@android:color/black"
             android:padding="3dp"
-            android:background="@drawable/shape_bottom_lib_item_n"
+            android:background="@color/white"
             android:text="Bài viết nổi bật "
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

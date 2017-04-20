@@ -18,11 +18,14 @@ public class SignUpIn extends AppCompatActivity {
     LoginViewPagerAdapter loginViewPagerAdapter;
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up_in);
+        //Check loading
+        if (LoadingActivity.checkLoad = false){
+            finish();
+        }
         addControll();
         //Toolbar
         idToolbar.setTitle("Trang đăng nhập/đăng ký");
@@ -62,5 +65,10 @@ public class SignUpIn extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
     }
 }
