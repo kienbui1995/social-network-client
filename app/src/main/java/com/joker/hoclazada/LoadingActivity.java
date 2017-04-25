@@ -13,10 +13,10 @@ public class LoadingActivity extends AwesomeSplash {
     @Override
     public void initSplash(ConfigSplash configSplash) {
         /* you don't have to override every property */
-        if (checkLoad == true)
-        {
-            finish();
-        }
+//        if (checkLoad == true)
+//        {
+//            finish();
+//        }
         //Customize Circular Reveal
         configSplash.setBackgroundColor(R.color.bgToolbar); //any color you want form colors.xml
         configSplash.setAnimCircularRevealDuration(1000); //int ms
@@ -35,14 +35,15 @@ public class LoadingActivity extends AwesomeSplash {
         configSplash.setTitleSplash("Thăng Long Social");
         configSplash.setTitleTextColor(R.color.colorWhite);
         configSplash.setTitleTextSize(30f); //float value
-        configSplash.setAnimTitleDuration(3000);
+        configSplash.setAnimTitleDuration(1000);
         configSplash.setAnimTitleTechnique(Techniques.FadeIn);
 //        configSplash.setTitleFont("fonts/myfont.ttf"); //provide string to your font located
     }
 
     @Override
     public void animationsFinished() {
-        checkLoad =true;
+//        checkLoad =true;
+        finish();
         startActivity(new Intent(this,SignUpIn.class));
     }
 }

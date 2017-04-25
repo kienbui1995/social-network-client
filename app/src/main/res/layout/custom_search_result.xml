@@ -10,6 +10,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
         <ImageView
+                android:id="@+id/imgAvatarSearchItem"
                 android:src="@drawable/avatar1"
                 android:layout_width="50dp"
                 android:layout_height="50dp"/>
@@ -19,6 +20,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
             <TextView
+                    android:id="@+id/txtFullNameSearchItem"
                     android:paddingTop="6dp"
                     android:textStyle="bold"
                     android:text="Hoài Nam"
@@ -27,7 +29,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
             <TextView
-                    android:textColor="#000"
+                    android:id="@+id/txtUserNameSearchItem"
+                    android:textColor="#0277BD"
                     android:text="Nam Dinh, Viet Nam"
                     android:textStyle="normal"
                     android:paddingTop="4dp"
@@ -36,6 +39,7 @@
         </LinearLayout>
     </LinearLayout>
     <Button
+            android:id="@+id/btnFollowUser"
             android:layout_marginRight="10dp"
             android:layout_gravity="center_vertical"
             android:textSize="12sp"

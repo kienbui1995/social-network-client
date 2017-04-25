@@ -115,4 +115,9 @@ public class EntityUserProfile extends RealmObject {
     public void setAvatar(String avatar) {
         this.avatar = avatar;
     }
+
+    @Override
+    public String toString() {
+        return getFirst_name()+ " " + getToken()+ " " +getUserName() ;
+    }
 }

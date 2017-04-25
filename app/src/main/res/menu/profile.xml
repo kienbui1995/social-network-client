@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item android:id="@+id/itMore"
+          android:title="More"
+          app:showAsAction="always"
+          android:icon="@drawable/ic_more_vert_white_24dp">
+        <menu>
+            <item android:id="@+id/itEditProfile"
+                  android:icon="@drawable/ic_pencil"
+                  android:title="Chỉnh sửa thông tin"/>
+            <item android:id="@+id/itBlock"
+                  android:icon="@drawable/ic_lock"
+                  android:title="Chặn người dùng này"/>
+        </menu>
+    </item>
+
+</menu>

@@ -68,6 +68,8 @@ import static com.facebook.FacebookSdk.getApplicationContext;
 
 public class DangKy extends Fragment implements Validator.ValidationListener {
     Validator validator;
+    @Length(min = 12,max = 25,message = "Họ và tên phải từ 12 đến 25 kí tự")
+    private DeleteEditText edtFullName;
     @Email(message = "Email không hợp lệ")
     private DeleteEditText edtEmail;
     private ImageView imgAvartarSignUp;
@@ -83,7 +85,7 @@ public class DangKy extends Fragment implements Validator.ValidationListener {
     private  Uri file;
     Intent mIntent;
     private String selectedImagePath = "";
-    private static final int CONTENT_VIEW_ID = 10101010;
+    private EntityDangKy entityDangKy;
 
     @Nullable
     @Override
@@ -145,14 +147,19 @@ public class DangKy extends Fragment implements Validator.ValidationListener {
     {
         HashMap<String,String> params = new HashMap<String, String>();
         params.put("username",entityDangKy.getUsername());
+        params.put("full_name",entityDangKy.getFullname());
         params.put("email",entityDangKy.getEmail());
         params.put("password",entityDangKy.getPassword());
         params.put("avatar",entityDangKy.getAvatar());
+//        params.put("full_name",);
+        Log.d("dangKy",new JSONObject(params).toString());
+
         final ProgressDialog progressDialog;
         progressDialog = ProgressDialog.show(getActivity(),"","Đang xử lý",true);
 
 
         VolleyHelper volleyHelper = new VolleyHelper(getActivity(),getResources().getString(R.string.url));
+
         volleyHelper.post("sign_up", new JSONObject(params), new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
@@ -170,7 +177,14 @@ public class DangKy extends Fragment implements Validator.ValidationListener {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                VolleyHelper.checkErrorCode(error);
+                progressDialog.dismiss();
+                if (VolleyHelper.checkErrorCode(error) == 371)
+                {
+                    edtEmail.setError("Email đã tồn tại trên hệ thống");
+                }else if (VolleyHelper.checkErrorCode(error) == 376)
+                {
+                    edtUserName.setError("Tên đăng nhập đã tồn tại");
+                }
             }
         });
     }
@@ -178,6 +192,7 @@ public class DangKy extends Fragment implements Validator.ValidationListener {
         imgAvartarSignUp = (ImageView) view.findViewById(R.id.imgAvartarSignUp);
         chooseAvatar = (Button) view.findViewById(R.id.chooseAvatar);
         edtUserName = (DeleteEditText) view.findViewById(R.id.edtUserName);
+        edtFullName = (DeleteEditText) view.findViewById(R.id.edtFullName);
         edtEmail = (DeleteEditText) view.findViewById(R.id.edtEmail);
         edtPassword = (PasswordEditText) view.findViewById(R.id.edtPassword);
         edtRePassword = (PasswordEditText) view.findViewById(R.id.edtRePassword);
@@ -202,25 +217,26 @@ public class DangKy extends Fragment implements Validator.ValidationListener {
 
     @Override
     public void onValidationSucceeded() {
+        String fullname = edtFullName.getText().toString().trim();
         String userName = edtUserName.getText().toString().trim();
         String email = edtEmail.getText().toString().toString().trim();
         String password =  SystemHelper.MD5(edtPassword.getText().toString());
-        String rePassword = edtRePassword.getText().toString();
 
         StorageReference storageReference = FirebaseStorage.getInstance().getReference();
         if (selectedImagePath == "")
         {
-            EntityDangKy entityDangKy = new EntityDangKy(userName,password,email,"");
+            entityDangKy = new EntityDangKy(fullname,userName,password,email,"");
             //Send Api
             registerAPI(entityDangKy);
         }else
         {
-            file = Uri.parse("http://data.whicdn.com/images/206414193/superthumb.png");
-            Picasso.with(getActivity()).load("http://data.whicdn.com/images/206414193/superthumb.png").into(picassoImageTarget(getApplicationContext(), "imageDir", "my_image.jpeg"));
+//            file = Uri.parse("http://data.whicdn.com/images/206414193/superthumb.png");
+//            Picasso.with(getActivity()).load("http://data.whicdn.com/images/206414193/superthumb.png").into(picassoImageTarget(getApplicationContext(), "imageDir", "my_image.jpeg"));
+            Uri file = Uri.fromFile(new File(selectedImagePath));
             long ts = SystemHelper.getTimeStamp();
             String fileName = "avatar/" +ts+ userName;
             StorageReference folder = storageReference.child(fileName);
-            EntityDangKy entityDangKy = new EntityDangKy(userName,password,email,fileName);
+            EntityDangKy entityDangKy = new EntityDangKy(fullname,userName,password,email,fileName);
             //Up anh
             uploadAnh(folder,file,storageReference);
 

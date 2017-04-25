@@ -3,6 +3,7 @@ package com.joker.hoclazada.Ultil;
 import android.content.Context;
 import android.util.Log;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request.Method;
 import com.android.volley.RequestQueue;
@@ -12,9 +13,13 @@ import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.joker.hoclazada.MainActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by joker on 3/17/17.
@@ -46,7 +51,15 @@ public class VolleyHelper {
     public void get(String method, JSONObject jsonRequest,
                     Response.Listener<JSONObject> listener, ErrorListener errorListener){
 
-        JsonObjectRequest objRequest = new JsonObjectRequest(Method.GET, contructUrl(method), jsonRequest, listener, errorListener);
+        JsonObjectRequest objRequest = new JsonObjectRequest(Method.GET, contructUrl(method), jsonRequest, listener, errorListener){
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> map = new HashMap<>();
+                map.put("Content-Type", "application/json");
+                map.put("token", MainActivity.token);
+                return map;
+            }
+        };
         mRequestQueue.add(objRequest);
     }
 
@@ -61,7 +74,9 @@ public class VolleyHelper {
                      Listener<JSONObject> listener, ErrorListener errorListener){
 
         JsonObjectRequest objRequest = new JsonObjectRequest(Method.POST, contructUrl(method), jsonRequest, listener, errorListener);
+        objRequest.setShouldCache(true);
         mRequestQueue.add(objRequest);
+
     }
 
     public void delete(String method, JSONObject jsonRequest,
@@ -71,6 +86,24 @@ public class VolleyHelper {
         mRequestQueue.add(objRequest);
     }
 
+
+    public void postHeader(String method, JSONObject jsonRequest,
+                     Listener<JSONObject> listener, ErrorListener errorListener){
+
+        JsonObjectRequest objRequest = new JsonObjectRequest(Method.POST, contructUrl(method), jsonRequest, listener, errorListener){
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> map = new HashMap<>();
+                map.put("Content-Type", "application/json");
+                map.put("token", MainActivity.token);
+                Log.d("tokenMap",MainActivity.token);
+                return map;
+            }
+        };
+        objRequest.setShouldCache(true);
+        mRequestQueue.add(objRequest);
+
+    }
 //    public void Post(String method,
 //                     Listener<String> listener, ErrorListener errorListener){
 //

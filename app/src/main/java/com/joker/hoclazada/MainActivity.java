@@ -19,6 +19,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -28,10 +29,18 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.facebook.FacebookSdk;
-import com.facebook.login.LoginManager;
-import com.joker.hoclazada.Ultil.DeviceUltil;
 import com.joker.hoclazada.Ultil.PutParamFacebook;
+import com.joker.hoclazada.Ultil.VolleyHelper;
+
+import org.json.JSONObject;
+
+import java.util.HashMap;
+
+import Entity.EntityUserProfile;
+import io.realm.Realm;
 
 public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOffsetChangedListener {
     private Toolbar toolbar;
@@ -53,12 +62,21 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
     FragmentManager manager;
     FragmentTransaction transaction;
     DatabaseReference databaseReference;
-
+    EntityUserProfile entityUserProfile;
+    public static String token = null;
+    Realm realm;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         FacebookSdk.sdkInitialize(getApplicationContext());
         setContentView(R.layout.activity_main);
+        //Khoi tao realm
+        Realm.init(this);
+        //Khoi tao doi tuong Realm
+        realm = Realm.getDefaultInstance();
+        entityUserProfile = realm.where(EntityUserProfile.class).findFirst();
+        token= entityUserProfile.getToken();
+
         tabHost = (TabLayout) findViewById(R.id.tabHost);
         viewPager = (ViewPager) findViewById(R.id.viewPager);
         toolbar = (Toolbar) findViewById(R.id.toolbarA);
@@ -204,15 +222,18 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
         int vitri = item.getItemId();
         if (vitri == R.id.itDangXuat)
         {
-            LoginManager.getInstance().logOut();
-            finish();
-            startActivity(new Intent(this,SignUpIn.class));
+            logOut();
+//            LoginManager.getInstance().logOut();
+//            finish();
+//            startActivity(new Intent(this,SignUpIn.class));
         }else if (vitri == R.id.itTrangCaNhan){
             startActivity(new Intent(this,UserProfileActivity.class));
         }else if (vitri==R.id.thongBao){
 //            startActivity(new Intent(this,RtcActivity.class));
         }else if (vitri == R.id.it_search){
             startActivity(new Intent(this,SearchActivity.class));
+            overridePendingTransition(R.anim.slide_out_right,R.anim.slide_in_left);
+
         }
         return true;
     }
@@ -227,4 +248,39 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
             linearLayout.setAlpha(1);
         }
     }
+    public void logOut(){
+        //Update token ve null
+        entityUserProfile = new EntityUserProfile();
+         entityUserProfile = realm.where(EntityUserProfile.class).findFirst();
+        VolleyHelper volleyHelper = new VolleyHelper(getApplicationContext(),getResources().getString(R.string.url));
+        HashMap<String,String> parram = new HashMap<>();
+        parram.put("token",entityUserProfile.getToken());
+        Log.d("token",new JSONObject(parram).toString());
+        volleyHelper.postHeader("logout", new JSONObject(parram), new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                realm.executeTransaction(new Realm.Transaction() {
+                    @Override
+                    public void execute(Realm realm) {
+                        realm.deleteAll();
+                        finish();
+                        startActivity(new Intent(getApplicationContext(),SignUpIn.class));
+                    }
+                });
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d("errorCode1",VolleyHelper.checkErrorCode(error)+"");
+//                Toast.makeText(getApplicationContext(), VolleyHelper.checkErrorCode(error), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(Intent.ACTION_MAIN);
+        intent.addCategory(Intent.CATEGORY_HOME);
+        startActivity(intent);
+    }
+
 }

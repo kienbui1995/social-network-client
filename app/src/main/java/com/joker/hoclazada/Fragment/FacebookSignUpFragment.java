@@ -29,6 +29,7 @@ import com.squareup.picasso.Picasso;
 
 import jp.wasabeef.picasso.transformations.CropSquareTransformation;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
@@ -36,8 +37,6 @@ import java.util.List;
 
 import Entity.EntityUserProfile;
 import io.realm.Realm;
-
-import static com.joker.hoclazada.Ultil.VolleyHelper.checkErrorCode;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -53,8 +52,8 @@ public class FacebookSignUpFragment extends Fragment implements Validator.Valida
     private ImageView imgAvatarFacebook;
     private TextView txtFullNameFacebook;
     private TextView txxEmailFacebook;
-
     private Realm realm;
+    private EntityUserProfile entityUserProfile;
     public FacebookSignUpFragment() {
         // Required empty public constructor
 
@@ -86,19 +85,37 @@ public class FacebookSignUpFragment extends Fragment implements Validator.Valida
         params.put("email",profile.getEmail());
         params.put("gender",profile.getGender());
         params.put("facebook_token",profile.getTokenFB());
-
         Log.d("hashMap", profile.toString());
         VolleyHelper volleyHelper = new VolleyHelper(getActivity(),getResources().getString(R.string.url));
         volleyHelper.post("sign_up", new JSONObject(params), new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                Log.d("loginFB",response.toString());
+                {
+                    try {
+                        JSONObject json = response.getJSONObject("data");
+                        entityUserProfile.setToken(json.getString("token"));
+                        realm.executeTransaction(new Realm.Transaction() {
+                            @Override
+                            public void execute(Realm realm) {
+                                realm.copyToRealmOrUpdate(entityUserProfile);
+                                Log.d("EntityObj",entityUserProfile.getUserName());
+                            }
+                        });
+                        startActivity(new Intent(getActivity(),MainActivity.class));
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
                 startActivity(new Intent(getActivity(), MainActivity.class));
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                checkErrorCode(error);
+                if (VolleyHelper.checkErrorCode(error) == 376)
+                {
+                    edtUserName.setError("Tên đăng nhập đã tồn tại");
+                }
             }
         });
 

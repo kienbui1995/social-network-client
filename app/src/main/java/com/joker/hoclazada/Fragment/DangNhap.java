@@ -2,18 +2,25 @@ package com.joker.hoclazada.Fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.text.InputType;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialog;
+import com.afollestad.materialdialogs.Theme;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.facebook.CallbackManager;
@@ -56,8 +63,9 @@ import static com.joker.hoclazada.Ultil.VolleyHelper.checkErrorCode;
  */
 
 public class DangNhap extends Fragment implements View.OnClickListener,Validator.ValidationListener{
+    private TextView txtForgotPassword;
     Validator validator;
-    @Length(min = 6,max=15,message = "Tên đăng nhập phải từ 6 đến 15 kí tự")
+    @Length(min = 6,max=15,message = "Tên đăng nhập phải từ 6 đến 15 kí tự",trim = true)
     private DeleteEditText edtUsername;
     @Password(scheme = Password.Scheme.ANY,min = 7)
     private PasswordEditText edtPassword;
@@ -66,7 +74,13 @@ public class DangNhap extends Fragment implements View.OnClickListener,Validator
     EntityUserProfile entityUserProfile;
     CallbackManager callbackManager;
     DeviceUltil deviceUltil;
+    String recoveryEmail;
     Button btnFacebook;
+    //token
+
+    //Forgot password
+    String key;
+    String id;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -162,6 +176,113 @@ public class DangNhap extends Fragment implements View.OnClickListener,Validator
         edtPassword = (PasswordEditText) view.findViewById(R.id.edtPassword);
         btnLogin = (Button) view.findViewById(R.id.btnLogin);
         btnFacebook = (Button) view.findViewById(R.id.btnFacebook);
+        txtForgotPassword = (TextView) view.findViewById(R.id.txtForgotPassword);
+        txtForgotPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                new MaterialDialog.Builder(getActivity())
+                        .title("Quên mật khẩu")
+                        .cancelable(false)
+                        .content("Nhập email của bạn")
+                        .theme(Theme.LIGHT)
+                        .inputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS | InputType.TYPE_TEXT_VARIATION_EMAIL_SUBJECT)
+                        .input("Nhập email", "", new MaterialDialog.InputCallback() {
+                            @Override
+                            public void onInput(final MaterialDialog dialog, CharSequence input) {
+                                {
+                                    if(TextUtils.isEmpty(input))
+                                    {
+                                        Toast.makeText(getActivity(), "No emails", Toast.LENGTH_LONG).show();
+                                    }else {
+                                        HashMap<String,String> params= new HashMap<>();
+                                        recoveryEmail = input.toString().trim();
+                                        params.put("email",recoveryEmail);
+                                        VolleyHelper volleyHelper = new VolleyHelper(getActivity(),getResources().getString(R.string.url));
+                                        volleyHelper.post("forgot_password", new JSONObject(params), new Response.Listener<JSONObject>() {
+                                            @Override
+                                            public void onResponse(JSONObject response) {
+                                                dialog.dismiss();
+                                                Log.d("forgotSuccess", String.valueOf(response));
+                                                Handler handler = new Handler();
+                                                final MaterialDialog finalDialog = dialog;
+                                                handler.postDelayed(new Runnable() {
+                                                    @Override
+                                                    public void run() {
+                                                        CheckCode();
+                                                    }
+                                                },3000);
+
+                                            }
+                                        }, new Response.ErrorListener() {
+                                            @Override
+                                            public void onErrorResponse(VolleyError error) {
+                                                Log.d("forgotSuccessa", String.valueOf(VolleyHelper.checkErrorCode(error)));
+                                            }
+                                        });
+                                    }
+
+                                }
+                                Toast.makeText(getActivity(), input.toString(), Toast.LENGTH_SHORT).show();
+                            }
+
+                        }).show();
+            }
+        });
+    }
+
+    private void CheckCode() {
+        new  MaterialDialog.Builder(getActivity())
+                .title("Xác thực mã")
+                .cancelable(false)
+                .content("Mời bạn nhập mã xác thực được gửi trong Email")
+                .theme(Theme.LIGHT)
+                .inputType(InputType.TYPE_CLASS_NUMBER)
+                .input("Nhập mã: ", "", new MaterialDialog.InputCallback() {
+                    @Override
+                    public void onInput(@NonNull MaterialDialog dialog, CharSequence input) {
+                        if(TextUtils.isEmpty(input))
+                        {
+                            Toast.makeText(getActivity(), "Chưa nhập mã xác thực", Toast.LENGTH_LONG).show();
+                        }else {
+                            HashMap<String,String> params= new HashMap<>();
+                            params.put("email",recoveryEmail);
+                            params.put("recovery_code",input.toString().trim());
+                            Log.d("recovery",new JSONObject(params).toString());
+                            VolleyHelper volleyHelper = new VolleyHelper(getActivity(),getResources().getString(R.string.url));
+                            volleyHelper.post("verify_recovery_code", new JSONObject(params), new Response.Listener<JSONObject>() {
+                                @Override
+                                public void onResponse(JSONObject response) {
+                                    Log.d("forgotSuccess",response.toString());
+                                    try {
+                                        JSONObject jsonObject = response.getJSONObject("data");
+                                        id = jsonObject.getString("id");
+                                        key = jsonObject.getString(("recovery_key"));
+                                        Bundle bundle = new Bundle();
+                                        bundle.putString("id",id);
+                                        bundle.putString("key",key);
+                                        ForgotPasswordFragment forgotPasswordFragment = new ForgotPasswordFragment();
+                                        forgotPasswordFragment.setArguments(bundle);
+                                        FragmentManager fragmentManager = getFragmentManager();
+                                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                                        fragmentTransaction.setCustomAnimations(R.anim.slide_out_right,R.anim.slide_out_right);
+                                        fragmentTransaction.replace(R.id.view_root,forgotPasswordFragment);
+                                        fragmentTransaction.commit();
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+
+                                }
+                            }, new Response.ErrorListener() {
+                                @Override
+                                public void onErrorResponse(VolleyError error) {
+                                    Log.d("forgotError", String.valueOf(VolleyHelper.checkErrorCode(error)));
+
+                                }
+                            });
+                        }
+                    }
+                }).show();
     }
 
     private void eventDangNhapThuCong() {
@@ -240,7 +361,6 @@ public class DangNhap extends Fragment implements View.OnClickListener,Validator
     {
         //Insert APi
         EntityUserProfile profile = realm.where(EntityUserProfile.class).findFirst();
-
         HashMap<String,String> params = new HashMap<String, String>();
         params.put("username",profile.getFirst_name());
         params.put("facebook_id",profile.getFbID());
@@ -268,10 +388,14 @@ public class DangNhap extends Fragment implements View.OnClickListener,Validator
     @Override
     public void onValidationSucceeded() {
         {
+            //Dang nhap thu cong
             String username = edtUsername.getText().toString();
             String password = SystemHelper.MD5(edtPassword.getText().toString());
             String device = deviceUltil.getImei();
+            entityUserProfile = new EntityUserProfile();
+            entityUserProfile.setUserName(username);
 
+            //Request
             VolleyHelper volleyHelper = new VolleyHelper(getActivity(),getResources().getString(R.string.url));
             HashMap<String,String> params = new HashMap<String, String>();
             params.put("username",username);
@@ -281,12 +405,27 @@ public class DangNhap extends Fragment implements View.OnClickListener,Validator
             volleyHelper.post("login", new JSONObject(params), new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject response) {
-                    startActivity(new Intent(getActivity(),MainActivity.class));
+                    try {
+                        JSONObject json = response.getJSONObject("data");
+                        entityUserProfile.setToken(json.getString("token"));
+                        entityUserProfile.setuID(json.getString("id"));
+                        realm.executeTransaction(new Realm.Transaction() {
+                            @Override
+                            public void execute(Realm realm) {
+                                realm.copyToRealmOrUpdate(entityUserProfile);
+                                Log.d("EntityObj",entityUserProfile.getuID());
+                            }
+                        });
+                        startActivity(new Intent(getActivity(),MainActivity.class));
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                 }
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    checkErrorCode(error);
+                    Log.d("loginError", "onErrorResponse: checkErrorCode(error)");
                 }
             });
 
@@ -310,7 +449,8 @@ public class DangNhap extends Fragment implements View.OnClickListener,Validator
     }
     public void checkFacebook(JSONObject jsonObject){
         VolleyHelper volleyHelper = new VolleyHelper(getActivity(),getResources().getString(R.string.url));
-        EntityUserProfile entityUserProfile = realm.where(EntityUserProfile.class).findFirst();
+        entityUserProfile = new EntityUserProfile();
+        entityUserProfile = realm.where(EntityUserProfile.class).findFirst();
         HashMap<String,String> params = new HashMap<>();
         DeviceUltil deviceUltil = new DeviceUltil(getActivity());
         deviceUltil.CheckPermission();
@@ -321,7 +461,26 @@ public class DangNhap extends Fragment implements View.OnClickListener,Validator
         volleyHelper.post("login_facebook", new JSONObject(params), new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                Toast.makeText(getActivity(), "Thành công", Toast.LENGTH_SHORT).show();
+                try {
+                    final String json = response.getJSONObject("data").getString("token");
+
+
+                    Log.d("dataToken1",json.toString());
+//                    Log.d("dataToken2",json.getString("token").toString());
+                    realm.executeTransaction(new Realm.Transaction() {
+                        @Override
+                        public void execute(Realm realm) {
+                            entityUserProfile.setToken(json);
+                            realm.copyToRealmOrUpdate(entityUserProfile);
+//                            Log.d("EntityObj",entityUserProfile.getUserName());
+                        }
+                    });
+                    Log.d("dataToken",entityUserProfile.getTokenFB());
+                    startActivity(new Intent(getActivity(),MainActivity.class));
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
         }, new Response.ErrorListener() {
             @Override

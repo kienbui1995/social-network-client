@@ -1,5 +1,6 @@
 package com.joker.hoclazada;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
@@ -10,11 +11,16 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 
+import com.joker.hoclazada.Ultil.SystemHelper;
+
+import io.realm.Realm;
+
 public class SignUpIn extends AppCompatActivity {
     private LinearLayout activitySignUpIn;
     private Toolbar idToolbar;
     private TabLayout idTabLayout;
     ViewPager viewPager;
+    Realm realm;
     LoginViewPagerAdapter loginViewPagerAdapter;
 
 
@@ -22,10 +28,18 @@ public class SignUpIn extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up_in);
-        //Check loading
-        if (LoadingActivity.checkLoad = false){
+        realm.init(this);
+        realm = Realm.getDefaultInstance();
+        if(SystemHelper.isLogin(realm))
+        {
             finish();
+            startActivity(new Intent(this,MainActivity.class));
+        }else {
+//            startActivity(new Intent(this,MainActivity.class));
+
         }
+
+        //Check loading
         addControll();
         //Toolbar
         idToolbar.setTitle("Trang đăng nhập/đăng ký");

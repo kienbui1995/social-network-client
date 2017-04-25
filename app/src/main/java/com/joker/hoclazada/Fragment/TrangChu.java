@@ -44,7 +44,7 @@ public class TrangChu extends Fragment {
 
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapterHome);
-        recyclerView.setNestedScrollingEnabled(false);
+//        recyclerView.setNestedScrollingEnabled(false);
         adapterHome.notifyDataSetChanged();
         return view;
     }

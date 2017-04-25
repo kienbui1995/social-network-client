@@ -37,6 +37,21 @@
                 android:layout_margin="10dp"
                 >
             <com.joker.hoclazada.CustomView.DeleteEditText
+                    android:id="@+id/edtFullName"
+                    android:maxLines="1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="#000"
+                    android:inputType="text"
+                    android:hint="Họ và tên"/>
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                >
+            <com.joker.hoclazada.CustomView.DeleteEditText
                     android:id="@+id/edtUserName"
                     android:maxLines="1"
                     android:layout_width="match_parent"
@@ -46,9 +61,11 @@
                     android:hint="Tên đăng nhập"/>
         </android.support.design.widget.TextInputLayout>
 
+
         <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:imeOptions="actionNext"
                 android:layout_margin="10dp"
                 >
             <com.joker.hoclazada.CustomView.DeleteEditText
@@ -59,7 +76,6 @@
                     android:textColor="#000"
                     android:hint="Địa chỉ Email"/>
         </android.support.design.widget.TextInputLayout>
-
         <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

@@ -5,18 +5,19 @@ package Entity;
  */
 
 public class EntityDangKy{
+    private String fullname;
     private String username;
     private String password;
     private String email;
+    private String avatar;
 
-    public EntityDangKy(String username, String password, String email, String avatar) {
-        this.username = username;
-        this.password = password;
-        this.email = email;
-        this.avatar = avatar;
+    public String getFullname() {
+        return fullname;
     }
 
-    private String avatar;
+    public void setFullname(String fullname) {
+        this.fullname = fullname;
+    }
 
     public String getUsername() {
         return username;
@@ -47,6 +48,14 @@ public class EntityDangKy{
     }
 
     public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
+
+    public EntityDangKy(String fullname, String username, String password, String email, String avatar) {
+        this.fullname = fullname;
+        this.username = username;
+        this.password = password;
+        this.email = email;
         this.avatar = avatar;
     }
 }

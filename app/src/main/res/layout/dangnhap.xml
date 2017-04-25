@@ -43,7 +43,9 @@
                         app:useStrike="true"
                         android:id="@+id/edtPassword"/>
             </android.support.design.widget.TextInputLayout>
+
             <TextView
+                    android:id="@+id/txtForgotPassword"
                     android:textColor="#72a4ef"
                     android:layout_gravity="right"
                     android:layout_margin="10dp"

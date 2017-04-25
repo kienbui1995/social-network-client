@@ -1,5 +1,8 @@
 package com.joker.hoclazada.Ultil;
 
+import Entity.EntityUserProfile;
+import io.realm.Realm;
+
 /**
  * Created by joker on 4/17/17.
  */
@@ -21,4 +24,16 @@ public class SystemHelper {
         }
         return null;
     }
+    public static boolean isLogin(Realm realm)
+    {
+        EntityUserProfile profile = new EntityUserProfile();
+        profile = realm.where(EntityUserProfile.class).findFirst();
+        if (profile ==null)
+        {
+           return false;
+        }else {
+            return true;
+        }
+    }
+
 }
