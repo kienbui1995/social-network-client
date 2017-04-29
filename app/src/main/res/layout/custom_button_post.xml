@@ -9,6 +9,7 @@
             android:layout_width="match_parent"
             android:layout_height="8dp"/>
 <Button
+        android:id="@+id/btnPostStatus"
         android:background="@drawable/bg_search"
         android:textColor="#000"
         android:text="Đăng"

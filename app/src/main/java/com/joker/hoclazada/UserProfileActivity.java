@@ -8,6 +8,7 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -16,12 +17,23 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.joker.hoclazada.Ultil.FilePath;
+import com.joker.hoclazada.Ultil.VolleyHelper;
 import com.squareup.picasso.Picasso;
 
 import jp.wasabeef.picasso.transformations.CropCircleTransformation;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import Entity.EntityUserProfile;
+
+import static com.joker.hoclazada.R.menu.profile;
 
 public class UserProfileActivity extends AppCompatActivity {
     private CoordinatorLayout content;
@@ -38,18 +50,69 @@ public class UserProfileActivity extends AppCompatActivity {
     private TabLayout tlUserProfileTabs;
     private Intent mIntent;
     private String selectedImagePath;
-
-
+    private TextView txtFullNameProfile;
+    private TextView txtUserNameProfile;
+    private VolleyHelper volleyHelper;
+    private EntityUserProfile entityUserProfile;
+    private Button btnNhanTin;
+    String id;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_profile);
+        entityUserProfile = new EntityUserProfile();
         addControl();
+        getDataProfile();
         setupTabs();
         addEvent();
     }
 
     private void addEvent() {
+        changeAvtar();
+
+    }
+
+    private void displayInfo() {
+        txtFullNameProfile.setText(entityUserProfile.getFull_name());
+        txtUserNameProfile.setText("@"+ entityUserProfile.getUserName());
+        btnNhanTin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), ChatActivity.class);
+                intent.putExtra("uId",id);
+                startActivity(intent);
+            }
+        });
+
+    }
+
+    private void getDataProfile() {
+        Intent intent = getIntent();
+        id = intent.getStringExtra("uId");
+        volleyHelper = new VolleyHelper(this,getResources().getString(R.string.url));
+        volleyHelper.get("users/"+id, null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+                    JSONObject infoUser = response.getJSONObject("data");
+                    entityUserProfile.setFull_name(infoUser.getString("full_name"));
+                    entityUserProfile.setuID(infoUser.getString("id"));
+                    entityUserProfile.setUserName(infoUser.getString("username"));
+                    displayInfo();
+                    Log.d("getInfoUser",entityUserProfile.toString());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d("getInfoUser",VolleyHelper.checkErrorCode(error)+"");
+            }
+        });
+    }
+
+    private void changeAvtar() {
         ivUserProfilePhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -92,6 +155,9 @@ public class UserProfileActivity extends AppCompatActivity {
         vUserStats = (LinearLayout) findViewById(R.id.vUserStats);
         toolbarProfile = (Toolbar) findViewById(R.id.toolbarProfile);
         tlUserProfileTabs = (TabLayout) findViewById(R.id.tlUserProfileTabs);
+        txtFullNameProfile = (TextView) findViewById(R.id.txtFullNameProfile);
+        btnNhanTin = (Button) findViewById(R.id.btnNhanTin);
+        txtUserNameProfile = (TextView) findViewById(R.id.txtUserNameProfile);
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -134,7 +200,7 @@ public class UserProfileActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.profile,menu);
+        getMenuInflater().inflate(profile,menu);
 
         return super.onCreateOptionsMenu(menu);
 

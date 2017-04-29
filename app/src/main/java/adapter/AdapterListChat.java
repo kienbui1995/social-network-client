@@ -7,7 +7,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 
-import java.util.List;
+import java.util.ArrayList;
+
+import Entity.EntityRoomChat;
 
 /**
  * Created by joker on 2/24/17.
@@ -16,8 +18,8 @@ import java.util.List;
 public class AdapterListChat extends ArrayAdapter{
     Activity context;
     int resource;
-    List objects;
-    public AdapterListChat(Activity context, int resource, List objects) {
+    ArrayList<EntityRoomChat> objects;
+    public AdapterListChat(Activity context, int resource, ArrayList objects) {
         super(context, resource, objects);
         this.context = context;
         this.resource = resource;

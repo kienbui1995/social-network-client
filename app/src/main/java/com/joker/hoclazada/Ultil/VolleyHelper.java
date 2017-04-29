@@ -82,7 +82,15 @@ public class VolleyHelper {
     public void delete(String method, JSONObject jsonRequest,
                        Listener<JSONObject> listener, ErrorListener errorListener){
 
-        JsonObjectRequest objRequest = new JsonObjectRequest(Method.DELETE, contructUrl(method), jsonRequest, listener, errorListener);
+        JsonObjectRequest objRequest = new JsonObjectRequest(Method.DELETE, contructUrl(method), jsonRequest, listener, errorListener){
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> map = new HashMap<>();
+                map.put("Content-Type", "application/json");
+                map.put("token", MainActivity.token);
+                return map;
+            }
+        };
         mRequestQueue.add(objRequest);
     }
 

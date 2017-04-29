@@ -1,6 +1,7 @@
 package adapter;
 
 import android.app.Activity;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -57,9 +58,11 @@ public class AdapterSearch extends ArrayAdapter {
         txtFullNameSearchItem.setText(items.get(position).getFull_name());
         txtUserNameSearchItem.setText("@"+items.get(position).getUsername());
         if (items.get(position).is_followed()){
-            btnFollowUser.setVisibility(View.INVISIBLE);
-        }{
-            btnFollowUser.setText("Follow");
+            btnFollowUser.setBackgroundResource(R.drawable.btn_unfollow);
+            btnFollowUser.setTextColor(Color.parseColor("#FFFFFF"));
+            btnFollowUser.setText("Đã theo dõi");
+        }else {
+            btnFollowUser.setText("Theo dõi");
             btnFollowUser.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

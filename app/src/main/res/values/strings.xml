@@ -63,4 +63,6 @@
     <string name="noticeFacebookSignup">Hệ thống đã liên kết với facebook của bạn
         , mời bạn tạo tài khoản trên hệ thống để có thể đăng nhập bằng tài khoản</string>
     <string name="forgotPassword">Thành công! Một email chứa mã xác nhận đã được gửi tới email của bạn. Mời bạn dùng nó để xác nhận đổi mật khẩu </string>
+    <string name="agree">Đồng ý</string>
+    <string name="disagree">Hủy bỏ</string>
 </resources>

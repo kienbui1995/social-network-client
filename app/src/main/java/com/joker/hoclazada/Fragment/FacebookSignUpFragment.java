@@ -101,8 +101,7 @@ public class FacebookSignUpFragment extends Fragment implements Validator.Valida
                                 Log.d("EntityObj",entityUserProfile.getUserName());
                             }
                         });
-                        startActivity(new Intent(getActivity(),MainActivity.class));
-
+//                        startActivity(new Intent(getActivity(),MainActivity.class));
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }

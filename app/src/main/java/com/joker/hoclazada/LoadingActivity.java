@@ -7,8 +7,13 @@ import com.viksaa.sssplash.lib.activity.AwesomeSplash;
 import com.viksaa.sssplash.lib.cnst.Flags;
 import com.viksaa.sssplash.lib.model.ConfigSplash;
 
+import Entity.EntityUserProfile;
+import io.realm.Realm;
+
 public class LoadingActivity extends AwesomeSplash {
     public static boolean checkLoad = false;
+    Realm realm;
+    public static EntityUserProfile profile;
 
     @Override
     public void initSplash(ConfigSplash configSplash) {
@@ -18,6 +23,11 @@ public class LoadingActivity extends AwesomeSplash {
 //            finish();
 //        }
         //Customize Circular Reveal
+        //Khoi tao realm
+        Realm.init(this);
+        //Khoi tao doi tuong Realm
+        realm = Realm.getDefaultInstance();
+        profile = realm.where(EntityUserProfile.class).findFirst();
         configSplash.setBackgroundColor(R.color.bgToolbar); //any color you want form colors.xml
         configSplash.setAnimCircularRevealDuration(1000); //int ms
         configSplash.setRevealFlagX(Flags.REVEAL_RIGHT);  //or Flags.REVEAL_LEFT

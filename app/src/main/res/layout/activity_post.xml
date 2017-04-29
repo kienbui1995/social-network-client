@@ -8,12 +8,14 @@
         android:background="@color/colorWhite"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        style="@style/AppThemeTextBlack"
         tools:context="com.joker.hoclazada.PostActivity">
     <android.support.design.widget.AppBarLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/bgToolbar">
     <android.support.v7.widget.Toolbar
+            android:theme="@style/AppThemeTextBlack"
             android:id="@+id/idToolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"/>
@@ -53,7 +55,9 @@
                     android:layout_height="30dp"/>
         </LinearLayout>
     </LinearLayout>
+
     <EditText
+            android:id="@+id/edtStatusInput"
             android:textSize="25sp"
             android:layout_marginTop="10dp"
             android:gravity="start"

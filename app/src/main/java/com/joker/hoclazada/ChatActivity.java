@@ -1,24 +1,15 @@
 package com.joker.hoclazada;
 
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
-import com.google.firebase.database.ServerValue;
+import com.google.firebase.database.ValueEventListener;
 
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.media.MediaPlayer;
-import android.media.RingtoneManager;
-import android.net.Uri;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.app.NotificationCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -27,14 +18,9 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
-import com.facebook.AccessToken;
-import com.facebook.FacebookSdk;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.joker.hoclazada.Model.ChatItem;
-import com.joker.hoclazada.Presenter.TrangChu.XuLyDuLieu.PresenterXuLyDuLieu;
-import com.squareup.picasso.Picasso;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -45,10 +31,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.TimeZone;
 
+import Entity.EntityConversation;
 import adapter.ViewHolderChat;
 import hani.momanii.supernova_emoji_library.Actions.EmojIconActions;
 import hani.momanii.supernova_emoji_library.Helper.EmojiconEditText;
 
+import static com.joker.hoclazada.R.layout.item_chat_friend;
 public class ChatActivity extends AppCompatActivity {
     private EmojIconActions emojIcon;
     private ImageView emojiButton;
@@ -62,25 +50,48 @@ public class ChatActivity extends AppCompatActivity {
     private LinearLayoutManager linearLayoutManager;
     private ArrayList<String> chatItems;
     public ChatItem chatItem;
-    String evalue;
-    NotificationCompat.Builder mBuilder;
-    NotificationManager mNotifyMgr;
-    int mNotificationId = 001;
-    String strContent;
     String myId;
+    String uId;
+    String idRoom;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        FacebookSdk.sdkInitialize(getApplicationContext());
         setContentView(R.layout.activity_chat);
-//        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
         mdatabase = FirebaseDatabase.getInstance().getReference();
-        final MediaPlayer mp = MediaPlayer.create(this, R.raw.coin_2);
+        Intent intent = getIntent();
+        uId = intent.getStringExtra("uId") ;
+        mdatabase.child("conversation").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.child(uId+"_"+MainActivity.entityUserProfile.getuID()).exists() == true
+                        && dataSnapshot.child(MainActivity.entityUserProfile.getuID()+"_"+uId).exists() == false)
+                {
+                    idRoom = uId+"_"+MainActivity.entityUserProfile.getuID();
+                    setupChat();
+                    Log.d("idRoom",idRoom.toString());
+                }else if (dataSnapshot.child(uId+"_"+MainActivity.entityUserProfile.getuID()).exists() == false
+                        && dataSnapshot.child(MainActivity.entityUserProfile.getuID()+"_"+uId).exists() ==false){
+                    idRoom = uId+"_"+MainActivity.entityUserProfile.getuID();
+                    setupChat();
+                    Log.d("idRoom",idRoom.toString());
+                }else {
+                    idRoom = MainActivity.entityUserProfile.getuID()+"_"+uId;
+                    setupChat();
+                    Log.d("idRoom",idRoom.toString());
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+        myId = MainActivity.entityUserProfile.getuID();
         addControll();
         setupEmoji();
         setupTabs();
-        addEvent();
-        setupChat();
+
+//        addEvent();
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -97,17 +108,18 @@ public class ChatActivity extends AppCompatActivity {
 
     private void setupChat() {
         chatItem = new ChatItem();
-        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        myId=prefs.getString("fb_id",null);
+//        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+//        myId=prefs.getString("fb_id",null);
         linearLayoutManager = new LinearLayoutManager(this);
 //        linearLayoutManager.setReverseLayout(false);
         linearLayoutManager.setStackFromEnd(true);
         chatItems = new ArrayList<>();
-        final Query query = mdatabase.child("chat/433174420346960KienBui1");
-        mdapter = new FirebaseRecyclerAdapter<ChatItem,ViewHolderChat>(ChatItem.class,R.layout.item_chat_friend,ViewHolderChat.class,query) {
+        Log.d("idRoom1",idRoom.toString());
+        final Query query = mdatabase.child("conversation/"+idRoom);
+        mdapter = new FirebaseRecyclerAdapter<ChatItem,ViewHolderChat>(ChatItem.class, item_chat_friend,ViewHolderChat.class,query) {
             @Override
             protected void populateViewHolder(ViewHolderChat viewHolder, ChatItem model, int position) {
-                Log.d("itemss",chatItems.size()+"");
+//                Log.d("itemss",chatItems.size()+"");
 //                viewHolder.setIsRecyclable(false);
                 if (model.getUserName().equals(myId))
                 {
@@ -115,99 +127,84 @@ public class ChatActivity extends AppCompatActivity {
                     viewHolder.txtMessageContent.setText(model.getContent());
                     viewHolder.txtMessageContent.setBackgroundResource(R.drawable.bg_item_chat_round_me);
                     viewHolder.txtMessageContent.setPadding(40,20,20,40);
-                    Picasso.with(getApplicationContext())
-                            .load(prefs.getString("fb_profileURL",null))
-                            .into(viewHolder.imgAvartarChat);
+//                    Picasso.with(getApplicationContext())
+//                            .load(prefs.getString("fb_profileURL",null))
+//                            .into(viewHolder.imgAvartarChat);
                 }
                 else {
                     chatItem=model;
                     viewHolder.txtDate.setText(convertTime(Long.valueOf(model.getTimeStamp().toString())));
                     viewHolder.txtMessageContent.setText(model.getContent());
 //                    viewHolder.txtMessageContent.setBackgroundResource(R.drawable.bg_item_chat_round_me);
-                    Picasso.with(getApplicationContext())
-                            .load("https://graph.facebook.com/" + model.getUserName() + "/picture?type=small")
-                            .into(viewHolder.imgAvartarChat);
+//                    Picasso.with(getApplicationContext())
+//                            .load("https://graph.facebook.com/" + model.getUserName() + "/picture?type=small")
+//                            .into(viewHolder.imgAvartarChat);
                 }
 //                Log.d("ModelArray",chatItem.getUserName()+" "+ prefs.getString("fb_id", null));
             }
 
 
-//            @Override
-//            public int getItemViewType(int position) {
-//                    Log.d("sizeArray",chatItem.toString()+" "+ prefs.getString("fb_id", null));
-////                String id = chatItems.get(position).getUserName();
-//                if (chatItem.getUserName() == null)
-//                {
-//                    return R.layout.item_chat_friend;
-//                }else {
-//                    if (Long.valueOf(prefs.getString("fb_id", null)) == Long.valueOf(prefs.getString("fb_id", null))) {
-//                        return R.layout.item_chat_me;
-//                    } else
-//                        return item_chat_friend;
-//                }
-//            }
-
         };
-        mdatabase.child("chat/433174420346960KienBui1").limitToLast(1).addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                if ((dataSnapshot.child("userName").getValue().toString()).equals(prefs.getString("fb_id",null)))
-                {
-                    return;
-                }
-                strContent = dataSnapshot.child("content").getValue().toString();
-                mBuilder =
-                        (NotificationCompat.Builder) new NotificationCompat.Builder(getApplicationContext())
-                                .setSmallIcon(R.drawable.ic_send_light)
-                                .setContentTitle(dataSnapshot.child("userName").getValue().toString())
-                                .setContentText(strContent);
-                long[] pattern = {500,500,500};
-                mBuilder.setVibrate(pattern);
-                Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-                mBuilder.setSound(alarmSound);
-                mNotifyMgr =
-                        (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-                mNotifyMgr.notify(mNotificationId, mBuilder.build());
-                Intent resultIntent = new Intent(getApplicationContext(), ChatItem.class);
-//                resultIntent.putExtra("content", strContent);
-
-                PendingIntent resultPendingIntent =
-                        PendingIntent.getActivity(
-                                getApplicationContext(),
-                                0,
-                                resultIntent,
-                                PendingIntent.FLAG_UPDATE_CURRENT
-                        );
-                // Set content intent;
-                mBuilder.setContentIntent(resultPendingIntent);
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
+//        mdatabase.child("chat/433174420346960KienBui1").limitToLast(1).addChildEventListener(new ChildEventListener() {
+//            @Override
+//            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+//                if ((dataSnapshot.child("userName").getValue().toString()).equals(prefs.getString("fb_id",null)))
+//                {
+//                    return;
+//                }
+//                strContent = dataSnapshot.child("content").getValue().toString();
+//                mBuilder =
+//                        (NotificationCompat.Builder) new NotificationCompat.Builder(getApplicationContext())
+//                                .setSmallIcon(R.drawable.ic_send_light)
+//                                .setContentTitle(dataSnapshot.child("userName").getValue().toString())
+//                                .setContentText(strContent);
+//                long[] pattern = {500,500,500};
+//                mBuilder.setVibrate(pattern);
+//                Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+//                mBuilder.setSound(alarmSound);
+//                mNotifyMgr =
+//                        (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+//                mNotifyMgr.notify(mNotificationId, mBuilder.build());
+//                Intent resultIntent = new Intent(getApplicationContext(), ChatItem.class);
+////                resultIntent.putExtra("content", strContent);
+//
+//                PendingIntent resultPendingIntent =
+//                        PendingIntent.getActivity(
+//                                getApplicationContext(),
+//                                0,
+//                                resultIntent,
+//                                PendingIntent.FLAG_UPDATE_CURRENT
+//                        );
+//                // Set content intent;
+//                mBuilder.setContentIntent(resultPendingIntent);
+//            }
+//
+//            @Override
+//            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+//
+//            }
+//
+//            @Override
+//            public void onChildRemoved(DataSnapshot dataSnapshot) {
+//
+//            }
+//
+//            @Override
+//            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+//
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//
+//            }
+//        });
 
         mdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             @Override
             public void onItemRangeChanged(int positionStart, int itemCount) {
                 super.onItemRangeChanged(positionStart, itemCount);
-                Toast.makeText(ChatActivity.this, "Đã thay đổi nội dung", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(ChatActivity.this, "Đã thay đổi nội dung", Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -228,11 +225,12 @@ public class ChatActivity extends AppCompatActivity {
         rcvMessage.setAdapter(mdapter);
     }
 
-    private void addEvent() {
-        submitChat();
-    }
+//    private void addEvent() {
+//        submitChat();
+//    }
 
     private void submitChat() {
+
         String content = edtNewMessage.getText().toString().trim();
         if (TextUtils.isEmpty(content))
         {
@@ -240,22 +238,25 @@ public class ChatActivity extends AppCompatActivity {
             return;
         }
 
-        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        PresenterXuLyDuLieu presenterXuLyDuLieu = new PresenterXuLyDuLieu(this);
-        AccessToken accessToken = presenterXuLyDuLieu.LayTenNguoiDungFacebook();
-        final String uId = accessToken.getUserId();
-        HashMap<String,Object> timeFirebase = new HashMap<>();
-        timeFirebase.put("date", ServerValue.TIMESTAMP);
-        Log.d("aaaa",timeFirebase.get("date").toString());
-        Long tsLong = System.currentTimeMillis()/1000;
-        final String timeStamp1 = tsLong.toString();
-        ChatItem chatItem = new ChatItem(uId, content);
+//        HashMap<String,Object> timeFirebase = new HashMap<>();
+//        timeFirebase.put("date", ServerValue.TIMESTAMP);
+//        Log.d("aaaa",timeFirebase.get("date").toString());
+//        Long tsLong = System.currentTimeMillis()/1000;
+//        final String timeStamp1 = tsLong.toString();
+        ChatItem chatItem = new ChatItem(myId, content);
         Map<String, Object> chatValues = chatItem.toMap();
         HashMap<String, Object> childUpdate = new HashMap<>();
-        String key = mdatabase.child("chat").child("433174420346960KienBui1").push().getKey();
-        childUpdate.put("/chat/" + "433174420346960"+ "KienBui1/" + key , chatValues);
+//        String key = mdatabase.child("user").child("433174420346960KienBui1").push().getKey();
+//        childUpdate.put("//" + "433174420346960"+ "KienBui1/" +  , chatValues);
+        EntityConversation entityConversation = new EntityConversation(idRoom,myId,uId,content);
+        Map<String,Object> conversation =entityConversation.toMap();
+        mdatabase.child("user").child(uId).child("conversation").child(idRoom).setValue(conversation);
+        mdatabase.child("user").child(myId).child("conversation").child(idRoom).setValue(conversation);
+        String key = mdatabase.child("conversation").child(idRoom).push().getKey();
+        childUpdate.put("conversation/"+idRoom+"/" + key,chatValues);
+//        mdatabase.child("user").child(uId).child("conversation").child(uId+"_"+MainActivity.entityUserProfile.getuID()).setValue();
         mdatabase.updateChildren(childUpdate);
-        edtNewMessage.setText(prefs.getString("profile_pic",null));
+        edtNewMessage.setText("");
     }
 
     private void addControll() {

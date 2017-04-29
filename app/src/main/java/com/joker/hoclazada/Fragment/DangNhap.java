@@ -67,7 +67,7 @@ public class DangNhap extends Fragment implements View.OnClickListener,Validator
     Validator validator;
     @Length(min = 6,max=15,message = "Tên đăng nhập phải từ 6 đến 15 kí tự",trim = true)
     private DeleteEditText edtUsername;
-    @Password(scheme = Password.Scheme.ANY,min = 7)
+    @Password(scheme = Password.Scheme.ANY,min = 6)
     private PasswordEditText edtPassword;
     private Button btnLogin;
     private Realm realm;

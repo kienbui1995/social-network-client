@@ -6,6 +6,9 @@
     <item android:title="Profile"
         android:id="@+id/itProfile"
             android:icon="@drawable/ic_profile"/>
+    <item android:title="Follow"
+        android:id="@+id/itFollow"
+            android:icon="@drawable/ic_follow"/>
 <item android:title="Groups"
       android:icon="@drawable/ic_group"
       android:id="@+id/itGroup"/>

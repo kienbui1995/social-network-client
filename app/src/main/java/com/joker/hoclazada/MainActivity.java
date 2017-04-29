@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
     FragmentManager manager;
     FragmentTransaction transaction;
     DatabaseReference databaseReference;
-    EntityUserProfile entityUserProfile;
+    public static EntityUserProfile entityUserProfile;
     public static String token = null;
     Realm realm;
     @Override
@@ -101,7 +101,29 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
         tabHost.setupWithViewPager(viewPager);
         viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
         viewPager.setAdapter(viewPagerAdapter);
+        tabHost.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                if (tab.getPosition()==0)
+                {
+//                    PagerAdapter pagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
+//                    viewPager.setAdapter(pagerAdapter);
+//                    // when notify then set manually current position.
+//                    viewPager.setCurrentItem(0);
+//                    pagerAdapter.notifyDataSetChanged();
+                }
+            }
 
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
         //DrawerLayout
         actionBarDrawerToggle = new ActionBarDrawerToggle(this,drawerLayout,R.string.open,R.string.close);
         drawerLayout.addDrawerListener(actionBarDrawerToggle);
@@ -157,7 +179,9 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
 //                            Toast.makeText(MainActivity.this, "Khong co fragment", Toast.LENGTH_SHORT).show();
 //                        }
                     case R.id.itProfile:
-//                        startActivity(new Intent(getApplicationContext(),UserProfileActivity.class));
+//                                                startActivity(new Intent(getApplicationContext(),UserProfileActivity.class));
+                    case R.id.itFollow:
+                        startActivity(new Intent(getApplicationContext(),FollowActivity.class));
                     case R.id.itLearing:
                         break;
                     case R.id.itGroup:

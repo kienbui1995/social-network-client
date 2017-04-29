@@ -7,27 +7,36 @@ import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.joker.hoclazada.Ultil.FilePath;
 import com.joker.hoclazada.Ultil.FirebaseHelper;
+import com.joker.hoclazada.Ultil.VolleyHelper;
 import com.squareup.picasso.Picasso;
 
+import org.json.JSONObject;
+
 import java.io.File;
+import java.util.HashMap;
 
 public class PostActivity extends AppCompatActivity {
     private LinearLayout activityPost;
@@ -37,6 +46,8 @@ public class PostActivity extends AppCompatActivity {
     private ImageView imgPost;
     private Intent mIntent;
     private StorageReference mStorageReference;
+    private EditText edtStatusInput;
+
     String selectedImagePath;
 
 
@@ -48,7 +59,7 @@ public class PostActivity extends AppCompatActivity {
         addControl();
         setupTabs();
         addEvent();
-        LoadImage();
+//        LoadImage();
 
 
     }
@@ -116,6 +127,7 @@ public class PostActivity extends AppCompatActivity {
         btnPrivacy = (Button) findViewById(R.id.btnPrivacy);
         btnSelectImage = (Button) findViewById(R.id.btnSelectImage);
         imgPost = (ImageView) findViewById(R.id.imgPost);
+        edtStatusInput = (EditText) findViewById(R.id.edtStatusInput);
         mStorageReference = FirebaseStorage.getInstance().getReference();
     }
     private void UploadFile(String selectedImagePath){
@@ -165,15 +177,42 @@ public class PostActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.postbai,menu);
+//        menu.findItem(R.id.itPost).setTitle(Html.fromHtml("<font color='#ff3824'>Đăng</font>"));
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.itPost){
-            finish();
+            if (TextUtils.isEmpty(edtStatusInput.getText()))
+            {
+                edtStatusInput.setError("Xin mời bạn nhập nội dung");
+            }else {
+                PostStatus();
+            }
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void PostStatus() {
+        final ProgressDialog progressDialog;
+        progressDialog = ProgressDialog.show(this,"","Đang cập nhật trạng thái của bạn",true);
+        VolleyHelper volleyHelper = new VolleyHelper(this,getResources().getString(R.string.url));
+        HashMap<String,String> parram = new HashMap<>();
+        parram.put("message",edtStatusInput.getText().toString());
+        volleyHelper.postHeader("users/" + MainActivity.entityUserProfile.getuID() + "/statuses", new JSONObject(parram), new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                progressDialog.dismiss();
+                Toast.makeText(PostActivity.this, "Cập nhật thành công", Toast.LENGTH_SHORT).show();
+                Log.d("postStatus",response.toString());
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d("postStatus",VolleyHelper.checkErrorCode(error)+"");
+            }
+        });
     }
 
     @Override
