@@ -11,17 +11,25 @@ public class EntityStatus {
     private String content;
     private long createdTime;
     private String image;
+    private boolean isLike;
+    private int status;
+    private int numberLike;
+    private int numberComment;
 
     public EntityStatus() {
     }
 
-    public EntityStatus(int idStatus, int uId, String nameId, String content, long createdTime, String image) {
+    public EntityStatus(int idStatus, int uId, String nameId, String content, long createdTime, String image, boolean isLike, int status, int numberLike, int numberComment) {
         this.idStatus = idStatus;
         this.uId = uId;
         this.nameId = nameId;
         this.content = content;
         this.createdTime = createdTime;
         this.image = image;
+        this.isLike = isLike;
+        this.status = status;
+        this.numberLike = numberLike;
+        this.numberComment = numberComment;
     }
 
     public int getIdStatus() {
@@ -70,5 +78,37 @@ public class EntityStatus {
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public boolean isLike() {
+        return isLike;
+    }
+
+    public void setLike(boolean like) {
+        isLike = like;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
+
+    public int getNumberLike() {
+        return numberLike;
+    }
+
+    public void setNumberLike(int numberLike) {
+        this.numberLike = numberLike;
+    }
+
+    public int getNumberComment() {
+        return numberComment;
+    }
+
+    public void setNumberComment(int numberComment) {
+        this.numberComment = numberComment;
     }
 }

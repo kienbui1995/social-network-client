@@ -193,7 +193,6 @@ public class PostActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-
     private void PostStatus() {
         final ProgressDialog progressDialog;
         progressDialog = ProgressDialog.show(this,"","Đang cập nhật trạng thái của bạn",true);
@@ -204,7 +203,8 @@ public class PostActivity extends AppCompatActivity {
             @Override
             public void onResponse(JSONObject response) {
                 progressDialog.dismiss();
-                Toast.makeText(PostActivity.this, "Cập nhật thành công", Toast.LENGTH_SHORT).show();
+                Toast.makeText(PostActivity.this, "Cập nhật thành công", Toast.LENGTH_LONG).show();
+                finish();
                 Log.d("postStatus",response.toString());
             }
         }, new Response.ErrorListener() {

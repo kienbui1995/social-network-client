@@ -83,15 +83,15 @@
 
                 </android.support.design.widget.CollapsingToolbarLayout>
 
-                <android.support.design.widget.TabLayout
-                        android:id="@+id/tabHost"
+                <april.yun.JPagerSlidingTabStrip2
+                        android:id="@+id/tab_buttom"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="47dp"
                         app:tabTextColor="@color/colorGrey"
                         app:tabTextAppearance="@style/capFalse"
                         app:tabMode="fixed">
 
-                </android.support.design.widget.TabLayout>
+                </april.yun.JPagerSlidingTabStrip2>
 
 
             </android.support.design.widget.AppBarLayout>
@@ -110,7 +110,6 @@
             </FrameLayout>
 
         </android.support.design.widget.CoordinatorLayout>
-
     </LinearLayout>
     <android.support.design.widget.NavigationView
             android:id="@+id/nvMenu"

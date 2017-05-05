@@ -62,6 +62,14 @@ public class AdapterFollowingList extends ArrayAdapter {
     }
 
     private void addEvent(final int position) {
+        imgAvatarFollow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context, UserProfileActivity.class);
+                intent.putExtra("uId",items.get(position).getId());
+                context.startActivity(intent);
+            }
+        });
         txtFullNameFollow.setText(items.get(position).getFull_name());
         txtFullNameFollow.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -71,7 +79,7 @@ public class AdapterFollowingList extends ArrayAdapter {
                 context.startActivity(intent);
             }
         });
-        txtUserNameFollow.setText(items.get(position).getUsername());
+        txtUserNameFollow.setText("@"+items.get(position).getUsername());
         btnMessage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

@@ -73,8 +73,6 @@ public class UserProfileActivity extends AppCompatActivity {
     }
 
     private void displayInfo() {
-        txtFullNameProfile.setText(entityUserProfile.getFull_name());
-        txtUserNameProfile.setText("@"+ entityUserProfile.getUserName());
         btnNhanTin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -89,27 +87,34 @@ public class UserProfileActivity extends AppCompatActivity {
     private void getDataProfile() {
         Intent intent = getIntent();
         id = intent.getStringExtra("uId");
-        volleyHelper = new VolleyHelper(this,getResources().getString(R.string.url));
-        volleyHelper.get("users/"+id, null, new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                try {
-                    JSONObject infoUser = response.getJSONObject("data");
-                    entityUserProfile.setFull_name(infoUser.getString("full_name"));
-                    entityUserProfile.setuID(infoUser.getString("id"));
-                    entityUserProfile.setUserName(infoUser.getString("username"));
-                    displayInfo();
-                    Log.d("getInfoUser",entityUserProfile.toString());
-                } catch (JSONException e) {
-                    e.printStackTrace();
+//        Log.d("id",id.toString());
+        if (id == null) {
+            txtFullNameProfile.setText(MainActivity.entityUserProfile.getFull_name());
+            txtUserNameProfile.setText("@" + MainActivity.entityUserProfile.getUserName());
+            btnNhanTin.setVisibility(View.GONE);
+            btnFollow.setVisibility(View.GONE);
+        } else {
+            volleyHelper = new VolleyHelper(this, getResources().getString(R.string.url));
+            volleyHelper.get("users/" + id, null, new Response.Listener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject response) {
+                    try {
+                        JSONObject infoUser = response.getJSONObject("data");
+                        txtFullNameProfile.setText(infoUser.getString("full_name"));
+                        txtUserNameProfile.setText("@" + infoUser.getString("username"));
+                        displayInfo();
+                        Log.d("getInfoUser", entityUserProfile.toString());
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                 }
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.d("getInfoUser",VolleyHelper.checkErrorCode(error)+"");
-            }
-        });
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Log.d("getInfoUser", VolleyHelper.checkErrorCode(error) + "");
+                }
+            });
+        }
     }
 
     private void changeAvtar() {
@@ -123,7 +128,7 @@ public class UserProfileActivity extends AppCompatActivity {
     }
 
     private void setupTabs() {
-        toolbarProfile.setTitle("Hoài Nam");
+        toolbarProfile.setTitle(MainActivity.entityUserProfile.getFull_name());
         setSupportActionBar(toolbarProfile);
         if (getSupportActionBar() != null){
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);

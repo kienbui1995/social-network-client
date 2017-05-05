@@ -1,5 +1,7 @@
 package com.joker.hoclazada.Fragment;
 
+import com.google.firebase.iid.FirebaseInstanceId;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -389,7 +391,7 @@ public class DangNhap extends Fragment implements View.OnClickListener,Validator
     public void onValidationSucceeded() {
         {
             //Dang nhap thu cong
-            String username = edtUsername.getText().toString();
+            String username = edtUsername.getText().toString().trim();
             String password = SystemHelper.MD5(edtPassword.getText().toString());
             String device = deviceUltil.getImei();
             entityUserProfile = new EntityUserProfile();
@@ -400,7 +402,7 @@ public class DangNhap extends Fragment implements View.OnClickListener,Validator
             HashMap<String,String> params = new HashMap<String, String>();
             params.put("username",username);
             params.put("password",password);
-            params.put("device",device);
+            params.put("device", FirebaseInstanceId.getInstance().getToken().toString());
             Log.d("HashMapX",new JSONObject(params).toString());
             volleyHelper.post("login", new JSONObject(params), new Response.Listener<JSONObject>() {
                 @Override

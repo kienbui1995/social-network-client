@@ -53,6 +53,8 @@
         </activity>
         <activity android:name=".FollowActivity">
         </activity>
+        <activity android:name=".DemoActivity">
+        </activity>
     </application>
 
 </manifest>

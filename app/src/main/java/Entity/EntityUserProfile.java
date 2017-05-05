@@ -128,6 +128,6 @@ public class EntityUserProfile extends RealmObject {
 
     @Override
     public String toString() {
-        return getFirst_name()+ " " + getToken()+ " " +getUserName() ;
+        return getFull_name()+ " " + getToken()+ " " +getUserName() + " "+getEmail() + " " + getuID() ;
     }
 }

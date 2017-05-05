@@ -6,79 +6,92 @@
               android:layout_marginTop="5dp"
               android:layout_marginBottom="5dp"
               android:layout_width="match_parent"
-              android:layout_height="match_parent">
+              android:layout_height="wrap_content">
 <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
- <ImageView
-         android:src="@drawable/avatar1"
-         android:layout_width="50dp"
-         android:layout_height="50dp"/>
+
+    <ImageView
+            android:layout_marginTop="8dp"
+            android:layout_marginLeft="10dp"
+            android:src="@drawable/avatar1"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:id="@+id/imageView5"/>
+
     <LinearLayout
             android:paddingLeft="15dp"
             android:orientation="vertical"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
         <TextView
+                android:id="@+id/txtFullNameComment"
                 android:paddingTop="6dp"
                 android:textStyle="bold"
-                android:text="Hoài Nam"
-                android:textSize="15sp"
+                android:text=""
+                android:textSize="13sp"
                 android:textColor="#000"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
         <TextView
+                android:id="@+id/txtContentComment"
                 android:textColor="#000"
-                android:text="Chào các bạn.Các bạn có thấy mình comment không?"
+                android:text=""
                 android:textStyle="normal"
+                android:textSize="13dp"
                 android:paddingTop="4dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
         <LinearLayout
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="5dp"
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
             <TextView
-                    android:text="3 giờ trước"
+                    android:layout_gravity="start"
+                    android:textSize="10dp"
+                    android:id="@+id/txtTimeComment"
+                    android:text=""
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
-            <TextView
-                    android:textStyle="bold"
-                    android:textColor="@color/colorGrey"
-                    android:layout_marginLeft="10dp"
-                    android:textSize="25sp"
-                    android:layout_marginRight="10dp"
-                    android:text="."
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-            <TextView
-                    android:text="Love"
-                    android:textColor="#fa3d56"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-            <TextView
-                    android:textStyle="bold"
-                    android:textColor="@color/colorGrey"
-                    android:layout_marginLeft="10dp"
-                    android:textSize="25sp"
-                    android:layout_marginRight="10dp"
-                    android:text="."
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-            <ImageView
-                    android:layout_marginTop="3dp"
-                    android:layout_gravity="center_vertical"
-                    android:src="@drawable/heart"
-                    android:id="@+id/imgNumberLove"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-            <TextView
-                    android:textColor="@color/bgToolbar"
-                    android:text="20"
-                    android:layout_marginLeft="10dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+            <!--<TextView-->
+                    <!--android:textStyle="bold"-->
+                    <!--android:textColor="@color/colorGrey"-->
+                    <!--android:layout_marginLeft="10dp"-->
+                    <!--android:textSize="25sp"-->
+                    <!--android:layout_marginRight="10dp"-->
+                    <!--android:text="."-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"/>-->
+            <!--<TextView-->
+                    <!--android:text="Love"-->
+                    <!--android:textColor="#fa3d56"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"/>-->
+            <!--<TextView-->
+                    <!--android:textStyle="bold"-->
+                    <!--android:textColor="@color/colorGrey"-->
+                    <!--android:layout_marginLeft="10dp"-->
+                    <!--android:textSize="25sp"-->
+                    <!--android:layout_marginRight="10dp"-->
+                    <!--android:text="."-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"/>-->
+            <!--<ImageView-->
+                    <!--android:layout_marginTop="3dp"-->
+                    <!--android:layout_gravity="center_vertical"-->
+                    <!--android:src="@drawable/heart"-->
+                    <!--android:id="@+id/imgNumberLove"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"/>-->
+            <!--<TextView-->
+                    <!--android:textColor="@color/bgToolbar"-->
+                    <!--android:text="20"-->
+                    <!--android:layout_marginLeft="10dp"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"/>-->
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <Button
+            android:layout_weight="1"
+            android:drawableLeft="@drawable/ic_keyboard_arrow_left_grey_500_24dp"
+            android:text="Danh sách nhưng người đã thích bài viết"
+            android:textAllCaps="false"
+            android:textColor="#000"
+            android:background="@drawable/btn_style"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/btnBackToComment"/>
+    <ListView
+            android:layout_weight="9"
+            android:background="@drawable/btn_style"
+            android:id="@+id/lvListLike"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+    </ListView>
+</LinearLayout>

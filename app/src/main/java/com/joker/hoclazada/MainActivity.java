@@ -4,12 +4,12 @@ import com.google.firebase.database.DatabaseReference;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.MenuItemCompat;
@@ -35,17 +35,23 @@ import com.facebook.FacebookSdk;
 import com.joker.hoclazada.Ultil.PutParamFacebook;
 import com.joker.hoclazada.Ultil.VolleyHelper;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
 
 import Entity.EntityUserProfile;
+import april.yun.JPagerSlidingTabStrip2;
+import april.yun.other.JTabStyleDelegate;
 import io.realm.Realm;
+
+import static april.yun.other.JTabStyleBuilder.STYLE_ROUND;
 
 public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOffsetChangedListener {
     private Toolbar toolbar;
-    private TabLayout tabHost;
+//    private TabLayout tabHost;
     private ViewPager viewPager;
+    private JPagerSlidingTabStrip2 tabButtom;
     ViewPagerAdapter viewPagerAdapter;
     private FrameLayout content;
     private DrawerLayout drawerLayout;
@@ -63,6 +69,7 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
     FragmentTransaction transaction;
     DatabaseReference databaseReference;
     public static EntityUserProfile entityUserProfile;
+    private EntityUserProfile profile;
     public static String token = null;
     Realm realm;
     @Override
@@ -74,14 +81,16 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
         Realm.init(this);
         //Khoi tao doi tuong Realm
         realm = Realm.getDefaultInstance();
+        getInfoUser();
         entityUserProfile = realm.where(EntityUserProfile.class).findFirst();
         token= entityUserProfile.getToken();
-
-        tabHost = (TabLayout) findViewById(R.id.tabHost);
+        Log.d("respone1",entityUserProfile.toString());
+//        tabHost = (TabLayout) findViewById(R.id.tabHost);
         viewPager = (ViewPager) findViewById(R.id.viewPager);
+        tabButtom = (JPagerSlidingTabStrip2) findViewById(R.id.tab_buttom);
         toolbar = (Toolbar) findViewById(R.id.toolbarA);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
-        content = (FrameLayout) findViewById(R.id.content);
+//        content = (FrameLayout) findViewById(R.id.content);
 //        epMenu = (ExpandableListView) findViewById(R.id.epMenu);
         appBarLayout = (AppBarLayout) findViewById(R.id.appBar);
         btnPostStatus = (Button) findViewById(R.id.btnPost);
@@ -89,6 +98,9 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
         collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapToolbar);
         frContent = (LinearLayout) findViewById(R.id.frContent);
         nvMenu = (NavigationView) findViewById(R.id.nvMenu);
+        View header = nvMenu.getHeaderView(0);
+        TextView full_name = (TextView) header.findViewById(R.id.txtFullNameNavibar);
+        full_name.setText(entityUserProfile.getFull_name());
 //        TelephonyManager telephonyManager = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE);
 //        Log.d("imei",telephonyManager.getDeviceId().toString());
 
@@ -98,32 +110,21 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
         toolbar.setTitle("");
         setSupportActionBar(toolbar);
         //Tabhost
-        tabHost.setupWithViewPager(viewPager);
-        viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
+//        tabHost.setupWithViewPager(viewPager);
+        int[] mSelectors = new int[] { R.drawable.tab1, R.drawable.tab2, R.drawable.tab3, R.drawable.tab4 };
+        setupStrip(tabButtom.getTabStyleDelegate(), STYLE_ROUND);
+//        tabButtom.getTabStyleDelegate()
+//                .setFrameColor(Color.TRANSPARENT)
+//                .setIndicatorColor(Color.TRANSPARENT)
+//                .setTabTextColor(R.color.colorWhite)
+////                .setIndicatorHeight(3)
+////                .setTabIconGravity(Gravity.)//图标显示在top
+////                .setIndicatorHeight(-8)//设置的高小于0 会显示在tab顶部 否则底部
+//                .setDividerColor(Color.TRANSPARENT);
+        viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(),mSelectors);
         viewPager.setAdapter(viewPagerAdapter);
-        tabHost.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                if (tab.getPosition()==0)
-                {
-//                    PagerAdapter pagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
-//                    viewPager.setAdapter(pagerAdapter);
-//                    // when notify then set manually current position.
-//                    viewPager.setCurrentItem(0);
-//                    pagerAdapter.notifyDataSetChanged();
-                }
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-
-            }
-        });
+        tabButtom.bindViewPager(viewPager);
+        tabButtom.setPromptNum(1,23);
         //DrawerLayout
         actionBarDrawerToggle = new ActionBarDrawerToggle(this,drawerLayout,R.string.open,R.string.close);
         drawerLayout.addDrawerListener(actionBarDrawerToggle);
@@ -214,6 +215,32 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
 
     }
 
+    private void getInfoUser() {
+        profile = realm.where(EntityUserProfile.class).findFirst();
+        VolleyHelper volleyHelper = new VolleyHelper(this,getResources().getString(R.string.url));
+        volleyHelper.get("users/" + profile.getuID(), null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+                    JSONObject jsonObject = response.getJSONObject("data");
+                    realm.beginTransaction();
+                    profile.setFull_name(jsonObject.getString("full_name"));
+                    realm.commitTransaction();
+//                    full_name.setText(profile.getFull_name().toString());
+                    Log.d("respone",profile.toString());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        });
+    }
+
     @Override
     public boolean onCreateOptionsMenu(final Menu menu) {
         getMenuInflater().inflate(R.menu.trangchu,menu);
@@ -253,7 +280,7 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
         }else if (vitri == R.id.itTrangCaNhan){
             startActivity(new Intent(this,UserProfileActivity.class));
         }else if (vitri==R.id.thongBao){
-//            startActivity(new Intent(this,RtcActivity.class));
+            startActivity(new Intent(this,DemoActivity.class));
         }else if (vitri == R.id.it_search){
             startActivity(new Intent(this,SearchActivity.class));
             overridePendingTransition(R.anim.slide_out_right,R.anim.slide_in_left);
@@ -305,6 +332,23 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
         Intent intent = new Intent(Intent.ACTION_MAIN);
         intent.addCategory(Intent.CATEGORY_HOME);
         startActivity(intent);
+    }
+    private void setupStrip(JTabStyleDelegate tabStyleDelegate, int type) {
+        tabStyleDelegate.setJTabStyle(type)
+                .setShouldExpand(true)
+                .setFrameColor(Color.TRANSPARENT)
+//                .setTabTextSize(13)
+                .setTextColor(Color.WHITE,Color.GRAY)
+                //.setTextColor(R.drawable.tabstripbg)
+                .setDividerColor(Color.TRANSPARENT)
+                .setDividerPadding(0)
+                .setUnderlineColor(Color.parseColor("#3045C01A"))
+                .setUnderlineHeight(10);
+//                .setIndicatorColor(Color.parseColor("#7045C01A"))
+//                .setIndicatorHeight(4);
+    }
+    private int getDimen(int dimen) {
+        return (int) getResources().getDimension(dimen);
     }
 
 }

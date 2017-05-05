@@ -10,20 +10,24 @@ import com.joker.hoclazada.Fragment.TrangChu;
 import java.util.ArrayList;
 import java.util.List;
 
+import april.yun.ISlidingTabStrip;
+
 /**
  * Created by joker on 2/9/17.
  */
 
-public class ViewPagerAdapter  extends FragmentPagerAdapter{
+public class ViewPagerAdapter  extends FragmentPagerAdapter implements ISlidingTabStrip.IconTabProvider{
     List<Fragment> listFragment = new ArrayList<Fragment>();
     List<String> listName = new ArrayList<String>();
-    public ViewPagerAdapter(FragmentManager fm) {
+    private int[] mSelectors;
+    public ViewPagerAdapter(FragmentManager fm, int[] mSelectors) {
         super(fm);
         listFragment.add(new TrangChu());
         listFragment.add(new TinNhan());
 
         listName.add("Trang chủ");
         listName.add("Tin nhắn");
+        this.mSelectors = mSelectors;
     }
 
     @Override
@@ -40,4 +44,16 @@ public class ViewPagerAdapter  extends FragmentPagerAdapter{
     public CharSequence getPageTitle(int position) {
         return listName.get(position);
     }
+
+    @Override
+    public int[] getPageIconResIds(int position) {
+        return null;
+    }
+
+    @Override
+    public int getPageIconResId(int position) {
+        return 0;
+    }
+
+
 }

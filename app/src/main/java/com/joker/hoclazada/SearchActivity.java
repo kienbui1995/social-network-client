@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -49,6 +48,8 @@ public class SearchActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
+        volleyHelper = new VolleyHelper(this,getResources().getString(R.string.url));
+        result = new ArrayList<>();
         addControll();
         addEvent();
     }
@@ -81,6 +82,7 @@ public class SearchActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                result.clear();
                 searchAction(charSequence);
             }
 
@@ -93,27 +95,31 @@ public class SearchActivity extends AppCompatActivity {
 
     private void searchAction(CharSequence query) {
 
-        result = new ArrayList<>();
-        volleyHelper = new VolleyHelper(this,getResources().getString(R.string.url));
         volleyHelper.get("find_user?name="+ query, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 try {
                     JSONArray jsonArray = response.getJSONArray("data");
-                    Log.d("findUser",jsonArray.get(0).toString());
-                    for (int i =0; i< jsonArray.length();i++)
-                    {
-                        JSONObject jsonObject = (JSONObject) jsonArray.get(i);
-                        EntityUserSearch item = new EntityUserSearch();
-                        item.setId(jsonObject.getString("id"));
-                        item.setUsername(jsonObject.getString("username"));
-                        item.setAvatar(jsonObject.getString("avatar"));
-                        item.setFull_name(jsonObject.getString("full_name"));
-                        item.setIs_followed(jsonObject.getBoolean("is_followed"));
-                        result.add(item);
-                        adapterSearch.notifyDataSetChanged();
+                    if(!response.getJSONArray("data").equals("null")) {
+                        //Value is not null
+                        for (int i =0; i< jsonArray.length();i++)
+                        {
+                            JSONObject jsonObject = (JSONObject) jsonArray.get(i);
+                            EntityUserSearch item = new EntityUserSearch();
+                            item.setId(jsonObject.getString("id"));
+                            item.setUsername(jsonObject.getString("username"));
+                            item.setAvatar(jsonObject.getString("avatar"));
+                            item.setFull_name(jsonObject.getString("full_name"));
+                            item.setIs_followed(jsonObject.getBoolean("is_followed"));
+                            result.add(item);
+                            adapterSearch.notifyDataSetChanged();
+                        }
+                    }else {
+                        System.exit(0);
                     }
-                Log.d("result",result.size()+"");
+//                    Log.d("findUser",jsonArray.get(0).toString());
+
+//                Log.d("result",result.size()+"");
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -121,7 +127,7 @@ public class SearchActivity extends AppCompatActivity {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.d("findUser",VolleyHelper.checkErrorCode(error)+"");
+//                Log.d("findUser",VolleyHelper.checkErrorCode(error)+"");
             }
         });
         adapterSearch = new AdapterSearch(this,R.layout.custom_search_result,result);
