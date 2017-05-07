@@ -102,6 +102,7 @@ public class UserProfileActivity extends AppCompatActivity {
                         JSONObject infoUser = response.getJSONObject("data");
                         txtFullNameProfile.setText(infoUser.getString("full_name"));
                         txtUserNameProfile.setText("@" + infoUser.getString("username"));
+                        toolbarProfile.setTitle(infoUser.getString("full_name"));
                         displayInfo();
                         Log.d("getInfoUser", entityUserProfile.toString());
                     } catch (JSONException e) {

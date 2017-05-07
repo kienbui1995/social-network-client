@@ -2,7 +2,9 @@ package adapter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Point;
+import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
@@ -19,6 +21,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
@@ -26,6 +29,8 @@ import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.bumptech.glide.Glide;
+import com.joker.hoclazada.ImagePostActivity;
 import com.joker.hoclazada.MainActivity;
 import com.joker.hoclazada.R;
 import com.joker.hoclazada.Ultil.SystemHelper;
@@ -48,7 +53,7 @@ import Entity.EntityStatus;
  * Created by joker on 3/3/17.
  */
 
-public class AdapterHome extends RecyclerView.Adapter<AdapterHome.ViewHolder>{
+public class AdapterHome extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
     Context context;
     Activity activity;
     private PopupWindow popWindow;
@@ -68,7 +73,7 @@ public class AdapterHome extends RecyclerView.Adapter<AdapterHome.ViewHolder>{
     EntityListLike entityListLike;
     private Button btnBackToComment;
     private ListView lvListLike;
-
+    View view;
     public AdapterHome(Context context, ArrayList<EntityStatus> items,Activity activity,VolleyHelper volleyHelper)
     {
         this.context = context;
@@ -77,116 +82,353 @@ public class AdapterHome extends RecyclerView.Adapter<AdapterHome.ViewHolder>{
         this.volleyHelper = volleyHelper;
     }
     //1. Khoi tao layout
-    @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        //Khoi tao layout
-        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View view = inflater.inflate(R.layout.custom_recycleview_home_text,parent,false);
-            ViewHolder viewHolder = new ViewHolder(view);
-            //Tra ve cai viewholder, va xuong buoc 2
-            return viewHolder;
-    }
-    //3.Chay thu 3, Gan du lieu vao view
-    @Override
-    public void onBindViewHolder(final ViewHolder holder, final int position) {
-        holder.btnComment.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onShowPopup(view,activity,position);
-            }
-        });
-        holder.txtOption.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //creating a popup menu
-                PopupMenu popup = new PopupMenu(context, holder.txtOption);
-                //inflating menu from xml resource
-                popup.inflate(R.menu.itembaiviet);
-                //adding click listener
-                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem item) {
-                        switch (item.getItemId()) {
-                            case R.id.mn_report_post:
-                                //handle menu1 click
-                                Toast.makeText(context, "Reported", Toast.LENGTH_SHORT).show();
-                                break;
-                            case R.id.mn_save_post:
-                                //handle menu2 click
-                                Toast.makeText(context, "Saved", Toast.LENGTH_SHORT).show();
+//    @Override
+//    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+//        //Khoi tao layout
+//        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+//            View view = inflater.inflate(R.layout.custom_recycleview_home_text,parent,false);
+//            ViewHolder viewHolder = new ViewHolder(view);
+//            //Tra ve cai viewholder, va xuong buoc 2
+//            return viewHolder;
+//    }
 
-                                break;
+    @Override
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        switch (viewType){
+            case 1:
+                view = inflater.inflate(R.layout.custom_recycleview_home_text,parent,false);
+                ViewHolderText viewHolderText = new ViewHolderText(view);
+                return viewHolderText;
+            case 2:
+                view = inflater.inflate(R.layout.custom_recycleview_home,parent,false);
+                ViewHolderPhoto viewHolderPhoto = new ViewHolderPhoto(view);
+                return viewHolderPhoto;
+        }
+        return null;
+    }
+
+    @Override
+    public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
+        switch (holder.getItemViewType()) {
+            case 1:
+                final ViewHolderText holderText = (ViewHolderText) holder;
+                holderText.btnComment.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        onShowPopup(view,activity,position);
+                    }
+                });
+                holderText.txtOption.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        //creating a popup menu
+                        PopupMenu popup = new PopupMenu(context, holderText.txtOption);
+                        //inflating menu from xml resource
+                        popup.inflate(R.menu.itembaiviet);
+                        //adding click listener
+                        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                            @Override
+                            public boolean onMenuItemClick(MenuItem item) {
+                                switch (item.getItemId()) {
+                                    case R.id.mn_report_post:
+                                        //handle menu1 click
+                                        Toast.makeText(context, "Reported", Toast.LENGTH_SHORT).show();
+                                        break;
+                                    case R.id.mn_save_post:
+                                        //handle menu2 click
+                                        Toast.makeText(context, "Saved", Toast.LENGTH_SHORT).show();
+
+                                        break;
 //                            case R.id.menu3:
 //                                //handle menu3 click
 //                                break;
-                        }
-                        return false;
-                    }
-                });
-                //displaying the popup
-                popup.show();
-            }
-        });
-        holder.txtFullNameFeed.setText(items.get(position).getNameId());
-        holder.txtTimePostStatus.setText(SystemHelper.getTimeAgo(items.get(position).getCreatedTime())+"");
-        holder.txtContentStatus.setText(items.get(position).getContent());
-        Log.d("isLike",items.get(position).isLike()+"'");
-        holder.txtNumberLike.setText(items.get(position).getNumberLike()+"");
-        if (items.get(position).getNumberComment() == 0)
-        {
-            holder.txtNumberComment.setVisibility(View.INVISIBLE);
-        }else {
-            holder.txtNumberComment.setText(items.get(position).getNumberComment()+"");
-        }
-        if (items.get(position).getNumberLike()==0)
-        {
-            holder.txtNumberLike.setVisibility(View.INVISIBLE);
-        }else {
-            holder.txtNumberLike.setText(items.get(position).getNumberLike()+"");
-        }
-
-        if (items.get(position).isLike() == true){
-            holder.btnLove.setLiked(true);
-        }else {
-            holder.btnLove.setLiked(false);
-        }
-        holder.btnLove.setOnLikeListener(new OnLikeListener() {
-            @Override
-            public void liked(LikeButton likeButton) {
-               volleyHelper.postHeader("statuses/" + items.get(position).getIdStatus() + "/likes",
-                       null, new Response.Listener<JSONObject>() {
-                           @Override
-                           public void onResponse(JSONObject response) {
-                               int like = items.get(position).getNumberLike() + 1;
-                               holder.txtNumberLike.setText((like+""));
-                           }
-                       }, new Response.ErrorListener() {
-                           @Override
-                           public void onErrorResponse(VolleyError error) {
-                               int like = items.get(position).getNumberLike() - 1;
-                               holder.txtNumberLike.setText((like)+"");
-                           }
-                       });
-            }
-
-            @Override
-            public void unLiked(LikeButton likeButton) {
-                volleyHelper.delete("statuses/" + items.get(position).getIdStatus() + "/likes",
-                        null, new Response.Listener<JSONObject>() {
-                            @Override
-                            public void onResponse(JSONObject response) {
-                                Log.d("is_Like",response.toString());
-                            }
-                        }, new Response.ErrorListener() {
-                            @Override
-                            public void onErrorResponse(VolleyError error) {
-
+                                }
+                                return false;
                             }
                         });
+                        //displaying the popup
+                        popup.show();
+                    }
+                });
+                holderText.txtFullNameFeed.setText(items.get(position).getNameId());
+                holderText.txtTimePostStatus.setText(SystemHelper.getTimeAgo(items.get(position).getCreatedTime())+"");
+                holderText.txtContentStatus.setText(items.get(position).getContent());
+                Log.d("isLike",items.get(position).isLike()+"'");
+                holderText.txtNumberLike.setText(items.get(position).getNumberLike()+"");
+                if (items.get(position).getNumberComment() == 0)
+                {
+                    holderText.txtNumberComment.setVisibility(View.INVISIBLE);
+                }else {
+                    holderText.txtNumberComment.setText(items.get(position).getNumberComment()+"");
+                }
+                if (items.get(position).getNumberLike()==0)
+                {
+                    holderText.txtNumberLike.setVisibility(View.INVISIBLE);
+                }else {
+                    holderText.txtNumberLike.setText(items.get(position).getNumberLike()+"");
+                }
 
-            }
-        });
+                if (items.get(position).isLike() == true){
+                    holderText.btnLove.setLiked(true);
+                }else {
+                    holderText.btnLove.setLiked(false);
+                }
+                holderText.btnLove.setOnLikeListener(new OnLikeListener() {
+                    @Override
+                    public void liked(LikeButton likeButton) {
+                        volleyHelper.postHeader("posts/" + items.get(position).getIdStatus() + "/likes",
+                                null, new Response.Listener<JSONObject>() {
+                                    @Override
+                                    public void onResponse(JSONObject response) {
+                                        JSONObject jsonObject = null;
+                                        try {
+                                            jsonObject = response.getJSONObject("data");
+                                            holderText.txtNumberLike.setText(jsonObject.getString("likes"));
+                                        } catch (JSONException e) {
+                                            e.printStackTrace();
+                                        }
+
+                                    }
+                                }, new Response.ErrorListener() {
+                                    @Override
+                                    public void onErrorResponse(VolleyError error) {
+//                                        int like = items.get(position).getNumberLike() - 1;
+//                                        holderText.txtNumberLike.setText((like)+"");
+                                    }
+                                });
+                    }
+
+                    @Override
+                    public void unLiked(LikeButton likeButton) {
+                        volleyHelper.delete("posts/" + items.get(position).getIdStatus() + "/likes",
+                                null, new Response.Listener<JSONObject>() {
+                                    @Override
+                                    public void onResponse(JSONObject response) {
+                                        JSONObject jsonObject = null;
+                                        try {
+                                            jsonObject = response.getJSONObject("data");
+                                            holderText.txtNumberLike.setText(jsonObject.getString("likes"));
+                                        } catch (JSONException e) {
+                                            e.printStackTrace();
+                                        }
+
+                                    }
+                                }, new Response.ErrorListener() {
+                                    @Override
+                                    public void onErrorResponse(VolleyError error) {
+
+                                    }
+                                });
+
+                    }
+                });
+                break;
+            case 2:
+                final ViewHolderPhoto holderPhoto = (ViewHolderPhoto) holder;
+                holderPhoto.imgPostContent.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent(context, ImagePostActivity.class);
+                        intent.putExtra("idStatus",items.get(position).getIdStatus());
+                        context.startActivity(intent);
+                    }
+                });
+                holderPhoto.txtFullName.setText(items.get(position).getNameId());
+                holderPhoto.txtTimePostStatus.setText(SystemHelper.getTimeAgo(items.get(position).getCreatedTime())+"");
+                holderPhoto.txtContentStatus.setText(items.get(position).getContent());
+//                Picasso.with(context).load(items.get(position).getImage())
+//                        .fit().centerCrop()
+//                        .into(holderPhoto.imgPostContent);
+                Glide.with(context)
+                        .load(items.get(position).getImage())
+                        .fitCenter()
+                        .centerCrop()
+                        .placeholder(R.drawable.progress_loading) // can also be a drawable
+//                        .error(R.mipmap.future_studio_launcher) // will be displayed if the image cannot be loaded
+                        .crossFade()
+                        .into(holderPhoto.imgPostContent);
+                holderPhoto.txtNumberLike.setText(items.get(position).getNumberLike()+"");
+                holderPhoto.btnComment.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        onShowPopup(view,activity,position);
+                    }
+                });
+
+                if (items.get(position).getNumberComment() == 0)
+                {
+                    holderPhoto.txtNumberComment.setVisibility(View.INVISIBLE);
+                }else {
+                    holderPhoto.txtNumberComment.setText(items.get(position).getNumberComment()+"");
+                }
+                if (items.get(position).getNumberLike()==0)
+                {
+                    holderPhoto.txtNumberLike.setVisibility(View.INVISIBLE);
+                }else {
+                    holderPhoto.txtNumberLike.setText(items.get(position).getNumberLike()+"");
+                }
+
+                if (items.get(position).isLike() == true){
+                    holderPhoto.btnLove.setLiked(true);
+                }else {
+                    holderPhoto.btnLove.setLiked(false);
+                }
+                holderPhoto.btnLove.setOnLikeListener(new OnLikeListener() {
+                    @Override
+                    public void liked(LikeButton likeButton) {
+                        volleyHelper.postHeader("posts/" + items.get(position).getIdStatus() + "/likes",
+                                null, new Response.Listener<JSONObject>() {
+                                    @Override
+                                    public void onResponse(JSONObject response) {
+                                        try {
+                                            JSONObject jsonObject = response.getJSONObject("data");
+                                            holderPhoto.txtNumberLike.setText(jsonObject.getString("likes"));
+                                        } catch (JSONException e) {
+                                            e.printStackTrace();
+                                        }
+
+                                    }
+                                }, new Response.ErrorListener() {
+                                    @Override
+                                    public void onErrorResponse(VolleyError error) {
+                                        int like = items.get(position).getNumberLike() - 1;
+                                        holderPhoto.txtNumberLike.setText((like)+"");
+                                    }
+                                });
+                    }
+
+                    @Override
+                    public void unLiked(LikeButton likeButton) {
+                        volleyHelper.delete("posts/" + items.get(position).getIdStatus() + "/likes",
+                                null, new Response.Listener<JSONObject>() {
+                                    @Override
+                                    public void onResponse(JSONObject response) {
+                                        JSONObject jsonObject = null;
+                                        try {
+                                            jsonObject = response.getJSONObject("data");
+                                            holderPhoto.txtNumberLike.setText(jsonObject.getString("likes"));
+                                        } catch (JSONException e) {
+                                            e.printStackTrace();
+                                        }
+
+                                    }
+                                }, new Response.ErrorListener() {
+                                    @Override
+                                    public void onErrorResponse(VolleyError error) {
+
+                                    }
+                                });
+
+                    }
+                });
+
+
+                break;
+        }
     }
+
+    //3.Chay thu 3, Gan du lieu vao view
+//    @Override
+//    public void onBindViewHolder(final ViewHolder holder, final int position) {
+//        holder.btnComment.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                onShowPopup(view,activity,position);
+//            }
+//        });
+//        holder.txtOption.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                //creating a popup menu
+//                PopupMenu popup = new PopupMenu(context, holder.txtOption);
+//                //inflating menu from xml resource
+//                popup.inflate(R.menu.itembaiviet);
+//                //adding click listener
+//                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+//                    @Override
+//                    public boolean onMenuItemClick(MenuItem item) {
+//                        switch (item.getItemId()) {
+//                            case R.id.mn_report_post:
+//                                //handle menu1 click
+//                                Toast.makeText(context, "Reported", Toast.LENGTH_SHORT).show();
+//                                break;
+//                            case R.id.mn_save_post:
+//                                //handle menu2 click
+//                                Toast.makeText(context, "Saved", Toast.LENGTH_SHORT).show();
+//
+//                                break;
+////                            case R.id.menu3:
+////                                //handle menu3 click
+////                                break;
+//                        }
+//                        return false;
+//                    }
+//                });
+//                //displaying the popup
+//                popup.show();
+//            }
+//        });
+//        holder.txtFullNameFeed.setText(items.get(position).getNameId());
+//        holder.txtTimePostStatus.setText(SystemHelper.getTimeAgo(items.get(position).getCreatedTime())+"");
+//        holder.txtContentStatus.setText(items.get(position).getContent());
+//        Log.d("isLike",items.get(position).isLike()+"'");
+//        holder.txtNumberLike.setText(items.get(position).getNumberLike()+"");
+//        if (items.get(position).getNumberComment() == 0)
+//        {
+//            holder.txtNumberComment.setVisibility(View.INVISIBLE);
+//        }else {
+//            holder.txtNumberComment.setText(items.get(position).getNumberComment()+"");
+//        }
+//        if (items.get(position).getNumberLike()==0)
+//        {
+//            holder.txtNumberLike.setVisibility(View.INVISIBLE);
+//        }else {
+//            holder.txtNumberLike.setText(items.get(position).getNumberLike()+"");
+//        }
+//
+//        if (items.get(position).isLike() == true){
+//            holder.btnLove.setLiked(true);
+//        }else {
+//            holder.btnLove.setLiked(false);
+//        }
+//        holder.btnLove.setOnLikeListener(new OnLikeListener() {
+//            @Override
+//            public void liked(LikeButton likeButton) {
+//               volleyHelper.postHeader("statuses/" + items.get(position).getIdStatus() + "/likes",
+//                       null, new Response.Listener<JSONObject>() {
+//                           @Override
+//                           public void onResponse(JSONObject response) {
+//                               int like = items.get(position).getNumberLike() + 1;
+//                               holder.txtNumberLike.setText((like+""));
+//                           }
+//                       }, new Response.ErrorListener() {
+//                           @Override
+//                           public void onErrorResponse(VolleyError error) {
+//                               int like = items.get(position).getNumberLike() - 1;
+//                               holder.txtNumberLike.setText((like)+"");
+//                           }
+//                       });
+//            }
+//
+//            @Override
+//            public void unLiked(LikeButton likeButton) {
+//                volleyHelper.delete("statuses/" + items.get(position).getIdStatus() + "/likes",
+//                        null, new Response.Listener<JSONObject>() {
+//                            @Override
+//                            public void onResponse(JSONObject response) {
+//                                Log.d("is_Like",response.toString());
+//                            }
+//                        }, new Response.ErrorListener() {
+//                            @Override
+//                            public void onErrorResponse(VolleyError error) {
+//
+//                            }
+//                        });
+//
+//            }
+//        });
+//    }
 
     private void onShowPopup(View v, Activity activity, int position) {
         LayoutInflater layoutInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -207,7 +449,7 @@ public class AdapterHome extends RecyclerView.Adapter<AdapterHome.ViewHolder>{
         // fill the data to the list items
 //        setSimpleList(listView);
         // set height depends on the device size
-        popWindow = new PopupWindow(inflatedView, width-120,height, true );
+        popWindow = new PopupWindow(inflatedView, width,height, true );
         // set a background drawable with rounders corners
         popWindow.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.fb_popup_bg));
         popWindow.setInputMethodMode(PopupWindow.INPUT_METHOD_NEEDED);
@@ -247,7 +489,7 @@ public class AdapterHome extends RecyclerView.Adapter<AdapterHome.ViewHolder>{
                 // fill the data to the list items
 //        setSimpleList(listView);
                 // set height depends on the device size
-                popWindow = new PopupWindow(inflatedView, size.x-120,size.y, true );
+                popWindow = new PopupWindow(inflatedView, size.x,size.y, true );
                 // set a background drawable with rounders corners
                 popWindow.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.fb_popup_bg));
                 popWindow.setInputMethodMode(PopupWindow.INPUT_METHOD_NEEDED);
@@ -262,7 +504,7 @@ public class AdapterHome extends RecyclerView.Adapter<AdapterHome.ViewHolder>{
 
             private void addEventListLike(final int position) {
                 itemsLikeList = new ArrayList<EntityListLike>();
-                volleyHelper.get("statuses/" + items.get(position).getIdStatus() + "/likes", null, new Response.Listener<JSONObject>() {
+                volleyHelper.get("posts/" + items.get(position).getIdStatus() + "/likes", null, new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
@@ -313,10 +555,15 @@ public class AdapterHome extends RecyclerView.Adapter<AdapterHome.ViewHolder>{
             public void onClick(View view) {
                 if (TextUtils.isEmpty(btnCommentInput.getText().toString().trim()))
                 {
-                    btnCommentInput.setError("Mời bạn nhập nội dung");
-                    return;
+//                    btnCommentInput.setError("Mời bạn nhập nội dung");
                 }else {
-                    addComment(volleyHelper,position);
+                    Handler handler = new Handler();
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            addComment(volleyHelper,position);
+                        }
+                    },2000);
                 }
 
             }
@@ -328,7 +575,7 @@ public class AdapterHome extends RecyclerView.Adapter<AdapterHome.ViewHolder>{
 
     private void getContentComment(final int position) {
         itemsComment = new ArrayList<>();
-        volleyHelper.get("statuses/" + items.get(position).getIdStatus() + "/comments?sort=created_at", null,
+        volleyHelper.get("posts/" + items.get(position).getIdStatus() + "/comments?sort=created_at", null,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
@@ -367,7 +614,10 @@ public class AdapterHome extends RecyclerView.Adapter<AdapterHome.ViewHolder>{
     private void addComment(VolleyHelper volleyHelper, int position) {
         HashMap<String,String> parrams = new HashMap<>();
         parrams.put("message",btnCommentInput.getText().toString().trim());
-        volleyHelper.postHeader("statuses/" + items.get(position).getIdStatus() + "/comments", new JSONObject(parrams),
+        HashMap map = new HashMap();
+        map.put("status",1);
+        parrams.putAll(map);
+        volleyHelper.postHeader("posts/" + items.get(position).getIdStatus() + "/comments", new JSONObject(parrams),
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
@@ -401,8 +651,9 @@ public class AdapterHome extends RecyclerView.Adapter<AdapterHome.ViewHolder>{
     public int getItemCount() {
         return items.size();
     }
+
     //2.Ham nay chay thu 2, find view o day, nhan cai return o Buoc 1
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolderText extends RecyclerView.ViewHolder {
         private TextView txtFullNameFeed;
         private TextView txtTimePostStatus;
         private LikeButton btnLove;
@@ -410,10 +661,8 @@ public class AdapterHome extends RecyclerView.Adapter<AdapterHome.ViewHolder>{
         private TextView txtOption;
         private TextView txtNumberLike;
         private TextView txtNumberComment;
-
-
         Button btnComment;
-        public ViewHolder(View itemView) {
+        public ViewHolderText(View itemView) {
             super(itemView);
             txtFullNameFeed = (TextView) itemView.findViewById(R.id.txtFullNameFeed);
             txtTimePostStatus = (TextView) itemView.findViewById(R.id.txtTimePostStatus);
@@ -426,8 +675,41 @@ public class AdapterHome extends RecyclerView.Adapter<AdapterHome.ViewHolder>{
         }
     }
 
+    public class ViewHolderPhoto extends RecyclerView.ViewHolder{
+        private TextView txtFullName;
+        private TextView txtTimePostStatus;
+        private TextView txtContentStatus;
+        private ImageView imgPostContent;
+        private LikeButton btnLove;
+        private TextView txtNumberLike;
+        private TextView txtNumberComment;
+        private Button btnComment;
+
+
+
+        public ViewHolderPhoto(View itemView) {
+            super(itemView);
+            txtFullName = (TextView) itemView.findViewById(R.id.txtFullName);
+            txtTimePostStatus = (TextView) itemView.findViewById(R.id.txtTimePostStatus);
+            txtContentStatus = (TextView) itemView.findViewById(R.id.txtContentStatus);
+            imgPostContent = (ImageView) itemView.findViewById(R.id.imgPostContent);
+            btnLove = (LikeButton) itemView.findViewById(R.id.btnLove);
+            txtNumberLike = (TextView) itemView.findViewById(R.id.txtNumberLike);
+            txtNumberComment = (TextView) itemView.findViewById(R.id.txtNumberComment);
+            btnComment = (Button) itemView.findViewById(R.id.btnComment);
+
+        }
+    }
+
     @Override
     public int getItemViewType(int position) {
-        return position %2 * 2;
+//        Log.d("image",items.get(position).getImage().toString());
+        int type = 1;
+        if (items.get(position).getImage() == null){
+            type = 1;
+        }else {
+            type = 2;
+        }
+        return type;
     }
 }

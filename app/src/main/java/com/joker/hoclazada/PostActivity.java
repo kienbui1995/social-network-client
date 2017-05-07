@@ -9,6 +9,7 @@ import com.google.firebase.storage.UploadTask;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -16,25 +17,30 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.joker.hoclazada.Ultil.FilePath;
-import com.joker.hoclazada.Ultil.FirebaseHelper;
+import com.joker.hoclazada.Ultil.ImagePicker;
+import com.joker.hoclazada.Ultil.SystemHelper;
 import com.joker.hoclazada.Ultil.VolleyHelper;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.util.HashMap;
 
@@ -47,21 +53,59 @@ public class PostActivity extends AppCompatActivity {
     private Intent mIntent;
     private StorageReference mStorageReference;
     private EditText edtStatusInput;
-
-    String selectedImagePath;
-
+    private Spinner spnPrivacy;
+    private TextView txtFullNamePost;
+    private int privacy;
+    String selectedImagePath ="";
+    Bitmap bmp;
+    Uri downloadUri;
+    ProgressDialog progressDialog;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post);
+        Intent intent = getIntent();
+        selectedImagePath = intent.getStringExtra("path");
         addControl();
+        if (selectedImagePath != null){
+            Log.d("selectedImagePath",selectedImagePath);
+            bmp = ImagePicker.getImageFromCamera(this,Uri.fromFile(new File(selectedImagePath)));
+            Picasso.with(this)
+                    .load(new File(selectedImagePath))
+                    .fit().centerCrop()
+                    .into(imgPost);
+        }
         setupTabs();
+        setupSpinner();
         addEvent();
+
 //        LoadImage();
 
 
+    }
+
+    private void setupSpinner() {
+        String arrPrivacy[] = {"Công khai","Chỉ cho người theo dõi bạn","Riêng tư"};
+        final HashMap<Integer,String> spinnerMap = new HashMap<Integer, String>();
+        for (int i = 0; i < 3; i++)
+        {
+            spinnerMap.put((i+1),arrPrivacy[i]);
+        }
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,R.layout.support_simple_spinner_dropdown_item,arrPrivacy);
+        spnPrivacy.setAdapter(adapter);
+        spnPrivacy.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                privacy = i+1;
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
     }
 
     private void LoadImage(){
@@ -84,14 +128,7 @@ public class PostActivity extends AppCompatActivity {
     }
 
     private void addEvent() {
-        btnPrivacy.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                btnPrivacy.performLongClick();
-            }
-        });
-        registerForContextMenu(btnPrivacy);
-
+        txtFullNamePost.setText(MainActivity.entityUserProfile.getFull_name());
         btnSelectImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -119,54 +156,33 @@ public class PostActivity extends AppCompatActivity {
                 finish();
             }
         });
+
     }
 
     private void addControl() {
         activityPost = (LinearLayout) findViewById(R.id.activity_post);
         idToolbar = (Toolbar) findViewById(R.id.idToolbar);
-        btnPrivacy = (Button) findViewById(R.id.btnPrivacy);
         btnSelectImage = (Button) findViewById(R.id.btnSelectImage);
         imgPost = (ImageView) findViewById(R.id.imgPost);
         edtStatusInput = (EditText) findViewById(R.id.edtStatusInput);
+        spnPrivacy = (Spinner) findViewById(R.id.spnPrivacy);
+        txtFullNamePost = (TextView) findViewById(R.id.txtFullNamePost);
         mStorageReference = FirebaseStorage.getInstance().getReference();
     }
-    private void UploadFile(String selectedImagePath){
-        Log.d("PathImage",selectedImagePath+"");
-        Uri file = Uri.fromFile(new File(selectedImagePath));
-        Long tsLong = System.currentTimeMillis()/1000;
-        String ts = tsLong.toString();
-        String fileName = "images/" +ts+"_hoainam";
-        StorageReference riversRef = mStorageReference.child(fileName);
 
-//        riversRef.putFile(file)
-//                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-//                    @Override
-//                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-//                        // Get a URL to the uploaded content
-//                        Uri downloadUrl = taskSnapshot.getDownloadUrl();
-//                        Toast.makeText(PostActivity.this, "Upload thanh cong", Toast.LENGTH_SHORT).show();
-//                    }
-//                })
-//                .addOnFailureListener(new OnFailureListener() {
-//                    @Override
-//                    public void onFailure(@NonNull Exception exception) {
-//                        // Handle unsuccessful uploads
-//                        Toast.makeText(PostActivity.this, "Upload fail", Toast.LENGTH_SHORT).show();
-//                        // ...
-//                    }
-//                });
-
-        FirebaseHelper firebaseHelper = new FirebaseHelper(this,mStorageReference);
-        firebaseHelper.putFile(riversRef, file, new OnSuccessListener() {
+    private void UploadFile(String fileName,Bitmap bmp){
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bmp.compress(Bitmap.CompressFormat.JPEG, 30, stream);
+        byte[] data = stream.toByteArray();
+        StorageReference filepath = mStorageReference.child(fileName);
+        UploadTask uploadTask = filepath.putBytes(data);
+        uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
-            public void onSuccess(Object o) {
-
-                UploadTask.TaskSnapshot taskSnapshot = (UploadTask.TaskSnapshot) o;
-                Uri url = taskSnapshot.getDownloadUrl();
-                Log.d("firebaseA",url.toString());
-                Toast.makeText(PostActivity.this, "Upload thanh cong", Toast.LENGTH_SHORT).show();
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                downloadUri = taskSnapshot.getDownloadUrl();
+                PostStatus("posts",downloadUri);
             }
-        }, new OnFailureListener() {
+        }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
                 Toast.makeText(PostActivity.this, "Upload fail", Toast.LENGTH_SHORT).show();
@@ -188,18 +204,30 @@ public class PostActivity extends AppCompatActivity {
             {
                 edtStatusInput.setError("Xin mời bạn nhập nội dung");
             }else {
-                PostStatus();
+                if (selectedImagePath == null){
+                    progressDialog = ProgressDialog.show(this,"","Đang cập nhật trạng thái của bạn",true);
+                    PostStatus("posts",null);
+                }else {
+                    progressDialog = ProgressDialog.show(this,"","Đang cập nhật trạng thái của bạn",true);
+                    String fileName = "images/photos/" + SystemHelper.getTimeStamp() + "_" + MainActivity.entityUserProfile.getUserName();
+                    UploadFile(fileName,bmp);
+                }
             }
         }
         return super.onOptionsItemSelected(item);
     }
-    private void PostStatus() {
-        final ProgressDialog progressDialog;
-        progressDialog = ProgressDialog.show(this,"","Đang cập nhật trạng thái của bạn",true);
+    private void PostStatus(String type,Uri downloadUri) {
         VolleyHelper volleyHelper = new VolleyHelper(this,getResources().getString(R.string.url));
         HashMap<String,String> parram = new HashMap<>();
         parram.put("message",edtStatusInput.getText().toString());
-        volleyHelper.postHeader("users/" + MainActivity.entityUserProfile.getuID() + "/statuses", new JSONObject(parram), new Response.Listener<JSONObject>() {
+        if (downloadUri !=null){
+            parram.put("photo",downloadUri.toString());
+        }
+        HashMap parramNumber = new HashMap();
+        parramNumber.put("status",1);
+        parramNumber.put("privacy", privacy);
+        parram.putAll(parramNumber);
+        volleyHelper.postHeader("users/" + MainActivity.entityUserProfile.getuID() + "/"+type, new JSONObject(parram), new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 progressDialog.dismiss();
@@ -215,35 +243,21 @@ public class PostActivity extends AppCompatActivity {
         });
     }
 
-    @Override
-    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        getMenuInflater().inflate(R.menu.privacy,menu);
-        menu.setHeaderTitle("Thay đổi quyền riêng tư");
-        menu.setHeaderIcon(R.drawable.ic_mode_edit_black_24dp);
-        super.onCreateContextMenu(menu, v, menuInfo);
-    }
-
-    @Override
-    public boolean onContextItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.itfollowing){
-            btnPrivacy.setText("Following");
-        }else if (item.getItemId() == R.id.itOnlyMe){
-            btnPrivacy.setText("Only Me");
-        }
-        return super.onContextItemSelected(item);
-    }
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
             if (requestCode == 1) {
                 selectedImagePath = FilePath.getPath(getApplicationContext(), data.getData());
                 Picasso.with(getApplicationContext())
                         .load(data.getData())
+                        .fit().centerCrop()
                         .into(imgPost);
-                UploadFile(selectedImagePath);
-                if (imgPost.getVisibility() != View.VISIBLE) {
-                    imgPost.setVisibility(View.VISIBLE);
-                }
+                bmp = ImagePicker.getImageFromResult(this, resultCode, data);
+                Log.d("data",data+"'");
+//                if (imgPost.getVisibility() != View.VISIBLE) {
+//                    imgPost.setVisibility(View.VISIBLE);
+//                }
             }
+
         }
     }
 }

@@ -3,6 +3,7 @@ package adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,7 +58,8 @@ public class AdapterComment extends RecyclerView.Adapter<AdapterComment.Viewhold
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(context, UserProfileActivity.class);
-                intent.putExtra("uId",items.get(position).getuId());
+                intent.putExtra("uId",items.get(position).getuId()+"");
+                Log.d("uIdd",items.get(position).getuId()+"");
                 context.startActivity(intent);
             }
         });

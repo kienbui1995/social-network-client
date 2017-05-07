@@ -19,7 +19,7 @@
             android:background="@drawable/btn_style"
             android:id="@+id/lvListLike"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="600dp">
 
     </ListView>
 </LinearLayout>

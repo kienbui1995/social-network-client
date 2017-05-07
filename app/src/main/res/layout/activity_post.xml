@@ -35,24 +35,19 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
             <TextView
+                    android:id="@+id/txtFullNamePost"
                     android:textColor="#000"
                     android:textStyle="bold"
                     android:textSize="16sp"
-                    android:text="Nam Hoài Nam"
+                    android:text=""
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
-            <Button
-                    android:drawablePadding="8dp"
-                    android:padding="5dp"
-                    android:id="@+id/btnPrivacy"
-                    android:drawableRight="@drawable/ic_keyboard_arrow_down_black_18dp"
-                    android:drawableLeft="@drawable/ic_language_black_18dp"
-                    android:textAllCaps="false"
-                    android:textColor="@color/bgToolbar"
-                    android:text="Pubic"
-                    android:background="@drawable/btn_style"
-                    android:layout_width="wrap_content"
-                    android:layout_height="30dp"/>
+            <Spinner
+                    android:id="@+id/spnPrivacy"
+                    android:layout_width="100dp"
+                    android:layout_height="20dp">
+
+            </Spinner>
         </LinearLayout>
     </LinearLayout>
 

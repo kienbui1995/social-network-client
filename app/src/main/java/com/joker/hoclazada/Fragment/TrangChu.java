@@ -71,6 +71,7 @@ public class TrangChu extends Fragment{
         swrNewFeed.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+//                rcvNewFeed.getRecycledViewPool().clear();
                 items.clear();
                 itemsAdapter.clear();
                 getData();
@@ -83,7 +84,7 @@ public class TrangChu extends Fragment{
 
     public void getData() {
         items = new ArrayList<>();
-        volleyHelper.get("users/" + entityUserProfile.getuID() + "/home"+"?sort=-created_at&limit=5", null, new Response.Listener<JSONObject>() {
+        volleyHelper.get("users/" + entityUserProfile.getuID() + "/home"+"?limit=5", null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 try {
@@ -99,6 +100,10 @@ public class TrangChu extends Fragment{
                         entityStatus.setNameId(jsonObject.getString("full_name"));
                         entityStatus.setLike(Boolean.parseBoolean(jsonObject.getString("is_liked")));
                         entityStatus.setStatus(jsonObject.getInt("status"));
+                        if (jsonObject.has("photo")){
+                            entityStatus.setImage(jsonObject.getString("photo"));
+                            Log.d("image",entityStatus.getImage());
+                        }
                         if (!jsonObject.isNull("comments"))
                         {
                             entityStatus.setNumberComment(jsonObject.getInt("comments"));
@@ -138,7 +143,7 @@ public class TrangChu extends Fragment{
             public void onLoadMore(int page, final int totalItemsCount, RecyclerView view) {
                 Log.d("LoadMore",page+" " + totalItemsCount + " ");
                 {
-                    volleyHelper.get("users/" + entityUserProfile.getuID() + "/home"+"?sort=-created_at&limit=5&skip="+
+                    volleyHelper.get("users/" + entityUserProfile.getuID() + "/home"+"?limit=5&skip="+
                             totalItemsCount, null, new Response.Listener<JSONObject>() {
                         @Override
                         public void onResponse(JSONObject response) {
@@ -159,6 +164,9 @@ public class TrangChu extends Fragment{
                                     entityStatus.setNameId(jsonObject.getString("full_name"));
                                     entityStatus.setLike(Boolean.parseBoolean(jsonObject.getString("is_liked")));
                                     entityStatus.setStatus(jsonObject.getInt("status"));
+                                    if (jsonObject.has("photo")){
+                                        entityStatus.setImage(jsonObject.getString("photo"));
+                                    }
                                     if (!jsonObject.isNull("comments"))
                                     {
                                         entityStatus.setNumberComment(jsonObject.getInt("comments"));

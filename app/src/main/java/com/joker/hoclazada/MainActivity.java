@@ -2,10 +2,14 @@ package com.joker.hoclazada;
 
 import com.google.firebase.database.DatabaseReference;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -26,6 +30,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -38,6 +43,7 @@ import com.joker.hoclazada.Ultil.VolleyHelper;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.util.HashMap;
 
 import Entity.EntityUserProfile;
@@ -45,6 +51,7 @@ import april.yun.JPagerSlidingTabStrip2;
 import april.yun.other.JTabStyleDelegate;
 import io.realm.Realm;
 
+import static android.R.attr.name;
 import static april.yun.other.JTabStyleBuilder.STYLE_ROUND;
 
 public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOffsetChangedListener {
@@ -72,6 +79,10 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
     private EntityUserProfile profile;
     public static String token = null;
     Realm realm;
+    private ImageButton btnTakePicture;
+    private static final int REQUEST_IMAGE = 100;
+    File destination;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,6 +97,7 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
         token= entityUserProfile.getToken();
         Log.d("respone1",entityUserProfile.toString());
 //        tabHost = (TabLayout) findViewById(R.id.tabHost);
+        btnTakePicture = (ImageButton) findViewById(R.id.btnTakePicture);
         viewPager = (ViewPager) findViewById(R.id.viewPager);
         tabButtom = (JPagerSlidingTabStrip2) findViewById(R.id.tab_buttom);
         toolbar = (Toolbar) findViewById(R.id.toolbarA);
@@ -125,6 +137,22 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
         viewPager.setAdapter(viewPagerAdapter);
         tabButtom.bindViewPager(viewPager);
         tabButtom.setPromptNum(1,23);
+        tabButtom.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                tabButtom.setPromptNum(1,0);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
         //DrawerLayout
         actionBarDrawerToggle = new ActionBarDrawerToggle(this,drawerLayout,R.string.open,R.string.close);
         drawerLayout.addDrawerListener(actionBarDrawerToggle);
@@ -211,8 +239,27 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
                 return false;
             }
         });
+        destination = new File(Environment.getExternalStorageDirectory(), name + ".jpg");
+        btnTakePicture.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(destination));
+                startActivityForResult(intent, REQUEST_IMAGE);
+            }
+        });
 
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if( requestCode == REQUEST_IMAGE && resultCode == Activity.RESULT_OK ){
+            Intent intent = new Intent(this, PostActivity.class);
+            intent.putExtra("path",destination.getAbsolutePath());
+            startActivity(intent);
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     private void getInfoUser() {

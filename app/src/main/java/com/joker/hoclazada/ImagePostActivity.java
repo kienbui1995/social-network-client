@@ -1,11 +1,13 @@
 package com.joker.hoclazada;
 
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -15,17 +17,20 @@ import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.Theme;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.github.piasy.biv.BigImageViewer;
 import com.github.piasy.biv.loader.glide.GlideImageLoader;
 import com.github.piasy.biv.view.BigImageView;
 import com.github.piasy.biv.view.ImageSaveCallback;
 import com.joker.hoclazada.Ultil.ImageUlti;
+import com.joker.hoclazada.Ultil.VolleyHelper;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class ImagePostActivity extends AppCompatActivity {
+    VolleyHelper volleyHelper;
     private BigImageView mBigImage;
     private Button mBtnLoad;
     private Toolbar toolbar;
@@ -43,7 +48,7 @@ public class ImagePostActivity extends AppCompatActivity {
     private Boolean touch = false;
 
 
-    String randomStr;
+    Integer idStatus;
 
 
     @Override
@@ -53,11 +58,51 @@ public class ImagePostActivity extends AppCompatActivity {
         setContentView(R.layout.activity_image_post);
         mBigImage = (BigImageView) findViewById(R.id.mBigImage);
         mBtnLoad = (Button) findViewById(R.id.mBtnLoad);
-        List<String> photos = Arrays.asList(this.getResources().getStringArray(R.array.user_photos));
-        randomStr = photos.get(new Random().nextInt(photos.size()));
-        addControl();
+        Intent intent = getIntent();
+        idStatus = intent.getIntExtra("idStatus",1);
+        Log.d("idStatus",idStatus+"");
         initToolbar();
-        loadImage();
+        getDataPhoto();
+        addControl();
+        addEvent();
+
+//        loadImage(src);
+    }
+
+    private void getDataPhoto() {
+        volleyHelper = new VolleyHelper(this,getResources().getString(R.string.url));
+        volleyHelper.get("posts/" + idStatus, null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+
+                try {
+                    JSONObject jsonObject = response.getJSONObject("data");
+                    Log.d("json",jsonObject.toString());
+                    loadImage(jsonObject.getString("photo"));
+                    txtShortContent.setText(jsonObject.getString("message"));
+                    txtNumberLove.setText(jsonObject.getString("likes"));
+//                    txtNumberComment.setText(jsonObject.getString(""));
+                    toolbar.setTitle("Ảnh của " + jsonObject.getString("full_name"));
+                    btnComment.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+
+                        }
+                    });
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        });
+    }
+
+    private void addEvent() {
         mBigImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -88,6 +133,7 @@ public class ImagePostActivity extends AppCompatActivity {
                 }
             }
         });
+
     }
 
     private void addControl() {
@@ -104,7 +150,7 @@ public class ImagePostActivity extends AppCompatActivity {
 
     private void initToolbar() {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle("Ảnh của Tin tức Thăng Long");
+//        toolbar.setTitle("Ảnh của Tin tức Thăng Long");
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -119,27 +165,27 @@ public class ImagePostActivity extends AppCompatActivity {
         });
     }
 
-    private void loadImage() {
+    private void loadImage(String src) {
         {
             imageUlti = new ImageUlti(getApplicationContext());
             final BigImageView bigImageView = (BigImageView) findViewById(R.id.mBigImage);
-            imageUlti.loadImage(bigImageView, randomStr);
+            imageUlti.loadImage(bigImageView, src);
             bigImageView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View view) {
                     new MaterialDialog.Builder(ImagePostActivity.this)
-                            .title("Choose Options:")
+                            .title("Chọn:")
                             .items(R.array.optionImage)
                             .theme(Theme.LIGHT)
                             .itemsCallback(new MaterialDialog.ListCallback() {
                                 @Override
                                 public void onSelection(MaterialDialog dialog, View itemView, int position, CharSequence text) {
-                                    if (TextUtils.equals(text, "Save picture")) {
+                                    if (TextUtils.equals(text, "Lưu hình ảnh")) {
                                         bigImageView.setImageSaveCallback(new ImageSaveCallback() {
                                             @Override
                                             public void onSuccess(String uri) {
                                                 Toast.makeText(getApplicationContext(),
-                                                        "Success",
+                                                        "Lưu vào thiết bị thành công",
                                                         Toast.LENGTH_SHORT).show();
                                             }
 

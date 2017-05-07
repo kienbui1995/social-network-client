@@ -87,7 +87,7 @@
                                     android:id="@+id/txtFullNameProfile"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:text="Hoài Nam"
+                                    android:text=""
                                     android:textColor="#ffffff"
                                     android:textSize="24sp" />
                             <ImageView
@@ -103,7 +103,7 @@
                                     android:id="@+id/txtUserNameProfile"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:text="\@namjoker"
+                                    android:text=""
                                     android:textColor="#bbbbbb"
                                     android:textSize="12sp" />
 

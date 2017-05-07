@@ -73,6 +73,7 @@
                                 android:background="@color/bgToolbar"/>
 
                         <ImageButton
+                                android:id="@+id/btnTakePicture"
                                 android:padding="10dp"
                                 android:background="@drawable/bg_search"
                                 android:layout_gravity="center"

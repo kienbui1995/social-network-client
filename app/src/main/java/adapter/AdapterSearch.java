@@ -79,6 +79,10 @@ public class AdapterSearch extends ArrayAdapter {
                                 @Override
                                 public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                                     Log.d("positionId",items.get(position).getId());
+                                    btnFollowUser.setBackgroundResource(R.drawable.btn_unfollow);
+                                    btnFollowUser.setTextColor(Color.parseColor("#FFFFFF"));
+                                    btnFollowUser.setText("Đã theo dõi");
+                                    btnFollowUser.setEnabled(false);
                                     Follow(items.get(position).getId());
                                     Intent intent = new Intent(context, UserProfileActivity.class);
                                     intent.putExtra("uId",items.get(position).getId());
