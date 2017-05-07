@@ -68,7 +68,7 @@ import static com.facebook.FacebookSdk.getApplicationContext;
 
 public class DangKy extends Fragment implements Validator.ValidationListener {
     Validator validator;
-    @Length(min = 6,max = 25,message = "Họ và tên phải từ 12 đến 25 kí tự")
+    @Length(min = 6,max = 25,message = "Họ và tên phải từ 6 đến 25 kí tự")
     private DeleteEditText edtFullName;
     @Email(message = "Email không hợp lệ")
     private DeleteEditText edtEmail;

@@ -26,6 +26,7 @@ import com.joker.hoclazada.Ultil.FilePath;
 import com.joker.hoclazada.Ultil.VolleyHelper;
 import com.squareup.picasso.Picasso;
 
+import io.realm.Realm;
 import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 
 import org.json.JSONException;
@@ -52,6 +53,9 @@ public class UserProfileActivity extends AppCompatActivity {
     private String selectedImagePath;
     private TextView txtFullNameProfile;
     private TextView txtUserNameProfile;
+    private TextView txtPost;
+    private TextView txtFollower;
+    private TextView txtFollowing;
     private VolleyHelper volleyHelper;
     private EntityUserProfile entityUserProfile;
     private Button btnNhanTin;
@@ -63,6 +67,7 @@ public class UserProfileActivity extends AppCompatActivity {
         entityUserProfile = new EntityUserProfile();
         addControl();
         getDataProfile();
+        displayInfo();
         setupTabs();
         addEvent();
     }
@@ -85,23 +90,22 @@ public class UserProfileActivity extends AppCompatActivity {
     }
 
     private void getDataProfile() {
-        Intent intent = getIntent();
-        id = intent.getStringExtra("uId");
-//        Log.d("id",id.toString());
-        if (id == null) {
-            txtFullNameProfile.setText(MainActivity.entityUserProfile.getFull_name());
-            txtUserNameProfile.setText("@" + MainActivity.entityUserProfile.getUserName());
+        {
+
             btnNhanTin.setVisibility(View.GONE);
             btnFollow.setVisibility(View.GONE);
-        } else {
+
             volleyHelper = new VolleyHelper(this, getResources().getString(R.string.url));
-            volleyHelper.get("users/" + id, null, new Response.Listener<JSONObject>() {
+            volleyHelper.get("users/" + MainActivity.entityUserProfile.getuID(), null, new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject response) {
                     try {
                         JSONObject infoUser = response.getJSONObject("data");
                         txtFullNameProfile.setText(infoUser.getString("full_name"));
                         txtUserNameProfile.setText("@" + infoUser.getString("username"));
+                        txtPost.setText(infoUser.getInt("posts")+"");
+                        txtFollower.setText(infoUser.getInt("followers")+"");
+                        txtFollowing.setText(infoUser.getInt("followings")+"");
                         toolbarProfile.setTitle(infoUser.getString("full_name"));
                         displayInfo();
                         Log.d("getInfoUser", entityUserProfile.toString());
@@ -164,6 +168,9 @@ public class UserProfileActivity extends AppCompatActivity {
         txtFullNameProfile = (TextView) findViewById(R.id.txtFullNameProfile);
         btnNhanTin = (Button) findViewById(R.id.btnNhanTin);
         txtUserNameProfile = (TextView) findViewById(R.id.txtUserNameProfile);
+        txtPost = (TextView) findViewById(R.id.txtPost);
+        txtFollower = (TextView) findViewById(R.id.txtFollower);
+        txtFollowing = (TextView) findViewById(R.id.txtFollowing);
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {

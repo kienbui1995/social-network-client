@@ -125,7 +125,7 @@ public class AdapterFollowerList extends ArrayAdapter {
                                     btnMessage.setBackgroundResource(R.drawable.btn_unfollow);
                                     btnMessage.setTextColor(Color.parseColor("#FFFFFF"));
                                     btnMessage.setText("Đã theo dõi");
-                                    btnMessage.setEnabled(false);
+//                                    btnMessage.setEnabled(false);
                                     Follow(Integer.parseInt(items.get(position).getId()));
                                     Intent intent = new Intent(context, UserProfileActivity.class);
                                     intent.putExtra("uId", items.get(position).getId());
