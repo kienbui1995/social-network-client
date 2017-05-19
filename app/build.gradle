@@ -4,7 +4,7 @@ android {
     compileSdkVersion 25
     buildToolsVersion "25.0.1"
     defaultConfig {
-        applicationId "com.joker.hoclazada"
+        applicationId "com.joker.thanglong"
         minSdkVersion 16
         targetSdkVersion 25
         versionCode 1
@@ -56,5 +56,11 @@ dependencies {
     compile 'com.google.firebase:firebase-core:10.2.1'
     compile 'com.google.firebase:firebase-messaging:10.2.1'
     compile 'com.yun.ospl:jtabstrip:1.5'
+    compile 'com.github.rrsystems:utilsplus:1.1.0'
+    compile 'com.github.asvid:Notti:0.0.6'
+    compile 'com.github.percolate:mentions:0.1.1'
+    compile 'org.apache.commons:commons-lang3:3.4'
+    compile 'com.google.code.gson:gson:2.7'
+    compile 'com.percolate:caffeine:0.3.3'
 }
 apply plugin: 'com.google.gms.google-services'

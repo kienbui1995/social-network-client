@@ -4,8 +4,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import com.joker.hoclazada.Fragment.FollowerFragment;
-import com.joker.hoclazada.Fragment.FollowingFragment;
+import com.joker.thanglong.Fragment.FollowerFragment;
+import com.joker.thanglong.Fragment.FollowingFragment;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -3,7 +3,7 @@
                                              xmlns:tools="http://schemas.android.com/tools"
                                              android:layout_width="match_parent"
                                              android:layout_height="match_parent"
-                                             tools:context="com.joker.hoclazada.Fragment.HomePagesFragment"
+                                             tools:context="com.joker.thanglong.Fragment.HomePagesFragment"
                                              tools:layout_editor_absoluteY="25dp"
                                              tools:layout_editor_absoluteX="0dp">
 

@@ -4,7 +4,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 
-import com.joker.hoclazada.R;
+import com.joker.thanglong.R;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 

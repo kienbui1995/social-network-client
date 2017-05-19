@@ -17,17 +17,15 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.Theme;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.joker.hoclazada.R;
-import com.joker.hoclazada.Ultil.VolleyHelper;
-import com.joker.hoclazada.UserProfileActivity;
+import com.joker.thanglong.R;
+import com.joker.thanglong.Ultil.VolleyHelper;
+import com.joker.thanglong.UserProfileActivity;
 
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 
 import Entity.EntityFollow;
-import Entity.EntityUserProfile;
-import io.realm.Realm;
 
 /**
  * Created by joker on 4/25/17.
@@ -115,12 +113,8 @@ public class AdapterFollowingList extends ArrayAdapter {
 
     private void unFollow(int uId)
     {
-        Realm realm;
-        realm = Realm.getDefaultInstance();
-        realm.init(context);
-        EntityUserProfile profile = realm.where(EntityUserProfile.class).findFirst();
         VolleyHelper volleyHelper = new VolleyHelper(context,context.getResources().getString(R.string.url));
-        volleyHelper.delete("users/" + profile.getuID() + "/subscribers/" + uId, null, new Response.Listener<JSONObject>() {
+        volleyHelper.delete("users/" +uId + "/subscriptions", null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 Log.d("follow",response.toString());

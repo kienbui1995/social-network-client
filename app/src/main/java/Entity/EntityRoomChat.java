@@ -9,17 +9,19 @@ public class EntityRoomChat {
     String idTo;
     String name;
     Long time;
+    int timeRead;
     String lastMessage;
 
     public EntityRoomChat() {
     }
 
-    public EntityRoomChat(String idFrom, String idTo, String name, Long time,String lastMessage) {
+    public EntityRoomChat(String idFrom, String idTo, String name, Long time,int timeRead,String lastMessage) {
         this.idFrom = idFrom;
         this.idTo = idTo;
         this.name = name;
         this.time = time;
         this.lastMessage=lastMessage;
+        this.timeRead = timeRead;
     }
 
     public String getLastMessage() {
@@ -60,5 +62,13 @@ public class EntityRoomChat {
 
     public void setTime(Long time) {
         this.time = time;
+    }
+
+    public int getTimeRead() {
+        return timeRead;
+    }
+
+    public void setTimeRead(int timeRead) {
+        this.timeRead = timeRead;
     }
 }

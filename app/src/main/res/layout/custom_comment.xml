@@ -5,9 +5,11 @@
               android:layout_marginRight="25dp"
               android:layout_marginTop="5dp"
               android:layout_marginBottom="5dp"
+
               android:layout_width="match_parent"
               android:layout_height="wrap_content">
 <LinearLayout
+        android:id="@+id/lnComment"
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -50,6 +52,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
             <TextView
+                    android:textColor="#71686565"
                     android:layout_gravity="start"
                     android:textSize="10dp"
                     android:id="@+id/txtTimeComment"

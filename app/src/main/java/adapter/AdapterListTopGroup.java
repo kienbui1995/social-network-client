@@ -6,7 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.joker.hoclazada.R;
+import com.joker.thanglong.R;
 
 import java.util.List;
 

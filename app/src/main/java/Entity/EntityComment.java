@@ -12,8 +12,14 @@ public class EntityComment {
     private String avatar;
     private String message;
     private long created_at;
+    private boolean canEdit;
+    private boolean canDelete;
+    private int total;
 
-    public EntityComment(int idComment, int uId, String username, String full_name, String avatar, String message, long created_at) {
+    public EntityComment() {
+    }
+
+    public EntityComment(int idComment, int uId, String username, String full_name, String avatar, String message, long created_at, boolean canEdit, boolean canDelete,int total) {
         this.idComment = idComment;
         this.uId = uId;
         this.username = username;
@@ -21,9 +27,9 @@ public class EntityComment {
         this.avatar = avatar;
         this.message = message;
         this.created_at = created_at;
-    }
-
-    public EntityComment() {
+        this.canEdit = canEdit;
+        this.canDelete = canDelete;
+        this.total=total;
     }
 
     public int getIdComment() {
@@ -80,5 +86,29 @@ public class EntityComment {
 
     public void setCreated_at(long created_at) {
         this.created_at = created_at;
+    }
+
+    public boolean isCanEdit() {
+        return canEdit;
+    }
+
+    public void setCanEdit(boolean canEdit) {
+        this.canEdit = canEdit;
+    }
+
+    public boolean isCanDelete() {
+        return canDelete;
+    }
+
+    public void setCanDelete(boolean canDelete) {
+        this.canDelete = canDelete;
+    }
+
+    public int getTotal() {
+        return total;
+    }
+
+    public void setTotal(int total) {
+        this.total = total;
     }
 }

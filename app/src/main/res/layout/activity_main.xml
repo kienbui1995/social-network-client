@@ -71,7 +71,6 @@
                                 android:layout_marginTop="10dp"
                                 android:layout_marginBottom="10dp"
                                 android:background="@color/bgToolbar"/>
-
                         <ImageButton
                                 android:id="@+id/btnTakePicture"
                                 android:padding="10dp"

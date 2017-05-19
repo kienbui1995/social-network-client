@@ -4,10 +4,10 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import com.joker.hoclazada.Fragment.AboutPagesFragment;
-import com.joker.hoclazada.Fragment.HomePagesFragment;
-import com.joker.hoclazada.Fragment.PhotoPagesFragment;
-import com.joker.hoclazada.Fragment.SettingPagesFragment;
+import com.joker.thanglong.Fragment.AboutPagesFragment;
+import com.joker.thanglong.Fragment.HomePagesFragment;
+import com.joker.thanglong.Fragment.PhotoPagesFragment;
+import com.joker.thanglong.Fragment.SettingPagesFragment;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -6,7 +6,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.joker.hoclazada.R;
+import com.joker.thanglong.R;
 import com.zaihuishou.expandablerecycleradapter.model.ExpandableListItem;
 import com.zaihuishou.expandablerecycleradapter.viewholder.AbstractExpandableAdapterItem;
 

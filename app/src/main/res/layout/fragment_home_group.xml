@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
 
-    tools:context="com.joker.hoclazada.Fragment.HomeGroupFragment">
+    tools:context="com.joker.thanglong.Fragment.HomeGroupFragment">
 
     <!-- TODO: Update blank fragment layout -->
     <LinearLayout

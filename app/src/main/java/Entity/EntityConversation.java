@@ -13,6 +13,7 @@ public class EntityConversation {
     String name;
     String idFrom;
     String idTo;
+    int timeRead;
     Object time;
     String lastMessage;
 
@@ -24,11 +25,12 @@ public class EntityConversation {
         this.lastMessage = lastMessage;
     }
 
-    public EntityConversation(String name, String idFrom, String idTo, String lastMessage) {
+    public EntityConversation(String name, String idFrom, String idTo, String lastMessage, int timeRead) {
         this.name = name;
         this.idFrom = idFrom;
         this.idTo = idTo;
         this.lastMessage = lastMessage;
+        this.timeRead = timeRead;
         this.time = ServerValue.TIMESTAMP;
     }
 
@@ -38,6 +40,7 @@ public class EntityConversation {
         result.put("idFrom",idFrom);
         result.put("idTo",idTo);
         result.put("time",time);
+        result.put("timeRead",timeRead);
         result.put("lastMessage",lastMessage);
         return result;
     }

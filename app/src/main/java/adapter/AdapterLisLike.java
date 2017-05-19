@@ -13,7 +13,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.joker.hoclazada.R;
+import com.joker.thanglong.R;
 
 import java.util.ArrayList;
 

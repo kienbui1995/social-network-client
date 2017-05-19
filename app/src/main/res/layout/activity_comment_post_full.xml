@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+<LinearLayout
+        android:layout_width="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_height="wrap_content">
+    <include layout="@layout/toolbar"/>
+</LinearLayout>
+<android.support.v4.widget.NestedScrollView
+        android:layout_marginLeft="5dp"
+        android:id="@+id/nsvPost"
+        android:layout_marginTop="?attr/actionBarSize"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        <android.support.v7.widget.CardView
+                android:id="@+id/cvHome"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+            <LinearLayout
+                    android:padding="5dp"
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                <LinearLayout
+
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                    <de.hdodenhof.circleimageview.CircleImageView
+                            android:src="@drawable/demo"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"/>
+                    <LinearLayout
+                            android:orientation="vertical"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content">
+                        <TextView
+                                android:id="@+id/txtFullName"
+                                android:textColor="#000"
+                                android:textSize="15sp"
+                                android:textStyle="normal"
+                                android:paddingTop="5dp"
+                                android:paddingLeft="10dp"
+                                android:paddingBottom="3dp"
+                                android:text=""
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"/>
+                        <TextView
+                                android:textSize="12sp"
+                                android:id="@+id/txtTimePostStatus"
+                                android:paddingLeft="10dp"
+                                android:text=""
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"/>
+                    </LinearLayout>
+                </LinearLayout>
+                <TextView
+                        android:id="@+id/txtContentStatus"
+                        android:text=""
+                        android:padding="10dp"
+                        android:textColor="#000"
+                        android:textSize="14sp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+                <ImageView
+                        android:id="@+id/imgPostContent"
+                        android:scaleType="fitCenter"
+                        android:layout_width="match_parent"
+                        android:layout_height="250dp"/>
+                <TextView
+                        android:layout_marginTop="5dp"
+                        android:background="#17000000"
+                        android:textSize="0.1dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+                <LinearLayout
+                        android:paddingBottom="5dp"
+                        android:paddingLeft="20dp"
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="30dp">
+
+                    <com.like.LikeButton
+                            android:layout_gravity="center_vertical"
+                            android:paddingTop="8dp"
+                            android:paddingBottom="5dp"
+                            android:gravity="center_horizontal|center_vertical"
+                            app:icon_type="heart"
+                            app:anim_scale_factor="1.5"
+                            app:icon_size="31dp"
+                            android:id="@+id/btnLove"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            />
+
+                    <TextView
+
+                            android:layout_gravity="center_vertical"
+                            android:textColor="@color/bgToolbar"
+                            android:layout_weight="9"
+                            android:layout_marginLeft="10dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/txtNumberLike"/>
+                    <TextView
+                            android:layout_gravity="center_vertical"
+                            android:textColor="@color/bgToolbar"
+                            android:layout_weight="1"
+                            android:layout_marginLeft="10dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/txtNumberComment"/>
+
+                    <Button
+                            android:layout_marginBottom="3dp"
+                            android:textSize="13sp"
+                            android:id="@+id/btnComment"
+                            android:layout_weight="0.1"
+                            android:background="@android:color/transparent"
+                            android:textColor="#e3464e4d"
+                            android:text="Bình luận"
+                            android:textAllCaps="false"
+                            android:drawableLeft="@drawable/ic_comment"
+                            android:layout_width="wrap_content"
+                            android:layout_height="30dp"/>
+                </LinearLayout>
+            </LinearLayout>
+
+        </android.support.v7.widget.CardView>
+            <android.support.v7.widget.RecyclerView
+                    android:paddingBottom="50dp"
+                    android:background="@color/background_card"
+                    android:id="@+id/rcvComment"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+            </android.support.v7.widget.RecyclerView>
+
+    </LinearLayout>
+
+</android.support.v4.widget.NestedScrollView>
+    <LinearLayout
+            android:layout_above="@+id/textbox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        <include layout="@layout/users_list" />
+    </LinearLayout>
+    <LinearLayout
+            android:id="@+id/textbox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:background="@drawable/btn_style_down"
+            android:orientation="horizontal">
+        <EditText
+                android:maxHeight="100dp"
+                android:paddingTop="15dp"
+                android:paddingBottom="15dp"
+                android:textColor="#000"
+                android:layout_gravity="center"
+                android:paddingLeft="10dp"
+                android:hint="Viết bình luận..."
+                android:drawablePadding="5dp"
+                android:drawableLeft="@drawable/ic_camera_alt_black_24dp"
+                android:background="@drawable/edt_backgroud"
+                android:layout_weight="0.2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/btnCommentInput"/>
+
+        <ImageButton
+                android:id="@+id/btnSubmmitComment"
+                android:paddingTop="15dp"
+                android:paddingBottom="15dp"
+                android:src="@drawable/ic_send"
+                android:layout_gravity="center"
+                android:text=""
+                android:textColor="#000"
+                android:background="@drawable/edt_backgroud"
+                android:layout_weight="0.9"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+    </LinearLayout>
+
+</RelativeLayout>

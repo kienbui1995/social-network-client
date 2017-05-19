@@ -5,7 +5,7 @@
              android:background="@color/white"
              xmlns:app="http://schemas.android.com/apk/res-auto"
              android:layout_height="match_parent"
-             tools:context="com.joker.hoclazada.Fragment.FacebookSignUpFragment">
+             tools:context="com.joker.thanglong.Fragment.FacebookSignUpFragment">
 
     <!-- TODO: Update blank fragment layout -->
 
@@ -71,7 +71,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             >
-        <com.joker.hoclazada.CustomView.DeleteEditText
+        <com.joker.thanglong.CustomView.DeleteEditText
                 android:id="@+id/edtUserName"
                 android:maxLines="1"
                 android:layout_width="match_parent"
@@ -85,7 +85,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             >
-        <com.joker.hoclazada.CustomView.PasswordEditText
+        <com.joker.thanglong.CustomView.PasswordEditText
                 android:textColor="#000"
                 android:id="@+id/edtPassword"
                 android:layout_width="match_parent"

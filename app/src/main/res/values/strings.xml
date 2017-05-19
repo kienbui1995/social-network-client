@@ -65,4 +65,7 @@
     <string name="forgotPassword">Thành công! Một email chứa mã xác nhận đã được gửi tới email của bạn. Mời bạn dùng nó để xác nhận đổi mật khẩu </string>
     <string name="agree">Đồng ý</string>
     <string name="disagree">Hủy bỏ</string>
+    <string name="deleteComment">Bạn có muốn xóa bình luận này?</string>
+    <string name="LoadPreviousComment">Tải các bình luận trước</string>
+    <string name="no_matches_found_user">Không tìm thấy người dùng</string>
 </resources>

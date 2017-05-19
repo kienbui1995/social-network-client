@@ -4,8 +4,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import com.joker.hoclazada.Fragment.DiscoverGroupFragment;
-import com.joker.hoclazada.Fragment.HomeListGroupFragment;
+import com.joker.thanglong.Fragment.DiscoverGroupFragment;
+import com.joker.thanglong.Fragment.HomeListGroupFragment;
 
 import java.util.ArrayList;
 import java.util.List;

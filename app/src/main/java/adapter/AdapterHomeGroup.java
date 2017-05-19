@@ -9,8 +9,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.joker.hoclazada.CommentPostActivity;
-import com.joker.hoclazada.R;
+import com.joker.thanglong.CommentPostActivity;
+import com.joker.thanglong.R;
 
 import java.util.List;
 

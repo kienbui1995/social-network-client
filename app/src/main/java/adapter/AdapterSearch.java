@@ -18,17 +18,15 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.Theme;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.joker.hoclazada.R;
-import com.joker.hoclazada.Ultil.VolleyHelper;
-import com.joker.hoclazada.UserProfileActivity;
+import com.joker.thanglong.R;
+import com.joker.thanglong.Ultil.VolleyHelper;
+import com.joker.thanglong.UserProfileActivity;
 
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-import Entity.EntityUserProfile;
 import Entity.EntityUserSearch;
-import io.realm.Realm;
 
 /**
  * Created by joker on 2/24/17.
@@ -103,13 +101,9 @@ public class AdapterSearch extends ArrayAdapter {
         btnFollowUser = (Button) row.findViewById(R.id.btnFollowUser);
     }
     public  void Follow(String uId){
-        Realm realm;
-        realm = Realm.getDefaultInstance();
-        realm.init(context);
-        EntityUserProfile profile = realm.where(EntityUserProfile.class).findFirst();
         VolleyHelper volleyHelper = new VolleyHelper(context,context.getResources().getString(R.string.url));
 
-        volleyHelper.postHeader("users/" + profile.getuID() + "/subscribers/" + uId, null, new Response.Listener<JSONObject>() {
+        volleyHelper.postHeader("users/" +uId + "/subscriptions", null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 Log.d("follow",response.toString());

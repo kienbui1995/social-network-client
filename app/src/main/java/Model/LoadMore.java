@@ -4,7 +4,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 
-import com.joker.hoclazada.Interface.OnLoadMoreListener;
+import com.joker.thanglong.Interface.OnLoadMoreListener;
 
 /**
  * Created by joker on 4/30/17.

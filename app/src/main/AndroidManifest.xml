@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.joker.hoclazada">
+          package="com.joker.thanglong">
 
     <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
     <uses-permission android:name="android.permission.INTERNET"/>
@@ -24,36 +24,53 @@
         <meta-data
                 android:name="com.facebook.sdk.ApplicationId"
                 android:value="@string/facebook_app_id"/>
+        <meta-data
+                android:name="com.google.firebase.messaging.default_notification_icon"
+                android:resource="@drawable/heart"/>
+        <meta-data
+                android:name="com.google.firebase.messaging.default_notification_color"
+                android:resource="@color/bgToolbar"/>
 
-        <activity android:name=".MainActivity"/>
-        <activity android:name=".SignUpIn"/>
-        <activity android:name=".NotificationActivity"/>
-        <activity android:name=".UserProfileActivity"/>
-        <activity android:name=".PostActivity"/>
-        <activity android:name=".CommentPostActivity"/>
-        <activity android:name=".ChatActivity"/>
-        <activity android:name=".SearchActivity"/>
-        <activity android:name=".SettingActivity"/>
-        <activity android:name=".TrangChuDiemDanhActivity"/>
-        <activity android:name=".GroupActivity"/>
-        <activity android:name=".PagesActivity">
+        <activity android:name="com.joker.thanglong.MainActivity"/>
+        <activity android:name="com.joker.thanglong.SignUpIn"/>
+        <activity android:name="com.joker.thanglong.NotificationActivity"/>
+        <activity android:name="com.joker.thanglong.UserProfileActivity"/>
+        <activity android:name="com.joker.thanglong.PostActivity"/>
+        <activity android:name="com.joker.thanglong.CommentPostActivity"/>
+        <activity android:name="com.joker.thanglong.ChatActivity"/>
+        <activity android:name="com.joker.thanglong.SearchActivity"/>
+        <activity android:name="com.joker.thanglong.SettingActivity"/>
+        <activity android:name="com.joker.thanglong.TrangChuDiemDanhActivity"/>
+        <activity android:name="com.joker.thanglong.GroupActivity"/>
+        <activity android:name="com.joker.thanglong.PagesActivity">
         </activity>
-        <activity android:name=".ImagePostActivity">
+        <activity android:name="com.joker.thanglong.ImagePostActivity">
         </activity>
-        <activity android:name=".HomeListGroupActivity">
+        <activity android:name="com.joker.thanglong.HomeListGroupActivity">
         </activity>
-        <activity android:name=".LoadingActivity">
+        <activity android:name="com.joker.thanglong.LoadingActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".WelcomeActivity">
+        <activity android:name="com.joker.thanglong.WelcomeActivity">
         </activity>
-        <activity android:name=".FollowActivity">
+        <activity android:name="com.joker.thanglong.FollowActivity">
         </activity>
-        <activity android:name=".DemoActivity">
+        <activity android:name="com.joker.thanglong.DemoActivity">
+        </activity>
+        <activity android:name="com.joker.thanglong.EditPostActivity">
+        </activity>
+
+        <service android:name="com.joker.thanglong.Service.MyFirebaseMessagingService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+            </intent-filter>
+        </service>
+
+        <activity android:name="com.joker.thanglong.CommentPostFullActivity">
         </activity>
     </application>
 

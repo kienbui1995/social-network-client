@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         style="@style/AppThemeTextBlack"
-        tools:context="com.joker.hoclazada.PostActivity">
+        tools:context="com.joker.thanglong.PostActivity">
     <android.support.design.widget.AppBarLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

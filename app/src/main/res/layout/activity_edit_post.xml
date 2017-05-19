@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/activity_post"
+        android:orientation="vertical"
+        android:background="@color/colorWhite"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        style="@style/AppThemeTextBlack"
+        tools:context="com.joker.thanglong.PostActivity">
+    <android.support.design.widget.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/bgToolbar">
+        <android.support.v7.widget.Toolbar
+                android:theme="@style/AppThemeTextBlack"
+                android:id="@+id/idToolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"/>
+    </android.support.design.widget.AppBarLayout>
+    <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        <ImageView
+                android:src="@drawable/avatar1"
+                android:layout_width="66dp"
+                android:layout_height="66dp"/>
+        <LinearLayout
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="10dp"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+            <TextView
+                    android:id="@+id/txtFullNamePost"
+                    android:textColor="#000"
+                    android:textStyle="bold"
+                    android:textSize="16sp"
+                    android:text=""
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            <Spinner
+                    android:spinnerMode="dialog"
+                    android:id="@+id/spnPrivacy"
+                    android:layout_width="100dp"
+                    android:layout_height="20dp">
+
+            </Spinner>
+        </LinearLayout>
+    </LinearLayout>
+
+    <EditText
+            android:id="@+id/edtStatusInput"
+            android:textSize="25sp"
+            android:layout_marginTop="10dp"
+            android:gravity="start"
+            android:hint=""
+            android:textColor="#000"
+            android:typeface="sans"
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/edt_backgroud"
+            android:layout_height="match_parent">
+    </EditText>
+    <ImageView
+            android:id="@+id/imgPost"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"/>
+
+</LinearLayout>

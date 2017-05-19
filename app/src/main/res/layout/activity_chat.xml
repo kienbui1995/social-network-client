@@ -7,7 +7,7 @@
         android:layout_width="match_parent"
         android:background="#38d7d9da"
         android:layout_height="match_parent"
-        tools:context="com.joker.hoclazada.ChatActivity">
+        tools:context="com.joker.thanglong.ChatActivity">
     <android.support.design.widget.AppBarLayout
             android:background="@color/bgToolbar"
             android:layout_width="match_parent"

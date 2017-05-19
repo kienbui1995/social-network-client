@@ -1,12 +1,11 @@
 package adapter;
 
-import android.app.FragmentManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import com.joker.hoclazada.Fragment.AboutGroupFragment;
-import com.joker.hoclazada.Fragment.HomeGroupFragment;
-import com.joker.hoclazada.Fragment.SettingGroupFragment;
+import com.joker.thanglong.Fragment.AboutGroupFragment;
+import com.joker.thanglong.Fragment.HomeGroupFragment;
+import com.joker.thanglong.Fragment.SettingGroupFragment;
 
 import java.util.ArrayList;
 import java.util.List;

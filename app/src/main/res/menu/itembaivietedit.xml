@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<item android:title="Báo cáo bài viết" android:id="@+id/mn_report_post"/>
+<item android:title="Lưu bài viết" android:id="@+id/mn_save_post"/>
+<item android:title="Sửa bài viết" android:id="@+id/mn_edit_post"/>
+<item android:title="Xóa bài viết" android:id="@+id/mn_delete_post"/>
+</menu>

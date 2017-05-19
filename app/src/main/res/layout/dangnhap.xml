@@ -20,7 +20,7 @@
                     android:layout_margin="10dp"
                     >
 
-                <com.joker.hoclazada.CustomView.DeleteEditText
+                <com.joker.thanglong.CustomView.DeleteEditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textColor="#000"
@@ -35,7 +35,7 @@
                     android:layout_margin="10dp"
                     >
 
-                <com.joker.hoclazada.CustomView.PasswordEditText
+                <com.joker.thanglong.CustomView.PasswordEditText
                         android:textColor="#000"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"

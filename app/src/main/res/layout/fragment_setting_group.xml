@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.joker.hoclazada.Fragment.SettingGroupFragment">
+    tools:context="com.joker.thanglong.Fragment.SettingGroupFragment">
 
     <!-- TODO: Update blank fragment layout -->
 
