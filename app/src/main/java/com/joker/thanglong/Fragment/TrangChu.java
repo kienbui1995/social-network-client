@@ -14,7 +14,7 @@ import android.widget.ProgressBar;
 
 import com.joker.thanglong.Interface.EndlessScrollListener;
 import com.joker.thanglong.R;
-import com.joker.thanglong.Ultil.PostUlti;
+import com.joker.thanglong.Model.PostModel;
 import com.joker.thanglong.Ultil.ProfileInstance;
 import com.joker.thanglong.Model.UserModel;
 
@@ -69,7 +69,7 @@ public class TrangChu extends Fragment{
 
     public void getData() {
         items = new ArrayList<>();
-        userModel.getNewfeed(new PostUlti.VolleyCallbackListStatus() {
+        userModel.getNewfeed(new PostModel.VolleyCallbackListStatus() {
             @Override
             public void onSuccess(ArrayList<EntityStatus> entityStatuses) {
                 itemsAdapter=entityStatuses;
@@ -88,7 +88,7 @@ public class TrangChu extends Fragment{
         endlessScrollListener =  new EndlessScrollListener((LinearLayoutManager) layoutManager) {
             @Override
             public void onLoadMore(int page, final int totalItemsCount, RecyclerView view) {
-                userModel.getNewfeed(new PostUlti.VolleyCallbackListStatus() {
+                userModel.getNewfeed(new PostModel.VolleyCallbackListStatus() {
                     @Override
                     public void onSuccess(ArrayList<EntityStatus> entityStatuses) {
                         itemsAdapter.addAll(entityStatuses);

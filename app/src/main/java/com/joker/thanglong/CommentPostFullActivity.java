@@ -24,9 +24,10 @@ import com.joker.thanglong.Mention.adapter.UsersAdapter;
 import com.joker.thanglong.Mention.models.Mention;
 import com.joker.thanglong.Mention.models.User;
 import com.joker.thanglong.Mention.utils.MentionsLoaderUtils;
-import com.joker.thanglong.Ultil.PostUlti;
+import com.joker.thanglong.Model.PostModel;
 import com.joker.thanglong.Ultil.ProfileInstance;
 import com.joker.thanglong.Ultil.SystemHelper;
+import com.joker.thanglong.Ultil.VolleySingleton;
 import com.like.LikeButton;
 import com.percolate.caffeine.ViewUtils;
 import com.percolate.mentions.Mentions;
@@ -63,7 +64,7 @@ public class CommentPostFullActivity extends AppCompatActivity implements QueryL
     RecyclerView rcvComment;
     RecyclerView.LayoutManager layoutManager;
     int idPost;
-    PostUlti postUlti;
+    PostModel postModel;
     EntityStatus entityStatus;
     EntityComment entityComment;
     EntityUserProfile entityUserProfile;
@@ -82,7 +83,7 @@ public class CommentPostFullActivity extends AppCompatActivity implements QueryL
         setupToolbar();
         Intent intent = getIntent();
         idPost = intent.getIntExtra("idPost",1);
-        postUlti = new PostUlti(this,idPost);
+        postModel = new PostModel(this,idPost);
         entityUserProfile = ProfileInstance.getProfileInstance(this).getProfile();
         getPostContent();
         initMention();
@@ -124,7 +125,7 @@ public class CommentPostFullActivity extends AppCompatActivity implements QueryL
                 if (TextUtils.isEmpty(btnCommentInput.getText().toString())) {
                     btnCommentInput.setError("Mời bạn nhập bình luận");
                 } else {
-                    postUlti.CommentPost(btnCommentInput.getText().toString().trim());
+                    postModel.CommentPost(btnCommentInput.getText().toString().trim());
                     entityComment = new EntityComment();
                     entityComment.setFull_name(entityUserProfile.getFull_name());
                     entityComment.setMessage(btnCommentInput.getText().toString());
@@ -157,7 +158,7 @@ public class CommentPostFullActivity extends AppCompatActivity implements QueryL
     }
 
     private void getPostContent() {
-        postUlti.getSinglePost(new PostUlti.VolleyCallbackStatus() {
+        postModel.getSinglePost(new PostModel.VolleyCallbackStatus() {
             @Override
             public void onSuccess(EntityStatus entityStatus) {
                 txtFullName.setText(entityStatus.getNameId());
@@ -184,7 +185,7 @@ public class CommentPostFullActivity extends AppCompatActivity implements QueryL
 
     private void addEvent() {
         itemsComment = new ArrayList<>();
-        postUlti.getComment(0,new PostUlti.VolleyCallbackComment() {
+        postModel.getComment(0,new PostModel.VolleyCallbackComment() {
             @Override
             public void onSuccess(ArrayList<EntityComment> entityComments) {
                 itemsComment = entityComments;
@@ -230,7 +231,7 @@ public class CommentPostFullActivity extends AppCompatActivity implements QueryL
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                PostUlti.volleyHelper.get("find_user?name=" + s, null, new Response.Listener<JSONObject>() {
+                VolleySingleton.getInstance(getApplicationContext()).get("find_user?name=" + s, null, new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
                         try {

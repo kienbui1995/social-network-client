@@ -16,13 +16,9 @@ import android.widget.TextView;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.Theme;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
+import com.joker.thanglong.Model.UserModel;
 import com.joker.thanglong.R;
-import com.joker.thanglong.Ultil.VolleyHelper;
 import com.joker.thanglong.UserProfileActivity;
-
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -40,6 +36,8 @@ public class AdapterSearch extends ArrayAdapter {
     private TextView txtFullNameSearchItem;
     private TextView txtUserNameSearchItem;
     private Button btnFollowUser;
+    private UserModel userModel;
+
 
     public AdapterSearch(Activity context, int resource, ArrayList objects) {
         super(context, resource, objects);
@@ -52,6 +50,7 @@ public class AdapterSearch extends ArrayAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         LayoutInflater inflater = this.context.getLayoutInflater();
         View row = inflater.inflate(this.resource,null);
+        userModel = new UserModel(context,items.get(position).getId());
         addControl(row);
         addData(position);
         return row;
@@ -81,7 +80,7 @@ public class AdapterSearch extends ArrayAdapter {
                                     btnFollowUser.setTextColor(Color.parseColor("#FFFFFF"));
                                     btnFollowUser.setText("Đã theo dõi");
                                     btnFollowUser.setEnabled(false);
-                                    Follow(items.get(position).getId());
+                                    userModel.Follow();
                                     Intent intent = new Intent(context, UserProfileActivity.class);
                                     intent.putExtra("uId",items.get(position).getId());
                                     context.startActivity(intent);
@@ -99,22 +98,6 @@ public class AdapterSearch extends ArrayAdapter {
         txtFullNameSearchItem = (TextView) row.findViewById(R.id.txtFullNameSearchItem);
         txtUserNameSearchItem = (TextView) row.findViewById(R.id.txtUserNameSearchItem);
         btnFollowUser = (Button) row.findViewById(R.id.btnFollowUser);
-    }
-    public  void Follow(String uId){
-        VolleyHelper volleyHelper = new VolleyHelper(context,context.getResources().getString(R.string.url));
-
-        volleyHelper.postHeader("users/" +uId + "/subscriptions", null, new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                Log.d("follow",response.toString());
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.d("follow",VolleyHelper.checkErrorCode(error)+"");
-
-            }
-        });
     }
 
 

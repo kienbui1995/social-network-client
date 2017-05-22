@@ -23,6 +23,7 @@
                     android:layout_height="wrap_content">
                 <de.hdodenhof.circleimageview.CircleImageView
                         android:src="@drawable/avatar1"
+                        android:id="@+id/imgAvatar"
                         android:layout_width="40dp"
                         android:layout_height="40dp"/>
                 <LinearLayout
@@ -45,7 +46,6 @@
                             android:textSize="12sp"
                             android:id="@+id/txtTimePostStatus"
                             android:paddingLeft="10dp"
-                            android:text="3 gio truoc"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"/>
                 </LinearLayout>

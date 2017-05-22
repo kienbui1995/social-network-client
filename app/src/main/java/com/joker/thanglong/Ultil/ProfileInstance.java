@@ -13,18 +13,17 @@ public class ProfileInstance {
     private static ProfileInstance profileInstance = null;
     static Realm realm;
     private EntityUserProfile profile;
-    private ProfileInstance(){
-
+    private Context context;
+    private ProfileInstance(Context context){
+        this.context =context;
+        Realm.init(context);
+        realm = Realm.getDefaultInstance();
     }
     public static ProfileInstance getProfileInstance(Context context){
 
-        if (realm ==null){
-            Realm.init(context);
-            realm = Realm.getDefaultInstance();
-        }
         if(profileInstance == null)
         {
-            profileInstance = new ProfileInstance();
+            profileInstance = new ProfileInstance(context);
         }
         return profileInstance;
     }

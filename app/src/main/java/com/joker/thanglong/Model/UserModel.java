@@ -5,7 +5,6 @@ import android.util.Log;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.joker.thanglong.Ultil.PostUlti;
 import com.joker.thanglong.Ultil.VolleySingleton;
 
 import org.json.JSONArray;
@@ -13,11 +12,14 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import Entity.EntityFollow;
 import Entity.EntityStatus;
 import Entity.EntityUserProfile;
 import Entity.EntityUserSearch;
+
+import static com.joker.thanglong.Ultil.VolleyHelper.checkErrorCode;
 
 /**
  * Created by joker on 5/12/17.
@@ -33,6 +35,36 @@ public class UserModel {
     public UserModel(Activity activity){
         this.activity = activity;
     }
+
+    public void unFollow(){
+        VolleySingleton.getInstance(activity).delete("users/" +uId + "/subscriptions", null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                Log.d("follow",response.toString());
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d("follow", checkErrorCode(error)+"");
+            }
+        });
+    }
+
+    public void Follow(){
+        VolleySingleton.getInstance(activity).post("users/" +uId + "/subscriptions", null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                Log.d("follow",response.toString());
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d("follow", checkErrorCode(error)+"");
+            }
+        });
+    }
+
+
 
     public void getListFollow(String type,final VolleyCallBackFollow callback){
         final ArrayList<EntityFollow> items = new ArrayList<>();
@@ -64,7 +96,7 @@ public class UserModel {
             }
         });
     }
-    public void getProfile(final PostUlti.VolleyCallBackJson callback){
+    public void getProfile(final PostModel.VolleyCallBackJson callback){
         VolleySingleton.getInstance(activity).get("users/" + uId, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
@@ -83,7 +115,7 @@ public class UserModel {
         });
     }
 
-    public void getNewfeed(final PostUlti.VolleyCallbackListStatus callback,String type){
+    public void getNewfeed(final PostModel.VolleyCallbackListStatus callback, String type){
         final ArrayList<EntityStatus> items = new ArrayList<>();
         VolleySingleton.getInstance(activity).get("news_feed" + "?limit=10"+type, null, new Response.Listener<JSONObject>() {
             @Override
@@ -103,6 +135,9 @@ public class UserModel {
                         entityStatus.setStatus(jsonObject.getInt("status"));
                         entityStatus.setCanEdit(jsonObject.getBoolean("can_edit"));
                         entityStatus.setCanDelete(jsonObject.getBoolean("can_delete"));
+                        if (jsonObject.has("avatar")){
+                            entityStatus.setAvatar(jsonObject.getString("avatar"));
+                        }
                         if (jsonObject.has("photo")){
                             entityStatus.setImage(jsonObject.getString("photo"));
                         }
@@ -165,6 +200,39 @@ public class UserModel {
         });
     }
 
+    public void updateAvatar(String large, String small, final PostModel.VolleyCallBackCheck callback){
+        HashMap<String,String> parrams = new HashMap<>();
+        parrams.put("large_avatar",large);
+        parrams.put("avatar",small);
+        VolleySingleton.getInstance(activity).put("users/" + uId, new JSONObject(parrams), new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                callback.onSuccess(true);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        });
+    }
+
+    public void updateUser(String full_name, String about, final PostModel.VolleyCallBackCheck callback){
+        HashMap<String,String> parrams = new HashMap<>();
+        parrams.put("full_name",full_name);
+        parrams.put("about",about);
+        VolleySingleton.getInstance(activity).put("users/" + uId, new JSONObject(parrams), new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                callback.onSuccess(true);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        });
+    }
 
     public interface VolleyCallBackFollow {
         void onSuccess(ArrayList<EntityFollow> listFollow);

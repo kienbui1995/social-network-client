@@ -3,6 +3,7 @@ package com.joker.thanglong;
 import android.content.Intent;
 
 import com.daimajia.androidanimations.library.Techniques;
+import com.joker.thanglong.Ultil.ProfileInstance;
 import com.viksaa.sssplash.lib.activity.AwesomeSplash;
 import com.viksaa.sssplash.lib.cnst.Flags;
 import com.viksaa.sssplash.lib.model.ConfigSplash;
@@ -36,8 +37,14 @@ public class LoadingActivity extends AwesomeSplash {
     @Override
     public void animationsFinished() {
 //        checkLoad =true;
-        finish();
-        startActivity(new Intent(this,SignUpIn.class));
+        if (ProfileInstance.getProfileInstance(this).getProfile() ==null)
+        {
+            finish();
+            startActivity(new Intent(this,SignUpIn.class));
+        }else {
+            finish();
+            startActivity(new Intent(this,MainActivity.class));
+        }
     }
 
 

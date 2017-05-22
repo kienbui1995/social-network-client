@@ -184,7 +184,6 @@ public class DangNhap extends Fragment implements View.OnClickListener,Validator
         txtForgotPassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 new MaterialDialog.Builder(getActivity())
                         .title("Quên mật khẩu")
                         .cancelable(false)
@@ -396,7 +395,6 @@ public class DangNhap extends Fragment implements View.OnClickListener,Validator
             String username = edtUsername.getText().toString().trim();
             String password = SystemHelper.MD5(edtPassword.getText().toString());
             entityUserProfile = new EntityUserProfile();
-            entityUserProfile.setUserName(username);
 
             //Request
             VolleyHelper volleyHelper = new VolleyHelper(getActivity(),getResources().getString(R.string.url),false);

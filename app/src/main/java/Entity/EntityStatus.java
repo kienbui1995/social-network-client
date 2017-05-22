@@ -18,10 +18,11 @@ public class EntityStatus {
     private int privacy;
     private boolean canEdit;
     private boolean canDelete;
+    private String avatar;
     public EntityStatus() {
     }
 
-    public EntityStatus(int idStatus, int uId, String nameId, String content, long createdTime, String image, boolean isLike, int status, int numberLike, int numberComment, int privacy, boolean canEdit, boolean canDelete) {
+    public EntityStatus(int idStatus, int uId, String nameId, String content, long createdTime, String image, boolean isLike, int status,String avatar ,int numberLike, int numberComment, int privacy, boolean canEdit, boolean canDelete) {
         this.idStatus = idStatus;
         this.uId = uId;
         this.nameId = nameId;
@@ -35,6 +36,7 @@ public class EntityStatus {
         this.privacy = privacy;
         this.canEdit = canEdit;
         this.canDelete = canDelete;
+        this.avatar = avatar;
     }
 
     public int getIdStatus() {
@@ -141,4 +143,11 @@ public class EntityStatus {
         this.canDelete = canDelete;
     }
 
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
 }

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+                                            android:orientation="vertical"
+                                            xmlns:app="http://schemas.android.com/apk/res-auto"
+                                            android:layout_width="match_parent"
+                                            android:background="@drawable/vienfacebook"
+                                            android:layout_height="match_parent">
+    <FrameLayout
+            android:id="@+id/viewContent"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        <include layout="@layout/toolbar"/>
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                      android:layout_marginTop="?attr/actionBarSize"
+                      android:orientation="vertical"
+                      android:padding="@dimen/activity_horizontal_margin"
+                      android:layout_width="match_parent"
+                      android:layout_height="match_parent">
+
+            <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    >
+                <com.joker.thanglong.CustomView.DeleteEditText
+                        android:id="@+id/edtFullName"
+                        android:maxLines="1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="#000"
+                        android:inputType="text"
+                        android:hint="Họ và tên"/>
+            </android.support.design.widget.TextInputLayout>
+            <RadioGroup
+                    android:layout_margin="13dp"
+                    android:id="@+id/rgSex"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Giới tính: "/>
+                <RadioButton
+                        android:id="@+id/rbMale"
+                        android:text="Nam"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                <RadioButton
+                        android:id="@+id/rdFemale"
+                        android:text="Nữ"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+            </RadioGroup>
+            <TextView
+                    android:layout_margin="10dp"
+                    android:text="Giới thiệu bản thân:"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    >
+                <EditText
+                        android:background="@drawable/vienthanglong"
+                        android:gravity="start"
+                        android:id="@+id/edtDescription"
+                        android:maxLines="14"
+                        android:layout_width="match_parent"
+                        android:layout_height="200dp"
+                        android:textColor="#000"
+                        android:inputType="text"/>
+            </android.support.design.widget.TextInputLayout>
+
+
+            <Button
+                    android:id="@+id/btnSignUp"
+                    android:layout_margin="10dp"
+                    android:layout_width="match_parent"
+                    android:text="Cập nhật thông tin"
+                    android:background="@color/colorAccent"
+                    android:layout_height="wrap_content"/>
+
+        </LinearLayout>
+    </FrameLayout>
+</android.support.v4.widget.NestedScrollView>

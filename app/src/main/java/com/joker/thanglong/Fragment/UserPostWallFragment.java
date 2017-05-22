@@ -6,15 +6,14 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.joker.thanglong.Interface.EndlessScrollListener;
-import com.joker.thanglong.R;
-import com.joker.thanglong.Ultil.PostUlti;
+import com.joker.thanglong.Model.PostModel;
 import com.joker.thanglong.Model.UserModel;
+import com.joker.thanglong.R;
 import com.joker.thanglong.UserProfileActivity;
 
 import java.util.ArrayList;
@@ -33,7 +32,7 @@ public class UserPostWallFragment extends Fragment {
     ArrayList<EntityStatus> itemsAdapter;
     RecyclerView.LayoutManager layoutManager;
     private EndlessScrollListener endlessScrollListener;
-    private PostUlti postUlti;
+    private PostModel postModel;
     private SwipeRefreshLayout swrPostWall ;
     UserModel userModel;
 
@@ -68,8 +67,8 @@ public class UserPostWallFragment extends Fragment {
     }
 
     private void getData() {
-        postUlti = new PostUlti(getActivity(), Integer.parseInt(UserProfileActivity.id),"");
-        postUlti.getListPost(0,new PostUlti.VolleyCallbackListStatus() {
+        postModel = new PostModel(getActivity(), Integer.parseInt(UserProfileActivity.id),"post");
+        postModel.getListPost(0,new PostModel.VolleyCallbackListStatus() {
             @Override
             public void onSuccess(ArrayList<EntityStatus> entityStatuses) {
                 items = entityStatuses;
@@ -87,8 +86,7 @@ public class UserPostWallFragment extends Fragment {
         endlessScrollListener =  new EndlessScrollListener((LinearLayoutManager) layoutManager) {
             @Override
             public void onLoadMore(int page, final int totalItemsCount, RecyclerView vie) {
-                Log.d("totalItem",totalItemsCount+"");
-                postUlti.getListPost(totalItemsCount,new PostUlti.VolleyCallbackListStatus() {
+                postModel.getListPost(totalItemsCount,new PostModel.VolleyCallbackListStatus() {
                     @Override
                     public void onSuccess(ArrayList<EntityStatus> entityStatuses) {
                         items.addAll(entityStatuses);

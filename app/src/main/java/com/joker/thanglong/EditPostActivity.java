@@ -16,7 +16,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.joker.thanglong.Ultil.PostUlti;
+import com.joker.thanglong.Model.PostModel;
 
 import java.util.HashMap;
 
@@ -31,7 +31,7 @@ public class EditPostActivity extends AppCompatActivity {
     private ImageView imgPost;
     int idPost;
     private int privacy;
-    PostUlti postUlti;
+    PostModel postModel;
     EntityUserProfile entityUserProfile;
     String arrPrivacy[] = {"Công khai","Chỉ cho người theo dõi bạn","Riêng tư"};
     @Override
@@ -41,7 +41,7 @@ public class EditPostActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         idPost = intent.getIntExtra("idPost",1);
-        postUlti = new PostUlti(this,idPost);
+        postModel = new PostModel(this,idPost);
         addControl();
         setupTabs();
         getContent();
@@ -49,7 +49,7 @@ public class EditPostActivity extends AppCompatActivity {
     }
 
     private void getContent() {
-        postUlti.getSinglePost(new PostUlti.VolleyCallbackStatus() {
+        postModel.getSinglePost(new PostModel.VolleyCallbackStatus() {
             @Override
             public void onSuccess(EntityStatus entityStatus) {
                 edtStatusInput.setText(entityStatus.getContent());
@@ -96,7 +96,7 @@ public class EditPostActivity extends AppCompatActivity {
             {
                 edtStatusInput.setError("Xin mời bạn nhập nội dung");
             }else {
-                postUlti.editPost(edtStatusInput.getText().toString().trim(), privacy, new PostUlti.VolleyCallBackCheck() {
+                postModel.editPost(edtStatusInput.getText().toString().trim(), privacy, new PostModel.VolleyCallBackCheck() {
                     @Override
                     public void onSuccess(boolean status) {
                         finish();

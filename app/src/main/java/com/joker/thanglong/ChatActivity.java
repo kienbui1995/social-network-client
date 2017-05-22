@@ -21,7 +21,6 @@ import android.widget.LinearLayout;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.joker.thanglong.Model.ChatItem;
-import com.joker.thanglong.Ultil.FirebaseHelper;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -122,7 +121,7 @@ public class ChatActivity extends AppCompatActivity {
         mdapter = new FirebaseRecyclerAdapter<ChatItem,ViewHolderChat>(ChatItem.class, item_chat_friend,ViewHolderChat.class,query) {
             @Override
             protected void populateViewHolder(ViewHolderChat viewHolder, ChatItem model, int position) {
-                FirebaseHelper.getFirebaseHelper(getApplicationContext()).setOnline(2);
+//                FirebaseHelper.getFirebaseHelper(getApplicationContext()).setOnline(2);
 //                Log.d("itemss",chatItems.size()+"");
 //                viewHolder.setIsRecyclable(false);
 //                if (isOnline){
@@ -316,18 +315,18 @@ public class ChatActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        FirebaseHelper.getFirebaseHelper(this).setOnline(2);
+//        FirebaseHelper.getFirebaseHelper(this).setOnline(2);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        FirebaseHelper.getFirebaseHelper(this).setOnline(2);
+//        FirebaseHelper.getFirebaseHelper(this).setOnline(2);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        FirebaseHelper.getFirebaseHelper(this).setOnline(2);
+//        FirebaseHelper.getFirebaseHelper(this).setOnline(2);
     }
 }

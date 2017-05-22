@@ -24,13 +24,12 @@ import com.github.piasy.biv.loader.glide.GlideImageLoader;
 import com.github.piasy.biv.view.BigImageView;
 import com.github.piasy.biv.view.ImageSaveCallback;
 import com.joker.thanglong.Ultil.ImageUlti;
-import com.joker.thanglong.Ultil.VolleyHelper;
+import com.joker.thanglong.Ultil.VolleySingleton;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 public class ImagePostActivity extends AppCompatActivity {
-    VolleyHelper volleyHelper;
     private BigImageView mBigImage;
     private Button mBtnLoad;
     private Toolbar toolbar;
@@ -70,8 +69,7 @@ public class ImagePostActivity extends AppCompatActivity {
     }
 
     private void getDataPhoto() {
-        volleyHelper = new VolleyHelper(this,getResources().getString(R.string.url));
-        volleyHelper.get("posts/" + idStatus, null, new Response.Listener<JSONObject>() {
+        VolleySingleton.getInstance(getApplicationContext()).get("posts/" + idStatus, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
 

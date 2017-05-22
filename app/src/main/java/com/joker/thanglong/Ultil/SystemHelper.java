@@ -32,19 +32,19 @@ public class SystemHelper extends Application{
         // TODO: localize
         final long diff = now - time;
         if (diff < MINUTE_MILLIS) {
-            return "just now";
+            return "Vừa xong";
         } else if (diff < 2 * MINUTE_MILLIS) {
-            return "a minute ago";
+            return "Một phút trước";
         } else if (diff < 50 * MINUTE_MILLIS) {
-            return diff / MINUTE_MILLIS + " minutes ago";
+            return diff / MINUTE_MILLIS + " phút trước";
         } else if (diff < 90 * MINUTE_MILLIS) {
-            return "an hour ago";
+            return "Một giờ trước";
         } else if (diff < 24 * HOUR_MILLIS) {
-            return diff / HOUR_MILLIS + " hours ago";
+            return diff / HOUR_MILLIS + " giờ trước";
         } else if (diff < 48 * HOUR_MILLIS) {
-            return "yesterday";
+            return "Hôm qua";
         } else {
-            return diff / DAY_MILLIS + " days ago";
+            return diff / DAY_MILLIS + " ngày trước";
         }
     }
     public static long getTimeStamp(){

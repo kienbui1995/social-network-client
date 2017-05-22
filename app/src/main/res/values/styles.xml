@@ -48,7 +48,8 @@
 
     <style name="menuitemcolor" parent="AppTheme">
         <item name="android:textColorHint">#c5c5c5</item>
-        <item name="android:textColorPrimary">@color/bgToolbar</item>
+        <item name="android:textColorPrimary">@color/colorWhite</item>
+        <item name="android:textColor">@color/bgToolbar</item>
         <item name="drawerArrowStyle">@style/colorDrawerToggle</item>
     </style>
 

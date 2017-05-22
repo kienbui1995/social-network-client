@@ -15,13 +15,9 @@ import android.widget.TextView;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.Theme;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
+import com.joker.thanglong.Model.UserModel;
 import com.joker.thanglong.R;
-import com.joker.thanglong.Ultil.VolleyHelper;
 import com.joker.thanglong.UserProfileActivity;
-
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -41,7 +37,7 @@ public class AdapterFollowingList extends ArrayAdapter {
     private TextView txtFullNameFollow;
     private TextView txtUserNameFollow;
     private Button btnMessage;
-    
+    private UserModel userModel;
     public AdapterFollowingList(Activity context, int resource, ArrayList objects) {
         super(context, resource, objects);
         this.context = context;
@@ -54,6 +50,7 @@ public class AdapterFollowingList extends ArrayAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         LayoutInflater inflater = this.context.getLayoutInflater();
         View view = inflater.inflate(this.resource,null);
+        userModel = new UserModel(context,items.get(position).getId());
         addControl(view);
         addEvent(position);
         return view;
@@ -90,7 +87,7 @@ public class AdapterFollowingList extends ArrayAdapter {
                             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
 
                                 Log.d("positionId",items.get(position).getId());
-                                unFollow(Integer.parseInt(items.get(position).getId()));
+                                userModel.unFollow();
                                 items.remove(position);
                                 notifyDataSetChanged();
                             }
@@ -111,22 +108,5 @@ public class AdapterFollowingList extends ArrayAdapter {
         btnMessage = (Button) view.findViewById(R.id.btnMessage);
     }
 
-    private void unFollow(int uId)
-    {
-        VolleyHelper volleyHelper = new VolleyHelper(context,context.getResources().getString(R.string.url));
-        volleyHelper.delete("users/" +uId + "/subscriptions", null, new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                Log.d("follow",response.toString());
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.d("follow",VolleyHelper.checkErrorCode(error)+"");
-
-            }
-        });
-
-    }
 
 }

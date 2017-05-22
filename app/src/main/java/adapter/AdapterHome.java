@@ -4,21 +4,13 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Point;
-import android.os.Handler;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
-import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.Display;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -31,18 +23,21 @@ import android.widget.Toast;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
+import com.joker.thanglong.CommentPostActivity;
 import com.joker.thanglong.EditPostActivity;
 import com.joker.thanglong.ImagePostActivity;
 import com.joker.thanglong.Interface.EndlessScrollListener;
+import com.joker.thanglong.Model.PostModel;
 import com.joker.thanglong.R;
 import com.joker.thanglong.Ultil.CommentUlti;
-import com.joker.thanglong.Ultil.PostUlti;
-import com.joker.thanglong.Ultil.ProfileInstance;
 import com.joker.thanglong.Ultil.SystemHelper;
 import com.joker.thanglong.Ultil.VolleyHelper;
+import com.joker.thanglong.Ultil.VolleySingleton;
 import com.joker.thanglong.UserProfileActivity;
 import com.like.LikeButton;
 import com.like.OnLikeListener;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -79,7 +74,7 @@ public class AdapterHome extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
     private ListView lvListLike;
     private ProgressDialog progressDialog;
     View view;
-    PostUlti postUlti;
+    PostModel postModel;
     CommentUlti commentUlti;
     EndlessScrollListener endlessScrollListener;
 //    public AdapterHome(Context context, ArrayList<EntityStatus> items,Activity activity,VolleyHelper volleyHelper)
@@ -116,22 +111,32 @@ public class AdapterHome extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
     @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
-        volleyHelper = new VolleyHelper(context,context.getResources().getString(R.string.url));
         progressDialog = new ProgressDialog(activity);
         Log.d("idStatus",items.get(position).getIdStatus()+"");
         commentUlti = new CommentUlti();
-//        holder.setIsRecyclable(false);
+        holder.setIsRecyclable(false);
         switch (holder.getItemViewType()) {
             case 1:
                 final ViewHolderText holderText = (ViewHolderText) holder;
                 holderText.btnComment.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        onShowPopup(view,activity,position);
+                        Intent intent = new Intent(context, CommentPostActivity.class);
+                        intent.putExtra("idPost",items.get(position).getIdStatus());
+                        intent.putExtra("likes",items.get(position).getNumberLike());
+                        context.startActivity(intent);
+                        activity.overridePendingTransition(R.anim.bottom_up,R.anim.bottom_down);
 //                        commentUlti.onShowUp(view,activity,position);
 //                        addEvent(position,view);
                     }
                 });
+
+                Glide.with(context).load(items.get(position).getAvatar())
+                        .fitCenter()
+                        .centerCrop()
+                        .crossFade()
+                        .into(holderText.imgAvatar);
+
                 holderText.txtOption.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -164,9 +169,9 @@ public class AdapterHome extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
                                         activity.startActivity(intent);
                                         break;
                                     case R.id.mn_delete_post:
-                                        PostUlti postUlti1 = new PostUlti(activity,items.get(position).getIdStatus());
+                                        PostModel postModel1 = new PostModel(activity,items.get(position).getIdStatus());
                                         progressDialog = ProgressDialog.show(activity,"","Đang xóa bài viết",true);
-                                        postUlti1.DeletePost(new PostUlti.VolleyCallBackCheck() {
+                                        postModel1.DeletePost(new PostModel.VolleyCallBackCheck() {
                                             @Override
                                             public void onSuccess(boolean status) {
                                                 if (status==true){
@@ -223,7 +228,7 @@ public class AdapterHome extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
                 holderText.btnLove.setOnLikeListener(new OnLikeListener() {
                     @Override
                     public void liked(LikeButton likeButton) {
-                        volleyHelper.postHeader("posts/" + items.get(position).getIdStatus() + "/likes", null, new Response.Listener<JSONObject>() {
+                        VolleySingleton.getInstance(activity).post("posts/" + items.get(position).getIdStatus() + "/likes", null, new Response.Listener<JSONObject>() {
                             @Override
                             public void onResponse(JSONObject response) {
                                 JSONObject jsonObject = null;
@@ -245,7 +250,7 @@ public class AdapterHome extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
                     @Override
                     public void unLiked(LikeButton likeButton) {
-                        volleyHelper.delete("posts/" + items.get(position).getIdStatus() + "/likes", null, new Response.Listener<JSONObject>() {
+                        VolleySingleton.getInstance(activity).delete("posts/" + items.get(position).getIdStatus() + "/likes", null, new Response.Listener<JSONObject>() {
                             @Override
                             public void onResponse(JSONObject response) {
                                 Log.d("Like","Like: + " + items.get(position).getIdStatus());
@@ -278,6 +283,13 @@ public class AdapterHome extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
                         context.startActivity(intent);
                     }
                 });
+                //Change avatar
+                Glide.with(context).load(items.get(position).getAvatar())
+                        .fitCenter()
+                        .centerCrop()
+                        .crossFade()
+                        .into(holderPhoto.imgAvatar);
+
                 holderPhoto.txtOption.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -310,9 +322,9 @@ public class AdapterHome extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
                                         activity.startActivity(intent);
                                         break;
                                     case R.id.mn_delete_post:
-                                        PostUlti postUlti1 = new PostUlti(activity,items.get(position).getIdStatus());
+                                        PostModel postModel1 = new PostModel(activity,items.get(position).getIdStatus());
                                         progressDialog = ProgressDialog.show(activity,"","Đang xóa bài viết",true);
-                                        postUlti1.DeletePost(new PostUlti.VolleyCallBackCheck() {
+                                        postModel1.DeletePost(new PostModel.VolleyCallBackCheck() {
                                             @Override
                                             public void onSuccess(boolean status) {
                                                 if (status==true){
@@ -361,7 +373,13 @@ public class AdapterHome extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
                 holderPhoto.btnComment.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        onShowPopup(view,activity,position);
+//                        onShowPopup(view,activity,position);
+                        Intent intent = new Intent(context, CommentPostActivity.class);
+                        intent.putExtra("idPost",items.get(position).getIdStatus());
+                        intent.putExtra("likes",items.get(position).getNumberLike());
+                        context.startActivity(intent);
+                        activity.overridePendingTransition(R.anim.bottom_up,R.anim.bottom_down);
+
                     }
                 });
 
@@ -386,7 +404,7 @@ public class AdapterHome extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
                 holderPhoto.btnLove.setOnLikeListener(new OnLikeListener() {
                     @Override
                     public void liked(LikeButton likeButton) {
-                        volleyHelper.postHeader("posts/" + items.get(position).getIdStatus() + "/likes", null, new Response.Listener<JSONObject>() {
+                        VolleySingleton.getInstance(activity).post("posts/" + items.get(position).getIdStatus() + "/likes", null, new Response.Listener<JSONObject>() {
                             @Override
                             public void onResponse(JSONObject response) {
                                 JSONObject jsonObject = null;
@@ -408,7 +426,7 @@ public class AdapterHome extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
                     @Override
                     public void unLiked(LikeButton likeButton) {
-                        volleyHelper.delete("posts/" + items.get(position).getIdStatus() + "/likes", null, new Response.Listener<JSONObject>() {
+                        VolleySingleton.getInstance(activity).delete("posts/" + items.get(position).getIdStatus() + "/likes", null, new Response.Listener<JSONObject>() {
                             @Override
                             public void onResponse(JSONObject response) {
                                 JSONObject jsonObject = null;
@@ -431,197 +449,197 @@ public class AdapterHome extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
         }
     }
 
-    private void onShowPopup(View v, Activity activity, int position) {
-        LayoutInflater layoutInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        // inflate the custom popup layout
-        View inflatedView = layoutInflater.inflate(R.layout.activity_comment_post, null,false);
-        addControl(inflatedView);
-        // find the ListView in the popup layout
-//        ListView listView = (ListView)inflatedView.findViewById(R.id.commentsListView);
-//        LinearLayout headerView = (LinearLayout)inflatedView.findViewById(R.id.headerLayout);
-        // get device size
-        Display display = activity.getWindowManager().getDefaultDisplay();
-        final Point size = new Point();
-        display.getSize(size);
-//        mDeviceHeight = size.y;
-        DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
-        int width = displayMetrics.widthPixels;
-        int height = displayMetrics.heightPixels;
-        // fill the data to the list items
-//        setSimpleList(listView);
-        // set height depends on the device size
-        popWindow = new PopupWindow(inflatedView, width,height, true );
-        // set a background drawable with rounders corners
-        popWindow.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.fb_popup_bg));
-        popWindow.setInputMethodMode(PopupWindow.INPUT_METHOD_NEEDED);
-        popWindow.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
-        popWindow.setAnimationStyle(R.style.PopupAnimation);
-        popWindow.setOutsideTouchable(true);
-        // show the popup at bottom of the screen and set some margin at bottom ie,
-        popWindow.showAtLocation(v, Gravity.BOTTOM, 0,130);
-        //Event
-        addEvent(position,v);
-    }
+//    private void onShowPopup(View v, Activity activity, int position) {
+//        LayoutInflater layoutInflater = (LayoutInflater)activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+//        // inflate the custom popup layout
+//        View inflatedView = layoutInflater.inflate(R.layout.activity_comment_post, null,false);
+//        addControl(inflatedView);
+//        // find the ListView in the popup layout
+////        ListView listView = (ListView)inflatedView.findViewById(R.id.commentsListView);
+////        LinearLayout headerView = (LinearLayout)inflatedView.findViewById(R.id.headerLayout);
+//        // get device size
+//        Display display = activity.getWindowManager().getDefaultDisplay();
+//        final Point size = new Point();
+//        display.getSize(size);
+////        mDeviceHeight = size.y;
+//        DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
+//        int width = displayMetrics.widthPixels;
+//        int height = displayMetrics.heightPixels;
+//        // fill the data to the list items
+////        setSimpleList(listView);
+//        // set height depends on the device size
+//        popWindow = new PopupWindow(inflatedView, width,height, true );
+//        // set a background drawable with rounders corners
+//        popWindow.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.fb_popup_bg));
+//        popWindow.setInputMethodMode(PopupWindow.INPUT_METHOD_NEEDED);
+//        popWindow.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
+//        popWindow.setAnimationStyle(R.style.PopupAnimation);
+//        popWindow.setOutsideTouchable(true);
+//        // show the popup at bottom of the screen and set some margin at bottom ie,
+//        popWindow.showAtLocation(v, Gravity.BOTTOM, 0,130);
+//        //Event
+//        addEvent(position,v);
+//    }
 
-    private void addEvent(final int position, final View v) {
-        btnLikeList.setText(items.get(position).getNumberLike()+"");
-        btnLikeList.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onShowPopupLikeList(v,activity,position);
-            }
-
-            private void onShowPopupLikeList(View v, Activity activity, int position) {
-                LayoutInflater layoutInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                // inflate the custom popup layout
-                View inflatedView = layoutInflater.inflate(R.layout.custom_like_list, null,false);
-                addControlListLike(inflatedView);
-                Display display = activity.getWindowManager().getDefaultDisplay();
-                final Point size = new Point();
-                display.getSize(size);
-                DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
-                int width = displayMetrics.widthPixels;
-                int height = displayMetrics.heightPixels;
-                popWindow = new PopupWindow(inflatedView, size.x,size.y, true );
-                // set a background drawable with rounders corners
-                popWindow.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.fb_popup_bg));
-                popWindow.setInputMethodMode(PopupWindow.INPUT_METHOD_NEEDED);
-                popWindow.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
-                popWindow.setAnimationStyle(R.style.PopupAnimationLike);
-                popWindow.setOutsideTouchable(true);
-                // show the popup at bottom of the screen and set some margin at bottom ie,
-                popWindow.showAtLocation(v, Gravity.FILL_VERTICAL, 0,130);
-                //Event
-//                addEventListLike(position);
-            }
-
-//            private void addEventListLike(final int position) {
-//                itemsLikeList = new ArrayList<EntityListLike>();
-//                volleyHelper.get("posts/" + items.get(position).getIdStatus() + "/likes", null, new Response.Listener<JSONObject>() {
-//                    @Override
-//                    public void onResponse(JSONObject response) {
-//                        try {
-//                            JSONArray jsonArray = response.getJSONArray("data");
-//                            if (jsonArray.equals("null"))
-//                            {
-//                                System.exit(0);
-//                            }else {
-//                                for (int i = 0; i< jsonArray.length(); i++)
-//                                {
-//                                    JSONObject jsonObject = (JSONObject) jsonArray.get(i);
-//                                    entityListLike = new EntityListLike();
-//                                    entityListLike.setFull_name(jsonObject.getString("full_name"));
-//                                    entityListLike.setUsername(jsonObject.getString("username"));
-//                                    entityListLike.setFollow(jsonObject.getBoolean("is_followed"));
-//                                    entityListLike.setId(jsonObject.getInt("id"));
-//                                    itemsLikeList.add(entityListLike);
-//                                    adapterLisLike.notifyDataSetChanged();
-//                                    Log.d("full_name",entityListLike.getFull_name());
-//                                }
-//                            }
-//                        } catch (JSONException e) {
-//                            e.printStackTrace();
-//                        }
-//                    }
-//                }, new Response.ErrorListener() {
-//                    @Override
-//                    public void onErrorResponse(VolleyError error) {
+//    private void addEvent(final int position, final View v) {
+//        btnLikeList.setText(items.get(position).getNumberLike()+"");
+//        btnLikeList.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                onShowPopupLikeList(v,activity,position);
+//            }
 //
+//            private void onShowPopupLikeList(View v, Activity activity, int position) {
+//                LayoutInflater layoutInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+//                // inflate the custom popup layout
+//                View inflatedView = layoutInflater.inflate(R.layout.custom_like_list, null,false);
+//                addControlListLike(inflatedView);
+//                Display display = activity.getWindowManager().getDefaultDisplay();
+//                final Point size = new Point();
+//                display.getSize(size);
+//                DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
+//                int width = displayMetrics.widthPixels;
+//                int height = displayMetrics.heightPixels;
+//                popWindow = new PopupWindow(inflatedView, size.x,size.y, true );
+//                // set a background drawable with rounders corners
+//                popWindow.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.fb_popup_bg));
+//                popWindow.setInputMethodMode(PopupWindow.INPUT_METHOD_NEEDED);
+//                popWindow.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
+//                popWindow.setAnimationStyle(R.style.PopupAnimationLike);
+//                popWindow.setOutsideTouchable(true);
+//                // show the popup at bottom of the screen and set some margin at bottom ie,
+//                popWindow.showAtLocation(v, Gravity.FILL_VERTICAL, 0,130);
+//                //Event
+////                addEventListLike(position);
+//            }
+//
+////            private void addEventListLike(final int position) {
+////                itemsLikeList = new ArrayList<EntityListLike>();
+////                volleyHelper.get("posts/" + items.get(position).getIdStatus() + "/likes", null, new Response.Listener<JSONObject>() {
+////                    @Override
+////                    public void onResponse(JSONObject response) {
+////                        try {
+////                            JSONArray jsonArray = response.getJSONArray("data");
+////                            if (jsonArray.equals("null"))
+////                            {
+////                                System.exit(0);
+////                            }else {
+////                                for (int i = 0; i< jsonArray.length(); i++)
+////                                {
+////                                    JSONObject jsonObject = (JSONObject) jsonArray.get(i);
+////                                    entityListLike = new EntityListLike();
+////                                    entityListLike.setFull_name(jsonObject.getString("full_name"));
+////                                    entityListLike.setUsername(jsonObject.getString("username"));
+////                                    entityListLike.setFollow(jsonObject.getBoolean("is_followed"));
+////                                    entityListLike.setId(jsonObject.getInt("id"));
+////                                    itemsLikeList.add(entityListLike);
+////                                    adapterLisLike.notifyDataSetChanged();
+////                                    Log.d("full_name",entityListLike.getFull_name());
+////                                }
+////                            }
+////                        } catch (JSONException e) {
+////                            e.printStackTrace();
+////                        }
+////                    }
+////                }, new Response.ErrorListener() {
+////                    @Override
+////                    public void onErrorResponse(VolleyError error) {
+////
+////                    }
+////                });
+////                adapterLisLike= new AdapterLisLike(activity,R.layout.custom_search_result,itemsLikeList);
+////                lvListLike.setAdapter(adapterLisLike);
+////                adapterLisLike.notifyDataSetChanged();
+////            }
+//
+//            private void addControlListLike(View inflatedView) {
+//                btnBackToComment = (Button) inflatedView.findViewById(R.id.btnBackToComment);
+//                lvListLike = (ListView) inflatedView.findViewById(R.id.lvListLike);
+//
+//            }
+//        });
+//        //init Volley
+////        final VolleyHelper volleyHelper = new VolleyHelper(context,context.getResources().getString(R.string.url));
+//        //Get content of comment
+//        getContentComment(position);
+//        //Add comment
+//        btnSubmmitComment.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                if (TextUtils.isEmpty(btnCommentInput.getText().toString().trim()))
+//                {
+////                    btnCommentInput.setError("Mời bạn nhập nội dung");
+//                }else {
+//                    Handler handler = new Handler();
+//                    handler.postDelayed(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            addComment(position);
+//                        }
+//                    },300);
+//                }
+//
+//            }
+//        });
+//
+//    }
+//
+//    private void getContentComment(final int position) {
+//        itemsComment = new ArrayList<>();
+//        postModel = new PostModel(activity,items.get(position).getIdStatus());
+//        postModel.getComment(0,new PostModel.VolleyCallbackComment() {
+//            @Override
+//            public void onSuccess(ArrayList<EntityComment> entityComments) {
+//                itemsComment =entityComments;
+//                loadMore();
+//            }
+//        });
+//
+//    }
+//    private void loadMore() {
+//        layoutManager = new LinearLayoutManager(context,LinearLayoutManager.VERTICAL,false);
+//        adapterComment = new AdapterComment(context,itemsComment);
+//        rcvComment.setLayoutManager(layoutManager);
+//        rcvComment.setAdapter(adapterComment);
+//        adapterComment.notifyDataSetChanged();
+//        endlessScrollListener = new EndlessScrollListener((LinearLayoutManager) layoutManager) {
+//            @Override
+//            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+//                postModel.getComment(totalItemsCount,new PostModel.VolleyCallbackComment() {
+//                    @Override
+//                    public void onSuccess(ArrayList<EntityComment> entityComments) {
+//                        itemsComment.addAll(entityComments);
+//                        Log.d("ScrollComment",true+"");
+//                        adapterComment.notifyDataSetChanged();
 //                    }
 //                });
-//                adapterLisLike= new AdapterLisLike(activity,R.layout.custom_search_result,itemsLikeList);
-//                lvListLike.setAdapter(adapterLisLike);
-//                adapterLisLike.notifyDataSetChanged();
 //            }
+//        };
+//        rcvComment.setOnScrollListener(endlessScrollListener);
+//    }
+//    private void addComment(int position) {
+//        String message = btnCommentInput.getText().toString();
+//        postModel.addComment(new PostModel.VolleyCallBackJson() {
+//            @Override
+//            public void onSuccess(JSONObject jsonObject) throws JSONException {
+//                entityComment = new EntityComment();
+//                entityComment.setFull_name(ProfileInstance.getProfileInstance(activity).getProfile().getFull_name());
+//                entityComment.setMessage(btnCommentInput.getText().toString());
+//                entityComment.setCreated_at(SystemHelper.getTimeStamp());
+//                itemsComment.add(entityComment);
+////                adapterComment.notifyDataSetChanged();
+//                btnCommentInput.setText("");
+//            }
+//        },message);
+//    }
 
-            private void addControlListLike(View inflatedView) {
-                btnBackToComment = (Button) inflatedView.findViewById(R.id.btnBackToComment);
-                lvListLike = (ListView) inflatedView.findViewById(R.id.lvListLike);
-
-            }
-        });
-        //init Volley
-//        final VolleyHelper volleyHelper = new VolleyHelper(context,context.getResources().getString(R.string.url));
-        //Get content of comment
-        getContentComment(position);
-        //Add comment
-        btnSubmmitComment.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (TextUtils.isEmpty(btnCommentInput.getText().toString().trim()))
-                {
-//                    btnCommentInput.setError("Mời bạn nhập nội dung");
-                }else {
-                    Handler handler = new Handler();
-                    handler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            addComment(position);
-                        }
-                    },300);
-                }
-
-            }
-        });
-
-    }
-
-    private void getContentComment(final int position) {
-        itemsComment = new ArrayList<>();
-        postUlti = new PostUlti(activity,items.get(position).getIdStatus());
-        postUlti.getComment(0,new PostUlti.VolleyCallbackComment() {
-            @Override
-            public void onSuccess(ArrayList<EntityComment> entityComments) {
-                itemsComment =entityComments;
-                loadMore();
-            }
-        });
-
-    }
-    private void loadMore() {
-        layoutManager = new LinearLayoutManager(context,LinearLayoutManager.VERTICAL,false);
-        adapterComment = new AdapterComment(context,itemsComment);
-        rcvComment.setLayoutManager(layoutManager);
-        rcvComment.setAdapter(adapterComment);
-        adapterComment.notifyDataSetChanged();
-        endlessScrollListener = new EndlessScrollListener((LinearLayoutManager) layoutManager) {
-            @Override
-            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
-                postUlti.getComment(totalItemsCount,new PostUlti.VolleyCallbackComment() {
-                    @Override
-                    public void onSuccess(ArrayList<EntityComment> entityComments) {
-                        itemsComment.addAll(entityComments);
-                        Log.d("ScrollComment",true+"");
-                        adapterComment.notifyDataSetChanged();
-                    }
-                });
-            }
-        };
-        rcvComment.setOnScrollListener(endlessScrollListener);
-    }
-    private void addComment(int position) {
-        String message = btnCommentInput.getText().toString();
-        postUlti.addComment(new PostUlti.VolleyCallBackJson() {
-            @Override
-            public void onSuccess(JSONObject jsonObject) throws JSONException {
-                entityComment = new EntityComment();
-                entityComment.setFull_name(ProfileInstance.getProfileInstance(activity).getProfile().getFull_name());
-                entityComment.setMessage(btnCommentInput.getText().toString());
-                entityComment.setCreated_at(SystemHelper.getTimeStamp());
-                itemsComment.add(entityComment);
-//                adapterComment.notifyDataSetChanged();
-                btnCommentInput.setText("");
-            }
-        },message);
-    }
-
-    private void addControl(View inflatedView) {
-        btnLikeList = (Button) inflatedView.findViewById(R.id.btnStatusLike);
-        rcvComment = (RecyclerView) inflatedView.findViewById(R.id.rcvComment);
-        btnCommentInput = (EditText) inflatedView.findViewById(R.id.btnCommentInput);
-        btnSubmmitComment = (ImageButton) inflatedView.findViewById(R.id.btnSubmmitComment);
-
-    }
+//    private void addControl(View inflatedView) {
+//        btnLikeList = (Button) inflatedView.findViewById(R.id.btnStatusLike);
+//        rcvComment = (RecyclerView) inflatedView.findViewById(R.id.rcvComment);
+//        btnCommentInput = (EditText) inflatedView.findViewById(R.id.btnCommentInput);
+//        btnSubmmitComment = (ImageButton) inflatedView.findViewById(R.id.btnSubmmitComment);
+//
+//    }
 
     @Override
     public int getItemCount() {
@@ -637,6 +655,8 @@ public class AdapterHome extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
         private TextView txtOption;
         private TextView txtNumberLike;
         private TextView txtNumberComment;
+        private CircleImageView imgAvatar;
+
         Button btnComment;
         public ViewHolderText(View itemView) {
             super(itemView);
@@ -648,6 +668,7 @@ public class AdapterHome extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
             txtOption = (TextView) itemView.findViewById(R.id.txtOption);
             txtNumberLike = (TextView) itemView.findViewById(R.id.txtNumberLike);
             txtNumberComment = (TextView) itemView.findViewById(R.id.txtNumberComment);
+            imgAvatar = (CircleImageView) itemView.findViewById(R.id.imgAvatar);
         }
     }
 
@@ -661,6 +682,8 @@ public class AdapterHome extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
         private TextView txtNumberComment;
         private Button btnComment;
         private TextView txtOption;
+        private CircleImageView imgAvatar;
+
 
 
 
@@ -675,6 +698,7 @@ public class AdapterHome extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
             txtNumberLike = (TextView) itemView.findViewById(R.id.txtNumberLike);
             txtNumberComment = (TextView) itemView.findViewById(R.id.txtNumberComment);
             btnComment = (Button) itemView.findViewById(R.id.btnComment);
+            imgAvatar = (CircleImageView) itemView.findViewById(R.id.imgAvatar);
 
         }
     }

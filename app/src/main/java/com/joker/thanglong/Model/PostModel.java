@@ -1,11 +1,13 @@
-package com.joker.thanglong.Ultil;
+package com.joker.thanglong.Model;
 
 import android.app.Activity;
+import android.net.Uri;
 import android.util.Log;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.joker.thanglong.R;
+import com.joker.thanglong.Ultil.VolleyHelper;
+import com.joker.thanglong.Ultil.VolleySingleton;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -17,34 +19,38 @@ import java.util.HashMap;
 import Entity.EntityComment;
 import Entity.EntityStatus;
 
+import static com.joker.thanglong.R.menu.privacy;
+
 /**
  * Created by joker on 5/8/17.
  */
 
-public class PostUlti {
-    public static VolleyHelper volleyHelper;
+public class PostModel {
     EntityStatus entityStatus;
     Activity activity;
     EntityComment entityComment;
     int idPost;
     int uId;
     String type;
-    public PostUlti(Activity activity,int uId,String type) {
-        this.volleyHelper = new VolleyHelper(activity,activity.getResources().getString(R.string.url));
+
+    public PostModel(Activity activity) {
+        this.activity = activity;
+    }
+
+    public PostModel(Activity activity, int uId, String type) {
         entityStatus = new EntityStatus();
         this.activity=activity;
         this.uId=uId;
         this.type =type;
     }
-    public PostUlti(Activity activity, int id) {
-        this.volleyHelper = new VolleyHelper(activity,activity.getResources().getString(R.string.url));
+    public PostModel(Activity activity, int id) {
         entityStatus = new EntityStatus();
         this.activity=activity;
         this.idPost = id;
     }
 
     public void getSinglePost(final VolleyCallbackStatus callback){
-        volleyHelper.get("posts/" + idPost, null, new Response.Listener<JSONObject>() {
+        VolleySingleton.getInstance(activity).get("posts/" + idPost, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 try {
@@ -78,7 +84,7 @@ public class PostUlti {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.d("editPost",VolleyHelper.checkErrorCode(error)+"");
+                Log.d("editPost",VolleySingleton.getInstance(activity).checkErrorCode(error)+"");
             }
         });
     }
@@ -97,7 +103,7 @@ public class PostUlti {
         parram.put("status",1);
         parrams.putAll(parram);
         Log.d("hashmap", new JSONObject(parrams).toString());
-        volleyHelper.put("posts/" + idPost , new JSONObject(parrams), new Response.Listener<JSONObject>() {
+        VolleySingleton.getInstance(activity).put("posts/" + idPost , new JSONObject(parrams), new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 callback.onSuccess(true);
@@ -111,7 +117,7 @@ public class PostUlti {
     }
     public  ArrayList<EntityComment> getComment(int number,final VolleyCallbackComment callback){
         final ArrayList<EntityComment> entityComments = new ArrayList<>();
-        volleyHelper.get("posts/" + idPost + "/comments?sort=-created_at&limit=15&skip="+ number, null,
+        VolleySingleton.getInstance(activity).get("posts/" + idPost + "/comments?sort=-created_at&limit=15&skip="+ number, null,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
@@ -146,6 +152,29 @@ public class PostUlti {
         return entityComments;
     }
 
+    public void addPost(String message, String type,Uri downloadUri, final VolleyCallBackCheck callback) {
+        HashMap<String,String> parram = new HashMap<>();
+        parram.put("message",message);
+        if (downloadUri !=null){
+            parram.put("photo",downloadUri.toString());
+        }
+        HashMap parramNumber = new HashMap();
+        parramNumber.put("status",1);
+        parramNumber.put("privacy", privacy);
+        parram.putAll(parramNumber);
+        VolleySingleton.getInstance(activity).post("users/" + uId + "/"+type, new JSONObject(parram), new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                callback.onSuccess(true);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        });
+    }
+
     public void CommentPost(final String content){
         final EntityComment entityComment = new EntityComment();
         HashMap<String,String> parrams = new HashMap<>();
@@ -153,7 +182,7 @@ public class PostUlti {
         HashMap map = new HashMap();
         map.put("status",1);
         parrams.putAll(map);
-        volleyHelper.postHeader("posts/" + idPost + "/comments", new JSONObject(parrams),
+        VolleySingleton.getInstance(activity).post("posts/" + idPost + "/comments", new JSONObject(parrams),
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
@@ -162,14 +191,14 @@ public class PostUlti {
                 }, new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Log.d("postCommentSucees",VolleyHelper.checkErrorCode(error)+"");
+                        Log.d("postCommentSucees",VolleySingleton.getInstance(activity).checkErrorCode(error)+"");
 
                     }
                 });
     }
     public ArrayList<EntityStatus> getListPost(int total,final VolleyCallbackListStatus callback){
         final ArrayList<EntityStatus> statuses = new ArrayList<>();
-        volleyHelper.get("users/" + uId + "/posts?type=" + type +"&limit=10"+ "&skip="+ total, null, new Response.Listener<JSONObject>() {
+        VolleySingleton.getInstance(activity).get("users/" + uId + "/posts?type=" + type +"&limit=10"+ "&skip="+ total, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 try {
@@ -187,7 +216,9 @@ public class PostUlti {
                         entityStatus.setStatus(jsonObject.getInt("status"));
                         entityStatus.setCanEdit(jsonObject.getBoolean("can_edit"));
                         entityStatus.setCanDelete(jsonObject.getBoolean("can_delete"));
-                        Log.d("canEdit",jsonObject.getBoolean("can_edit")+"");
+                        if (jsonObject.has("avatar")){
+                            entityStatus.setAvatar(jsonObject.getString("avatar"));
+                        }
                         if (jsonObject.has("photo")){
                             entityStatus.setImage(jsonObject.getString("photo"));
                         }
@@ -218,7 +249,7 @@ public class PostUlti {
         return statuses;
     }
     public void DeletePost(final VolleyCallBackCheck callback){
-        volleyHelper.delete("posts/" + idPost, null, new Response.Listener<JSONObject>() {
+        VolleySingleton.getInstance(activity).delete("posts/" + idPost, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 callback.onSuccess(true);
@@ -233,7 +264,7 @@ public class PostUlti {
     }
 
     public void LikePost(final VolleyCallBackJson callback){
-        volleyHelper.postHeader("posts/" + idPost + "/likes", null, new Response.Listener<JSONObject>() {
+        VolleySingleton.getInstance(activity).post("posts/" + idPost + "/likes", null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 try {
@@ -246,14 +277,14 @@ public class PostUlti {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.d("Like",VolleyHelper.checkErrorCode(error)+"");
+                Log.d("Like",VolleySingleton.getInstance(activity).checkErrorCode(error)+"");
             }
         });
 
     }
 
     public void UnLikePost(final VolleyCallBackJson callback){
-        volleyHelper.delete("posts/" + idPost + "/likes", null, new Response.Listener<JSONObject>() {
+        VolleySingleton.getInstance(activity).delete("posts/" + idPost + "/likes", null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 try {
@@ -266,7 +297,7 @@ public class PostUlti {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.d("UnLike",VolleyHelper.checkErrorCode(error)+"");
+                Log.d("UnLike",VolleySingleton.getInstance(activity).checkErrorCode(error)+"");
             }
         });
 
@@ -274,10 +305,7 @@ public class PostUlti {
     public void addComment(final VolleyCallBackJson callback,String message){
         HashMap<String,String> parrams = new HashMap<>();
         parrams.put("message",message);
-        HashMap map = new HashMap();
-        map.put("status",1);
-        parrams.putAll(map);
-        volleyHelper.postHeader("posts/" + idPost + "/comments", new JSONObject(parrams),
+        VolleySingleton.getInstance(activity).post("posts/" + idPost + "/comments", new JSONObject(parrams),
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
@@ -291,7 +319,7 @@ public class PostUlti {
                 }, new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-
+                        Log.d("addComment", VolleyHelper.checkErrorCode(error)+"");
 
                     }
                 });
@@ -299,10 +327,11 @@ public class PostUlti {
     }
 
 
-    public void DeleteComment(final VolleyCallBackCheck callback){
-        volleyHelper.delete("comments/" + idPost, null, new Response.Listener<JSONObject>() {
+    public void DeleteComment(final VolleyCallBackCheck callback, final int idComment){
+        VolleySingleton.getInstance(activity).delete("comments/" + idComment, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
+                Log.d("delete",idComment+"");
                 callback.onSuccess(true);
             }
         }, new Response.ErrorListener() {

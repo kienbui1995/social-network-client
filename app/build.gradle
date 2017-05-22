@@ -10,6 +10,7 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        multiDexEnabled true
     }
     buildTypes {
         release {
@@ -42,7 +43,7 @@ dependencies {
     compile 'com.github.piasy:BigImageViewer:1.2.5'
     compile 'com.github.piasy:ProgressPieIndicator:1.2.5'
     compile 'com.github.piasy:GlideImageLoader:1.2.5'
-    compile 'com.afollestad.material-dialogs:core:0.9.4.1'
+    compile 'com.afollestad.material-dialogs:core:0.9.4.5'
     compile 'com.google.firebase:firebase-storage:10.2.1'
     compile 'com.google.firebase:firebase-auth:10.2.1'
     compile 'com.firebaseui:firebase-ui-database:1.2.0'

@@ -1,7 +1,5 @@
 package com.joker.thanglong;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -12,7 +10,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -30,18 +27,15 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
+import com.joker.thanglong.Model.PostModel;
 import com.joker.thanglong.Ultil.DeviceUltil;
 import com.joker.thanglong.Ultil.FilePath;
+import com.joker.thanglong.Ultil.FirebaseHelper;
 import com.joker.thanglong.Ultil.ImagePicker;
+import com.joker.thanglong.Ultil.ProfileInstance;
 import com.joker.thanglong.Ultil.SystemHelper;
-import com.joker.thanglong.Ultil.VolleyHelper;
 import com.squareup.picasso.Picasso;
 
-import org.json.JSONObject;
-
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.util.HashMap;
 
@@ -64,7 +58,8 @@ public class PostActivity extends AppCompatActivity {
     int fileSize;
     ProgressDialog progressDialog;
     Activity activity;
-
+    PostModel postModel;
+    FirebaseHelper firebaseHelper;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,6 +67,8 @@ public class PostActivity extends AppCompatActivity {
         activity =this;
         Intent intent = getIntent();
         selectedImagePath = intent.getStringExtra("path");
+        postModel = new PostModel(this,Integer.parseInt(ProfileInstance.getProfileInstance(this).getProfile().getuID()),"");
+        firebaseHelper = new FirebaseHelper(this);
         addControl();
         if (selectedImagePath != null){
             Log.d("selectedImagePath",selectedImagePath);
@@ -178,25 +175,32 @@ public class PostActivity extends AppCompatActivity {
         mStorageReference = FirebaseStorage.getInstance().getReference();
     }
 
-    private void UploadFile(String fileName,Bitmap bmp){
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bmp.compress(Bitmap.CompressFormat.JPEG, 80, stream);
-        byte[] data = stream.toByteArray();
-        StorageReference filepath = mStorageReference.child(fileName);
-        UploadTask uploadTask = filepath.putBytes(data);
-        uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                downloadUri = taskSnapshot.getDownloadUrl();
-                PostStatus("posts",downloadUri);
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Toast.makeText(PostActivity.this, "Upload fail", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
+//    private void UploadFile(String fileName,Bitmap bmp){
+//        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+//        bmp.compress(Bitmap.CompressFormat.JPEG, 80, stream);
+//        byte[] data = stream.toByteArray();
+//        StorageReference filepath = mStorageReference.child(fileName);
+//        UploadTask uploadTask = filepath.putBytes(data);
+//        uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+//            @Override
+//            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+//                downloadUri = taskSnapshot.getDownloadUrl();
+//                postModel.addPost(edtStatusInput.getText().toString().trim(), "posts", downloadUri, new PostModel.VolleyCallBackCheck() {
+//                    @Override
+//                    public void onSuccess(boolean status) {
+//                        progressDialog.dismiss();
+//                        Toast.makeText(PostActivity.this, "Cập nhật thành công", Toast.LENGTH_LONG).show();
+//                        finish();
+//                    }
+//                });
+//            }
+//        }).addOnFailureListener(new OnFailureListener() {
+//            @Override
+//            public void onFailure(@NonNull Exception e) {
+//                Toast.makeText(PostActivity.this, "Upload fail", Toast.LENGTH_SHORT).show();
+//            }
+//        });
+//    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -214,42 +218,66 @@ public class PostActivity extends AppCompatActivity {
             }else {
                 if (selectedImagePath == null){
                     progressDialog = ProgressDialog.show(this,"","Đang cập nhật trạng thái của bạn",true);
-                    PostStatus("posts",null);
+                    postModel.addPost(edtStatusInput.getText().toString().trim(), "posts", null, new PostModel.VolleyCallBackCheck() {
+                        @Override
+                        public void onSuccess(boolean status) {
+                            progressDialog.dismiss();
+                            Toast.makeText(PostActivity.this, "Cập nhật thành công", Toast.LENGTH_LONG).show();
+                            finish();
+                        }
+                    });
                 }else {
                     progressDialog = ProgressDialog.show(this,"","Đang cập nhật trạng thái của bạn",true);
-                    String fileName = "images/photos/" + SystemHelper.getTimeStamp() + "_" + MainActivity.entityUserProfile.getUserName();
-                    UploadFile(fileName,bmp);
+                    String fileName = "images/photos/" + SystemHelper.getTimeStamp() + "_" + ProfileInstance.getProfileInstance(this)
+                            .getProfile().getUserName();
+//                    UploadFile(fileName,bmp);
+                    firebaseHelper.UploadFile(fileName, bmp, new FirebaseHelper.FirebaseCallback() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            downloadUri = taskSnapshot.getDownloadUrl();
+                            postModel.addPost(edtStatusInput.getText().toString().trim(), "posts", downloadUri, new PostModel.VolleyCallBackCheck() {
+                                @Override
+                                public void onSuccess(boolean status) {
+                                    progressDialog.dismiss();
+                                    Toast.makeText(PostActivity.this, "Cập nhật thành công", Toast.LENGTH_LONG).show();
+                                    finish();
+                                }
+                            });
+
+                        }
+                    });
+
                 }
             }
         }
         return super.onOptionsItemSelected(item);
     }
-    private void PostStatus(String type,Uri downloadUri) {
-        VolleyHelper volleyHelper = new VolleyHelper(this,getResources().getString(R.string.url));
-        HashMap<String,String> parram = new HashMap<>();
-        parram.put("message",edtStatusInput.getText().toString());
-        if (downloadUri !=null){
-            parram.put("photo",downloadUri.toString());
-        }
-        HashMap parramNumber = new HashMap();
-        parramNumber.put("status",1);
-        parramNumber.put("privacy", privacy);
-        parram.putAll(parramNumber);
-        volleyHelper.postHeader("users/" + MainActivity.entityUserProfile.getuID() + "/"+type, new JSONObject(parram), new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                progressDialog.dismiss();
-                Toast.makeText(PostActivity.this, "Cập nhật thành công", Toast.LENGTH_LONG).show();
-                finish();
-                Log.d("postStatus",response.toString());
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.d("postStatus",VolleyHelper.checkErrorCode(error)+"");
-            }
-        });
-    }
+//    private void PostStatus(String type,Uri downloadUri) {
+//        VolleyHelper volleyHelper = new VolleyHelper(this,getResources().getString(R.string.url));
+//        HashMap<String,String> parram = new HashMap<>();
+//        parram.put("message",edtStatusInput.getText().toString());
+//        if (downloadUri !=null){
+//            parram.put("photo",downloadUri.toString());
+//        }
+//        HashMap parramNumber = new HashMap();
+//        parramNumber.put("status",1);
+//        parramNumber.put("privacy", privacy);
+//        parram.putAll(parramNumber);
+//        volleyHelper.postHeader("users/" + MainActivity.entityUserProfile.getuID() + "/"+type, new JSONObject(parram), new Response.Listener<JSONObject>() {
+//            @Override
+//            public void onResponse(JSONObject response) {
+//                progressDialog.dismiss();
+//                Toast.makeText(PostActivity.this, "Cập nhật thành công", Toast.LENGTH_LONG).show();
+//                finish();
+//                Log.d("postStatus",response.toString());
+//            }
+//        }, new Response.ErrorListener() {
+//            @Override
+//            public void onErrorResponse(VolleyError error) {
+//                Log.d("postStatus",VolleyHelper.checkErrorCode(error)+"");
+//            }
+//        });
+//    }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {

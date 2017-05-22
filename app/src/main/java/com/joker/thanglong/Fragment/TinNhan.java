@@ -91,7 +91,7 @@ public class TinNhan extends Fragment{
 //                if (model.getIdTo().equals(MainActivity.entityUserProfile.getuID()))
 //                {
 //                    UserModel userModel = new UserModel(getActivity(),model.getIdFrom());
-//                    userModel.getProfile(new PostUlti.VolleyCallBackJson() {
+//                    userModel.getProfile(new PostModel.VolleyCallBackJson() {
 //                        @Override
 //                        public void onSuccess(JSONObject jsonObject) throws JSONException {
 //                            try {
@@ -131,7 +131,7 @@ public class TinNhan extends Fragment{
 //                    });
 //                }else {
 //                    UserModel userModel = new UserModel(getActivity(),model.getIdTo());
-//                    userModel.getProfile(new PostUlti.VolleyCallBackJson() {
+//                    userModel.getProfile(new PostModel.VolleyCallBackJson() {
 //                        @Override
 //                        public void onSuccess(JSONObject jsonObject) throws JSONException {
 //                            try {

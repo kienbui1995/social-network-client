@@ -13,7 +13,7 @@ import android.view.ViewGroup;
 
 import com.joker.thanglong.Interface.EndlessScrollListener;
 import com.joker.thanglong.R;
-import com.joker.thanglong.Ultil.PostUlti;
+import com.joker.thanglong.Model.PostModel;
 import com.joker.thanglong.UserProfileActivity;
 
 import java.util.ArrayList;
@@ -30,8 +30,9 @@ public class UserPictureWallFragment extends Fragment {
     private ArrayList<EntityStatus> listPhoto;
     private SwipeRefreshLayout swrPictureWall;
     private EndlessScrollListener endlessScrollListener;
-    PostUlti postUlti;
+    PostModel postModel;
     String uID;
+    boolean isLoad = false;
     public UserPictureWallFragment() {
         // Required empty public constructor
     }
@@ -42,10 +43,12 @@ public class UserPictureWallFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_user_picture_wall, container, false);
-        getIntent();
-        addControl(view);
-        getData();
-        addEvent();
+       if (!isLoad){
+           getIntent();
+           addControl(view);
+           getData();
+           addEvent();
+       }
         return view;
     }
 
@@ -68,8 +71,8 @@ public class UserPictureWallFragment extends Fragment {
 
     private void getData() {
         listPhoto = new ArrayList<>();
-        postUlti = new PostUlti(getActivity(),Integer.parseInt(uID),"photo");
-        postUlti.getListPost(0,new PostUlti.VolleyCallbackListStatus() {
+        postModel = new PostModel(getActivity(),Integer.parseInt(uID),"photo");
+        postModel.getListPost(0,new PostModel.VolleyCallbackListStatus() {
             @Override
             public void onSuccess(ArrayList<EntityStatus> entityStatuses) {
                 listPhoto=entityStatuses;
@@ -87,7 +90,7 @@ public class UserPictureWallFragment extends Fragment {
             @Override
             public void onLoadMore(int page, final int totalItemsCount, RecyclerView vie) {
                 Log.d("totalItem",totalItemsCount+"");
-                postUlti.getListPost(totalItemsCount,new PostUlti.VolleyCallbackListStatus() {
+                postModel.getListPost(totalItemsCount,new PostModel.VolleyCallbackListStatus() {
                     @Override
                     public void onSuccess(ArrayList<EntityStatus> entityStatuses) {
                         listPhoto.addAll(entityStatuses);
@@ -104,4 +107,11 @@ public class UserPictureWallFragment extends Fragment {
         swrPictureWall = (SwipeRefreshLayout) view.findViewById(R.id.swrPictureWall);
     }
 
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser && !isLoad){
+            isLoad=true;
+        }
+    }
 }

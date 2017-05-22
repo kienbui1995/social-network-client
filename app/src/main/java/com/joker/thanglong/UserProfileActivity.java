@@ -1,8 +1,5 @@
 package com.joker.thanglong;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
@@ -11,7 +8,6 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
@@ -20,7 +16,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -28,29 +23,33 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialog;
+import com.afollestad.materialdialogs.Theme;
+import com.bumptech.glide.Glide;
+import com.joker.thanglong.Fragment.EditProfileFragment;
+import com.joker.thanglong.Model.PostModel;
+import com.joker.thanglong.Model.UserModel;
 import com.joker.thanglong.Ultil.DeviceUltil;
 import com.joker.thanglong.Ultil.FilePath;
+import com.joker.thanglong.Ultil.FirebaseHelper;
 import com.joker.thanglong.Ultil.ImagePicker;
-import com.joker.thanglong.Ultil.PostUlti;
 import com.joker.thanglong.Ultil.ProfileInstance;
-import com.joker.thanglong.Ultil.SystemHelper;
-import com.joker.thanglong.Model.UserModel;
-import com.joker.thanglong.Ultil.VolleyHelper;
 import com.squareup.picasso.Picasso;
+
+import de.hdodenhof.circleimageview.CircleImageView;
+
+import jp.wasabeef.picasso.transformations.CropSquareTransformation;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 
-import Entity.EntityUserProfile;
 import adapter.UserWallAdapter;
-
-import static com.joker.thanglong.R.menu.profile;
 
 public class UserProfileActivity extends AppCompatActivity {
     private CoordinatorLayout content;
@@ -58,7 +57,7 @@ public class UserProfileActivity extends AppCompatActivity {
     private AppBarLayout appBarLayout;
     private CollapsingToolbarLayout collapsingToolbar;
     private LinearLayout vUserProfileRoot;
-    private ImageView ivUserProfilePhoto;
+    private CircleImageView ivUserProfilePhoto;
     private LinearLayout vUserDetails;
     private ImageView idVerifi;
     private Button btnFollow;
@@ -69,8 +68,6 @@ public class UserProfileActivity extends AppCompatActivity {
     private String selectedImagePath = "";
     private TextView txtFullNameProfile;
     private TextView txtUserNameProfile;
-    private VolleyHelper volleyHelper;
-    private EntityUserProfile entityUserProfile;
     private Button btnNhanTin;
     private ViewPager viewPager;
     private  UserWallAdapter userWallAdapter;
@@ -80,16 +77,22 @@ public class UserProfileActivity extends AppCompatActivity {
     public static String id = null;
     private UserModel userModel;
     private Bitmap bmp;
+    private FirebaseHelper firebaseHelper;
+    private String large_avatar;
+    private String small_avatar;
+    private RelativeLayout viewRoot;
+
     Uri downloadUri;
     File file;
     int fileSize;
     StorageReference mStorageReference;
     public UserProfileActivity() {
-
+    firebaseHelper = new FirebaseHelper(this);
     }
 
-    @Override
 
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_profile);
@@ -106,13 +109,10 @@ public class UserProfileActivity extends AppCompatActivity {
     }
 
     private void addEvent() {
-        changeAvtar();
+        changeAvatar();
 
     }
 
-    private void displayInfo() {
-
-    }
 
     private void getDataProfile() {
         Intent intent = getIntent();
@@ -130,7 +130,7 @@ public class UserProfileActivity extends AppCompatActivity {
 
     private void getProfile(final String id) {
         userModel = new UserModel(this, id);
-        userModel.getProfile(new PostUlti.VolleyCallBackJson() {
+        userModel.getProfile(new PostModel.VolleyCallBackJson() {
             @Override
             public void onSuccess(JSONObject jsonObject) throws JSONException {
                 JSONObject object = jsonObject;
@@ -140,6 +140,11 @@ public class UserProfileActivity extends AppCompatActivity {
                 txtFollower.setText(object.getString("followers"));
                 toolbarProfile.setTitle(object.getString("full_name"));
                 txtNumberOfPost.setText(object.getString("posts"));
+                Glide.with(getApplicationContext()).load(jsonObject.getString("avatar"))
+                        .fitCenter()
+                        .centerCrop()
+                        .crossFade()
+                        .into(ivUserProfilePhoto);
                 btnNhanTin.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -148,20 +153,33 @@ public class UserProfileActivity extends AppCompatActivity {
                         startActivity(intent);
                     }
                 });
-
             }
         });
 
     }
 
-    private void changeAvtar() {
+    private void changeAvatar() {
         ivUserProfilePhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ivUserProfilePhoto.performLongClick();
+                new MaterialDialog.Builder(UserProfileActivity.this)
+                        .items(R.array.optionAvatar)
+                        .theme(Theme.LIGHT)
+                        .itemsCallback(new MaterialDialog.ListCallback() {
+                            @Override
+                            public void onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
+                                switch (which){
+                                    case 0:
+                                        chooseImage();
+                                    case 1:
+                                        Toast.makeText(UserProfileActivity.this, which+"", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        })
+                        .show();
+
             }
         });
-        registerForContextMenu(ivUserProfilePhoto);
     }
 
     private void setupTabs() {
@@ -196,7 +214,7 @@ public class UserProfileActivity extends AppCompatActivity {
         appBarLayout = (AppBarLayout) findViewById(R.id.appBarLayout);
         collapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
         vUserProfileRoot = (LinearLayout) findViewById(R.id.vUserProfileRoot);
-        ivUserProfilePhoto = (ImageView) findViewById(R.id.ivUserProfilePhoto);
+        ivUserProfilePhoto = (CircleImageView) findViewById(R.id.ivUserProfilePhoto);
         vUserDetails = (LinearLayout) findViewById(R.id.vUserDetails);
         idVerifi = (ImageView) findViewById(R.id.idVerifi);
         btnFollow = (Button) findViewById(R.id.btnFollow);
@@ -208,7 +226,8 @@ public class UserProfileActivity extends AppCompatActivity {
         txtUserNameProfile = (TextView) findViewById(R.id.txtUserNameProfile);
         viewPager = (ViewPager) findViewById(R.id.view_pager);
         txtNumberOfPost = (TextView) findViewById(R.id.txtNumberOfPost);
-        mStorageReference = FirebaseStorage.getInstance().getReference();
+        viewRoot = (RelativeLayout) findViewById(R.id.viewRoot);
+
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -218,12 +237,30 @@ public class UserProfileActivity extends AppCompatActivity {
                 Picasso.with(getApplicationContext())
                         .load(data.getData())
                         .fit().centerCrop()
+                        .transform(new CropSquareTransformation())
                         .into(ivUserProfilePhoto);
                 file = new File(selectedImagePath);
                 fileSize = Integer.parseInt(String.valueOf(file.length()))/1024;
                 bmp = ImagePicker.getImageFromResult(this, resultCode, data);
-                String fileName = "images/photos/" + SystemHelper.getTimeStamp() + "_" + MainActivity.entityUserProfile.getUserName();
-                UploadFile(fileName,bmp);
+                firebaseHelper.changeAvatar(bmp,"large",new FirebaseHelper.FirebaseCallback() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        large_avatar =taskSnapshot.getDownloadUrl().toString();
+                        firebaseHelper.changeAvatar(bmp, "small", new FirebaseHelper.FirebaseCallback() {
+                            @Override
+                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                small_avatar = taskSnapshot.getDownloadUrl().toString();
+                                userModel.updateAvatar(large_avatar, small_avatar, new PostModel.VolleyCallBackCheck() {
+                                    @Override
+                                    public void onSuccess(boolean status) {
+                                        Toast.makeText(UserProfileActivity.this, "Cập nhật ảnh đại diện thành công", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                            }
+                        });
+                    }
+                });
+//                UploadFile(fileName,bmp);
                 Log.d("data", fileSize+"'");
 //                if (imgPost.getVisibility() != View.VISIBLE) {
 //                    imgPost.setVisibility(View.VISIBLE);
@@ -234,17 +271,7 @@ public class UserProfileActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        getMenuInflater().inflate(R.menu.avatar,menu);
-        menu.setHeaderTitle("Thay đổi ảnh đại diện");
-        menu.setHeaderIcon(R.drawable.ic_mode_edit_black_24dp);
-        super.onCreateContextMenu(menu, v, menuInfo);
-    }
-
-    @Override
-    public boolean onContextItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.itChangeAvatar){
+    public void chooseImage() {
             DeviceUltil deviceUltil = new DeviceUltil(this);
             deviceUltil.CheckPermissionStorage();
             mIntent = new Intent();
@@ -253,35 +280,47 @@ public class UserProfileActivity extends AppCompatActivity {
             startActivityForResult(
                     Intent.createChooser(mIntent, getString(R.string.select_picture)),
                     1);
-        }else {
-            Toast.makeText(this, "Tinh nang dang duoc hoan thanh", Toast.LENGTH_SHORT).show();
-        }
-        return super.onContextItemSelected(item);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(profile,menu);
+        getMenuInflater().inflate(R.menu.profile,menu);
         return super.onCreateOptionsMenu(menu);
+    }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int mId = item.getItemId();
+        switch (mId){
+            case R.id.itEditProfile:
+                EditProfileFragment editProfileFragment = new EditProfileFragment();
+                getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.slide_out_right,R.anim.slide_in_left)
+                        .add(R.id.viewRoot,editProfileFragment,"editProfile")
+                        .addToBackStack(null)
+                        .commit();
+            case 1:
+
+        }
+        return true;
     }
-    private void UploadFile(String fileName,Bitmap bmp){
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bmp.compress(Bitmap.CompressFormat.JPEG, 80, stream);
-        byte[] data = stream.toByteArray();
-        StorageReference filepath = mStorageReference.child(fileName);
-        UploadTask uploadTask = filepath.putBytes(data);
-        uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                downloadUri = taskSnapshot.getDownloadUrl();
-//                PostStatus("posts",downloadUri);
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Toast.makeText(getApplicationContext(), "Upload fail", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
+    //    private void UploadFile(String fileName,Bitmap bmp){
+//        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+//        bmp.compress(Bitmap.CompressFormat.JPEG, 80, stream);
+//        byte[] data = stream.toByteArray();
+//        StorageReference filepath = mStorageReference.child(fileName);
+//        UploadTask uploadTask = filepath.putBytes(data);
+//        uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+//            @Override
+//            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+//                downloadUri = taskSnapshot.getDownloadUrl();
+////                PostStatus("posts",downloadUri);
+//            }
+//        }).addOnFailureListener(new OnFailureListener() {
+//            @Override
+//            public void onFailure(@NonNull Exception e) {
+//                Toast.makeText(getApplicationContext(), "Upload fail", Toast.LENGTH_SHORT).show();
+//            }
+//        });
+//    }
+
 }

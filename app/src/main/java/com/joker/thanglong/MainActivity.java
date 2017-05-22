@@ -1,10 +1,6 @@
 package com.joker.thanglong;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import android.app.Activity;
 import android.content.Context;
@@ -42,6 +38,7 @@ import android.widget.TextView;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.facebook.FacebookSdk;
+import com.joker.thanglong.Model.UserModel;
 import com.joker.thanglong.Ultil.DeviceUltil;
 import com.joker.thanglong.Ultil.ProfileInstance;
 import com.joker.thanglong.Ultil.PutParamFacebook;
@@ -91,6 +88,7 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
     private static final int REQUEST_IMAGE = 100;
     File destination;
     Activity activity;
+    UserModel userModel;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -107,6 +105,7 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
         Log.d("respone1",entityUserProfile.toString());
         activity=this;
 //        tabHost = (TabLayout) findViewById(R.id.tabHost);
+        userModel = new UserModel(this,ProfileInstance.getProfileInstance(this).getProfile().getuID());
         btnTakePicture = (ImageButton) findViewById(R.id.btnTakePicture);
         viewPager = (ViewPager) findViewById(R.id.viewPager);
         tabButtom = (JPagerSlidingTabStrip2) findViewById(R.id.tab_buttom);
@@ -124,32 +123,6 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
         TextView full_name = (TextView) header.findViewById(R.id.txtFullNameNavibar);
         full_name.setText(entityUserProfile.getFull_name());
 
-        DatabaseReference connectedRef = FirebaseDatabase.getInstance().getReference(".info/connected");
-        connectedRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot snapshot) {
-                boolean connected = snapshot.getValue(Boolean.class);
-                if (connected) {
-                    System.out.println("connected");
-                } else {
-                    System.out.println("not connected");
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError error) {
-                System.err.println("Listener was cancelled");
-            }
-        });
-
-
-
-
-//        TelephonyManager telephonyManager = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE);
-//        Log.d("imei",telephonyManager.getDeviceId().toString());
-
-
-//        notification = (TextView) findViewById(R.id.txtNotification);
         //Toolbar
         toolbar.setTitle("");
         setSupportActionBar(toolbar);
@@ -157,14 +130,6 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
 //        tabHost.setupWithViewPager(viewPager);
         int[] mSelectors = new int[] { R.drawable.tab1, R.drawable.tab2, R.drawable.tab3, R.drawable.tab4 };
         setupStrip(tabButtom.getTabStyleDelegate(), STYLE_ROUND);
-//        tabButtom.getTabStyleDelegate()
-//                .setFrameColor(Color.TRANSPARENT)
-//                .setIndicatorColor(Color.TRANSPARENT)
-//                .setTabTextColor(R.color.colorWhite)
-////                .setIndicatorHeight(3)
-////                .setTabIconGravity(Gravity.)//图标显示在top
-////                .setIndicatorHeight(-8)//设置的高小于0 会显示在tab顶部 否则底部
-//                .setDividerColor(Color.TRANSPARENT);
         viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(),mSelectors);
         viewPager.setAdapter(viewPagerAdapter);
         tabButtom.bindViewPager(viewPager);
@@ -192,26 +157,9 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-
-        //Doc thu preferences
-//        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-//        String email = prefs.getString("fb_id",null);
-//        Log.d("emaiL",email);
-
         actionBarDrawerToggle.syncState();
         //Set su kien click cho Appbar layout
         appBarLayout.addOnOffsetChangedListener(this);
-        //Presenter
-//        PresenterXuLyDuLieu presenterXuLyDuLieu = new PresenterXuLyDuLieu(this);
-//        AccessToken accessToken = presenterXuLyDuLieu.LayTenNguoiDungFacebook();
-//        Log.d("token",accessToken.toString());
-//        Log.d("tokenn",""+accessToken.getUserId());
-//        //Tam thoi commment de chay
-//        if (accessToken == null){
-//            finish();
-//            startActivity(new Intent(this,SignUpIn.class));
-//        }
-//
         btnPostStatus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -297,6 +245,7 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
     }
 
     private void getInfoUser() {
+
         profile = realm.where(EntityUserProfile.class).findFirst();
         VolleyHelper volleyHelper = new VolleyHelper(this,getResources().getString(R.string.url));
         volleyHelper.get("users/" + profile.getuID(), null, new Response.Listener<JSONObject>() {

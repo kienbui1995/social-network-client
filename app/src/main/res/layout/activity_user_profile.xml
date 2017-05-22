@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
+                android:id="@+id/viewRoot"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
     <android.support.design.widget.CoordinatorLayout
@@ -57,7 +58,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="10dp"
                             android:layout_marginRight="10dp">
-                        <ImageView
+                        <de.hdodenhof.circleimageview.CircleImageView
                                 android:src="@drawable/avatar1"
                                 android:id="@+id/ivUserProfilePhoto"
                                 android:layout_width="88dp"
@@ -230,7 +231,7 @@
                         android:layout_height="?attr/actionBarSize"
                         android:background="@color/bgToolbar"
                         app:layout_collapseMode="pin"
-                        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+                        app:theme="@style/menuitemcolor">
 
                 </android.support.v7.widget.Toolbar>
 

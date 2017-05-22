@@ -13,13 +13,12 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.joker.thanglong.Model.PostModel;
 import com.joker.thanglong.R;
 import com.joker.thanglong.Ultil.DialogUlti;
-import com.joker.thanglong.Ultil.PostUlti;
 import com.joker.thanglong.Ultil.SystemHelper;
 import com.joker.thanglong.UserProfileActivity;
 
@@ -32,12 +31,12 @@ import Entity.EntityComment;
  */
 
 public class AdapterComment extends RecyclerView.Adapter<AdapterComment.Viewholder>{
-    Context context;
-    PostUlti postUlti;
+    Activity context;
+    PostModel postModel;
     ArrayList<EntityComment> items;
     private int lastPosition = -1;
 
-    public AdapterComment(Context context, ArrayList<EntityComment> items)
+    public AdapterComment(Activity context, ArrayList<EntityComment> items)
     {
         this.context = context;
         this.items=items;
@@ -56,12 +55,12 @@ public class AdapterComment extends RecyclerView.Adapter<AdapterComment.Viewhold
 
     @Override
     public void onBindViewHolder(Viewholder holder, int position) {
+        postModel = new PostModel(context);
         addDataForView(holder,position);
 //        setAnimation(holder.lnComment,position);
     }
 
     private void addDataForView(Viewholder holder, final int position) {
-        postUlti = new PostUlti((Activity) context,items.get(position).getIdComment());
         holder.txtFullNameComment.setText(items.get(position).getFull_name());
         holder.txtFullNameComment.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -82,15 +81,14 @@ public class AdapterComment extends RecyclerView.Adapter<AdapterComment.Viewhold
                     DialogUlti.initDiaglog(context, context.getResources().getString(R.string.deleteComment), new MaterialDialog.SingleButtonCallback() {
                         @Override
                         public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                            postUlti.DeleteComment(new PostUlti.VolleyCallBackCheck() {
+                            postModel.DeleteComment(new PostModel.VolleyCallBackCheck() {
                                 @Override
                                 public void onSuccess(boolean status) {
-                                    Toast.makeText(context, "Xóa bình luận thành công", Toast.LENGTH_SHORT).show();
                                     items.remove(position);
                                     notifyDataSetChanged();
 
                                 }
-                            });
+                            },items.get(position).getIdComment());
                         }
                     });
                 }
