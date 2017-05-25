@@ -1,14 +1,42 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
              xmlns:tools="http://schemas.android.com/tools"
              android:layout_width="match_parent"
+              android:layout_marginTop="20dp"
              android:layout_height="match_parent"
-              android:background="@color/colorWhite"
+              android:orientation="vertical"
+              android:background="@color/colorGrey"
              tools:context="com.joker.thanglong.Fragment.GroupFragment">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView
+<include layout="@layout/toolbar"/>
+    <android.support.v4.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="@string/hello_blank_fragment"/>
+            android:layout_height="match_parent">
+        <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
+            <TextView
+                    android:textStyle="bold"
+                    android:textColor="#000"
+                    android:background="@color/white"
+                    android:text="Group của tôi"
+                    android:textSize="15sp"
+                    android:padding="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+            <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"/>
+            <android.support.v7.widget.RecyclerView
+                    android:padding="10dp"
+                    android:background="@color/white"
+                    android:id="@+id/rcvMyGroup"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+            </android.support.v7.widget.RecyclerView>
+
+        </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
 </LinearLayout>

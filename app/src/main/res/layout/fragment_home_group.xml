@@ -9,8 +9,46 @@
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:orientation="vertical"
+                android:layout_height="wrap_content">
+            <Button
+                    android:textAllCaps="false"
+                    android:gravity="left|center_vertical"
+                    android:textColor="#000"
+                    android:text="2 yêu cầu xin tham gia vào nhóm"
+                    android:paddingLeft="10dp"
+                    android:layout_marginBottom="1dp"
+                    android:drawableLeft="@drawable/ic_people_grey_700_18dp"
+                    android:background="@color/white"
+                    android:drawablePadding="10dp"
+                    android:textSize="13sp"
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"/>
+            <Button
+                    android:textAllCaps="false"
+                    android:gravity="left|center_vertical"
+                    android:textColor="#000"
+                    android:text="1 bài viết bị báo cáo vi phạm"
+                    android:paddingLeft="10dp"
+                    android:drawableLeft="@drawable/ic_report_problem_grey_500_18dp"
+                    android:background="@color/white"
+                    android:drawablePadding="10dp"
+                    android:textSize="13sp"
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"/>
 
+            <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginTop="10dp"
+                    android:alpha="0.1"
+                    android:background="@color/bgToolbar" />
+
+        </LinearLayout>
         <LinearLayout
             android:id="@+id/idLnSearch"
             android:layout_width="match_parent"
@@ -63,7 +101,7 @@
         <android.support.v7.widget.RecyclerView
             android:id="@+id/rcvListPostGroup"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content">
 
         </android.support.v7.widget.RecyclerView>
     </LinearLayout>

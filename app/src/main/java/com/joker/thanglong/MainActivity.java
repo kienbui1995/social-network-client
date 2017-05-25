@@ -38,6 +38,7 @@ import android.widget.TextView;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.facebook.FacebookSdk;
+import com.joker.thanglong.Fragment.GroupFragment;
 import com.joker.thanglong.Model.UserModel;
 import com.joker.thanglong.Ultil.DeviceUltil;
 import com.joker.thanglong.Ultil.ProfileInstance;
@@ -122,7 +123,6 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
         View header = nvMenu.getHeaderView(0);
         TextView full_name = (TextView) header.findViewById(R.id.txtFullNameNavibar);
         full_name.setText(entityUserProfile.getFull_name());
-
         //Toolbar
         toolbar.setTitle("");
         setSupportActionBar(toolbar);
@@ -194,14 +194,15 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
                     case R.id.itLearing:
                         break;
                     case R.id.itGroup:
-//                        //Framgment
-//                        manager = getSupportFragmentManager();
-//                        transaction = manager.beginTransaction();
-//                        GroupFragment groupFragment = new GroupFragment();
-//                        transaction.replace(R.id.contentLayout,groupFragment);
-//                        transaction.commit();
-//                        drawerLayout.closeDrawers();
-                        startActivity(new Intent(getApplicationContext(),GroupActivity.class));
+                        //Framgment
+                        manager = getSupportFragmentManager();
+                        transaction = manager.beginTransaction();
+                        GroupFragment groupFragment = new GroupFragment();
+                        transaction.add(R.id.frContentHome,groupFragment);
+                        transaction.addToBackStack(null);
+                        transaction.commit();
+                        drawerLayout.closeDrawers();
+//                        startActivity(new Intent(getApplicationContext(),GroupActivity.class));
 
                         break;
                     case R.id.itPage:
@@ -233,6 +234,7 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
 
 
     }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -308,13 +310,13 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
 //            finish();
 //            startActivity(new Intent(this,SignUpIn.class));
         }else if (vitri == R.id.itTrangCaNhan){
-            startActivity(new Intent(this,UserProfileActivity.class));
+            Intent intent = new Intent(this,UserProfileActivity.class);
+            intent.putExtra("uId",ProfileInstance.getProfileInstance(this).getProfile().getuID());
+            startActivity(intent);
         }else if (vitri==R.id.thongBao){
-            startActivity(new Intent(this,DemoActivity.class));
+            startActivity(new Intent(this, ManagerMemberGroupActivity.class));
         }else if (vitri == R.id.it_search){
             startActivity(new Intent(this,SearchActivity.class));
-            overridePendingTransition(R.anim.slide_out_right,R.anim.slide_in_left);
-
         }
         return true;
     }

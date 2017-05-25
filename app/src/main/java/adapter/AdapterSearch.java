@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.Theme;
+import com.bumptech.glide.Glide;
 import com.joker.thanglong.Model.UserModel;
 import com.joker.thanglong.R;
 import com.joker.thanglong.UserProfileActivity;
@@ -57,7 +58,16 @@ public class AdapterSearch extends ArrayAdapter {
     }
 
     private void addData(final int position) {
+        Glide.with(context).load(items.get(position).getAvatar()).fitCenter().into(imgAvatarSearchItem);
         txtFullNameSearchItem.setText(items.get(position).getFull_name());
+        txtFullNameSearchItem.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context,UserProfileActivity.class);
+                intent.putExtra("uId",items.get(position).getId());
+                context.startActivity(intent);
+            }
+        });
         txtUserNameSearchItem.setText("@"+items.get(position).getUsername());
         if (items.get(position).is_followed()){
             btnFollowUser.setBackgroundResource(R.drawable.btn_unfollow);

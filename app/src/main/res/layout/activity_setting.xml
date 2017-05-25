@@ -7,24 +7,43 @@
 
     <include layout="@layout/toolbar"/>
     <LinearLayout
+            android:orientation="vertical"
             android:layout_marginTop="10dp"
             android:background="@drawable/btn_style"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
         <Button
-
                 android:textStyle="normal"
                 android:textAllCaps="false"
-                android:text="Thông báo"
+                android:text="Cài đặt bảng tin"
                 android:paddingRight="10dp"
                 android:paddingLeft="20dp"
-                android:drawableRight="@drawable/ic_keyboard_arrow_right_blue_100_24dp"
                 android:gravity="left|center"
                 android:drawablePadding="10dp"
                 android:textColor="#000"
+                android:layout_marginBottom="5dp"
                 android:background="@drawable/btn_style"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
+        <RadioGroup
+                android:id="@+id/rgNews"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+            <RadioButton
+                    android:textSize="13dp"
+                    android:layout_marginLeft="10dp"
+                    android:text="Tin mới nhất"
+                    android:id="@+id/rbNews"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            <RadioButton
+                    android:textSize="13dp"
+                    android:id="@+id/rbPopular"
+                    android:layout_marginLeft="10dp"
+                    android:text="Tin nổi bật"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+        </RadioGroup>
     </LinearLayout>
     <LinearLayout
             android:layout_marginTop="10dp"
@@ -32,7 +51,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
         <Button
-
                 android:textStyle="normal"
                 android:textAllCaps="false"
                 android:text="Thông báo"

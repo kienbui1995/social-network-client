@@ -15,11 +15,10 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 import Entity.EntityComment;
 import Entity.EntityStatus;
-
-import static com.joker.thanglong.R.menu.privacy;
 
 /**
  * Created by joker on 5/8/17.
@@ -55,10 +54,15 @@ public class PostModel {
             public void onResponse(JSONObject response) {
                 try {
                     JSONObject jsonObject = response.getJSONObject("data");
+                    JSONObject jsonOwner = jsonObject.getJSONObject("owner");
                     entityStatus.setContent(jsonObject.getString("message"));
                     entityStatus.setPrivacy(jsonObject.getInt("privacy"));
-                    entityStatus.setNameId(jsonObject.getString("full_name"));
+                    entityStatus.setNameId(jsonOwner.getString("full_name"));
                     entityStatus.setCreatedTime(jsonObject.getLong("created_at"));
+                    entityStatus.setLike(jsonObject.getBoolean("is_liked"));
+                    if (jsonOwner.has("avatar")){
+                        entityStatus.setAvatar(jsonOwner.getString("avatar"));
+                    }
                     if (jsonObject.has("photo"))
                     {
                         entityStatus.setImage(jsonObject.getString("photo"));
@@ -125,14 +129,18 @@ public class PostModel {
                             JSONArray jsonArray = response.getJSONArray("data");
                             for (int i = 0; i< jsonArray.length();i++){
                                 JSONObject jsonObject = (JSONObject) jsonArray.get(i);
+                                JSONObject jsonOwner = jsonObject.getJSONObject("owner");
                                 entityComment = new EntityComment();
-                                entityComment.setuId(Integer.parseInt(jsonObject.getString("userid")));
-                                entityComment.setFull_name(jsonObject.getString("full_name"));
+                                entityComment.setuId(Integer.parseInt(jsonOwner.getString("id")));
+                                entityComment.setFull_name(jsonOwner.getString("full_name"));
                                 entityComment.setIdComment(Integer.parseInt(jsonObject.getString("id")));
                                 entityComment.setMessage(jsonObject.getString("message"));
-                                entityComment.setUsername(jsonObject.getString("username"));
+                                entityComment.setUsername(jsonOwner.getString("username"));
                                 entityComment.setCreated_at(Long.parseLong(jsonObject.getString("created_at")));
                                 entityComment.setCanEdit(jsonObject.getBoolean("can_edit"));
+                                if (jsonOwner.has("avatar")){
+                                    entityComment.setAvatar(jsonOwner.getString("avatar"));
+                                }
                                 entityComment.setCanDelete(jsonObject.getBoolean("can_delete"));
                                 entityComment.setTotal(response.getInt("total"));
                                 entityComments.add(entityComment);
@@ -152,7 +160,7 @@ public class PostModel {
         return entityComments;
     }
 
-    public void addPost(String message, String type,Uri downloadUri, final VolleyCallBackCheck callback) {
+    public void addPost(String message,int privacy,String type,Uri downloadUri, final VolleyCallBackCheck callback) {
         HashMap<String,String> parram = new HashMap<>();
         parram.put("message",message);
         if (downloadUri !=null){
@@ -179,9 +187,6 @@ public class PostModel {
         final EntityComment entityComment = new EntityComment();
         HashMap<String,String> parrams = new HashMap<>();
         parrams.put("message",content);
-        HashMap map = new HashMap();
-        map.put("status",1);
-        parrams.putAll(map);
         VolleySingleton.getInstance(activity).post("posts/" + idPost + "/comments", new JSONObject(parrams),
                 new Response.Listener<JSONObject>() {
                     @Override
@@ -206,18 +211,19 @@ public class PostModel {
                     for (int i =0; i< jsonArray.length();i++)
                     {
                         JSONObject jsonObject = (JSONObject) jsonArray.get(i);
+                        JSONObject jsonOwner = jsonObject.getJSONObject("owner");
                         EntityStatus entityStatus = new EntityStatus();
-                        entityStatus.setuId(Integer.parseInt(jsonObject.getString("userid")));
+                        entityStatus.setuId(Integer.parseInt(jsonOwner.getString("id")));
                         entityStatus.setContent(jsonObject.getString("message"));
                         entityStatus.setCreatedTime(Long.parseLong(jsonObject.getString("created_at")));
                         entityStatus.setIdStatus(Integer.parseInt(jsonObject.getString("id")));
-                        entityStatus.setNameId(jsonObject.getString("full_name"));
+                        entityStatus.setNameId(jsonOwner.getString("full_name"));
                         entityStatus.setLike(Boolean.parseBoolean(jsonObject.getString("is_liked")));
                         entityStatus.setStatus(jsonObject.getInt("status"));
                         entityStatus.setCanEdit(jsonObject.getBoolean("can_edit"));
                         entityStatus.setCanDelete(jsonObject.getBoolean("can_delete"));
-                        if (jsonObject.has("avatar")){
-                            entityStatus.setAvatar(jsonObject.getString("avatar"));
+                        if (jsonOwner.has("avatar")){
+                            entityStatus.setAvatar(jsonOwner.getString("avatar"));
                         }
                         if (jsonObject.has("photo")){
                             entityStatus.setImage(jsonObject.getString("photo"));
@@ -248,12 +254,11 @@ public class PostModel {
         });
         return statuses;
     }
-    public void DeletePost(final VolleyCallBackCheck callback){
-        VolleySingleton.getInstance(activity).delete("posts/" + idPost, null, new Response.Listener<JSONObject>() {
+    public void DeletePost(int idPost1,final VolleyCallBackCheck callback){
+        VolleySingleton.getInstance(activity).delete("posts/" + idPost1, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 callback.onSuccess(true);
-                Log.d("delete: ",idPost + response.toString());
             }
         }, new Response.ErrorListener() {
             @Override
@@ -302,9 +307,19 @@ public class PostModel {
         });
 
     }
-    public void addComment(final VolleyCallBackJson callback,String message){
+    public void addComment(final VolleyCallBackJson callback,String message,ArrayList<JSONObject> listMentions){
         HashMap<String,String> parrams = new HashMap<>();
         parrams.put("message",message);
+        if (!listMentions.isEmpty()){
+            JSONArray jsonArrayMention = new JSONArray();
+            for (int i =0;i<listMentions.size();i++){
+                jsonArrayMention.put(listMentions.get(i));
+            }
+            Map map = new HashMap();
+            map.put("mentions",jsonArrayMention);
+            parrams.putAll(map);
+        }
+        Log.d("JsonComment",new JSONObject(parrams).toString());
         VolleySingleton.getInstance(activity).post("posts/" + idPost + "/comments", new JSONObject(parrams),
                 new Response.Listener<JSONObject>() {
                     @Override
@@ -341,6 +356,38 @@ public class PostModel {
             }
         });
     }
+
+
+
+    public JSONObject itemListToJsonConvert(ArrayList<HashMap<String, String>> list) {
+
+        JSONObject jResult = new JSONObject();// main object
+        JSONArray jArray = new JSONArray();// /ItemDetail jsonArray
+
+        for (int i = 0; i < list.size(); i++) {
+            JSONObject jGroup = new JSONObject();// /sub Object
+
+            try {
+                jGroup.put("ItemMasterID", list.get(i).get("ItemMasterID"));
+                jGroup.put("ID", list.get(i).get("id"));
+                jGroup.put("Name", list.get(i).get("name"));
+                jGroup.put("Category", list.get(i).get("category"));
+
+                jArray.put(jGroup);
+
+                // /itemDetail Name is JsonArray Name
+                jResult.put("itemDetail", jArray);
+                return jResult;
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return jResult;
+    }
+
+
+
 
     public interface VolleyCallbackStatus{
         void onSuccess(EntityStatus entityStatus);

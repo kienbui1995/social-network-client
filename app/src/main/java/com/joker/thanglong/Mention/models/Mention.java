@@ -4,6 +4,11 @@ import android.widget.EditText;
 
 import com.percolate.mentions.Mentionable;
 
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * A mention inserted into the {@link EditText}. All mentions inserted into the
  * {@link EditText} must implement the {@link Mentionable} interface.
@@ -11,20 +16,26 @@ import com.percolate.mentions.Mentionable;
 public class Mention implements Mentionable {
 
     private String mentionName;
-    private String mentionId;
+    private int mentionId;
     private int offset;
     private int length;
 
+
     @Override
     public String toString() {
+        HashMap<String,Integer> map = new HashMap<>();
+        map.put("id",mentionId);
+        map.put("offset",offset);
+        map.put("length",length);
+        JSONObject jsonObject = new JSONObject(map);
+        return jsonObject.toString();
+    }
+
+    public int getMentionId() {
         return mentionId;
     }
 
-    public String getMentionId() {
-        return mentionId;
-    }
-
-    public void setMentionId(String mentionId) {
+    public void setMentionId(int mentionId) {
         this.mentionId = mentionId;
     }
 
@@ -56,5 +67,13 @@ public class Mention implements Mentionable {
     @Override
     public void setMentionName(String mentionName) {
         this.mentionName = mentionName;
+    }
+
+    public Map<String,Object> toMap(){
+        HashMap<String,Object> result = new HashMap<>();
+        result.put("id",mentionId);
+        result.put("offset",offset);
+        result.put("length",length);
+        return result;
     }
 }

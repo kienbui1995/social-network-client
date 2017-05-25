@@ -20,6 +20,8 @@ import android.widget.TextView;
 import com.joker.thanglong.Model.UserModel;
 
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import Entity.EntityUserSearch;
 import adapter.AdapterSearch;
@@ -34,7 +36,7 @@ public class SearchActivity extends AppCompatActivity {
     ArrayList<EntityUserSearch> result;
     AdapterSearch adapterSearch;
     UserModel userModel;
-
+    Timer timer;
 
 
     @Override
@@ -43,6 +45,7 @@ public class SearchActivity extends AppCompatActivity {
         setContentView(R.layout.activity_search);
         userModel = new UserModel(this);
         result = new ArrayList<>();
+        timer = new Timer();
         addControll();
         addEvent();
     }
@@ -74,9 +77,16 @@ public class SearchActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                result.clear();
-                searchAction(charSequence);
+            public void onTextChanged(final CharSequence charSequence, int i, int i1, int i2) {
+                timer.cancel();
+                timer = new Timer();
+                timer.schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        result.clear();
+                        searchAction(charSequence);
+                    }
+                },1000);
             }
 
             @Override

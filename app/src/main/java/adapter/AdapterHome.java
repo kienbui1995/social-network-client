@@ -169,9 +169,9 @@ public class AdapterHome extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
                                         activity.startActivity(intent);
                                         break;
                                     case R.id.mn_delete_post:
-                                        PostModel postModel1 = new PostModel(activity,items.get(position).getIdStatus());
+                                        PostModel postModel1 = new PostModel(activity);
                                         progressDialog = ProgressDialog.show(activity,"","Đang xóa bài viết",true);
-                                        postModel1.DeletePost(new PostModel.VolleyCallBackCheck() {
+                                        postModel1.DeletePost(items.get(position).getIdStatus(),new PostModel.VolleyCallBackCheck() {
                                             @Override
                                             public void onSuccess(boolean status) {
                                                 if (status==true){
@@ -322,9 +322,9 @@ public class AdapterHome extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
                                         activity.startActivity(intent);
                                         break;
                                     case R.id.mn_delete_post:
-                                        PostModel postModel1 = new PostModel(activity,items.get(position).getIdStatus());
+                                        PostModel postModel1 = new PostModel(activity);
                                         progressDialog = ProgressDialog.show(activity,"","Đang xóa bài viết",true);
-                                        postModel1.DeletePost(new PostModel.VolleyCallBackCheck() {
+                                        postModel1.DeletePost(items.get(position).getIdStatus(),new PostModel.VolleyCallBackCheck() {
                                             @Override
                                             public void onSuccess(boolean status) {
                                                 if (status==true){

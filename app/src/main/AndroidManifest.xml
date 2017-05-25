@@ -31,46 +31,52 @@
                 android:name="com.google.firebase.messaging.default_notification_color"
                 android:resource="@color/bgToolbar"/>
 
-        <activity android:name="com.joker.thanglong.MainActivity"/>
-        <activity android:name="com.joker.thanglong.SignUpIn"/>
-        <activity android:name="com.joker.thanglong.NotificationActivity"/>
-        <activity android:name="com.joker.thanglong.UserProfileActivity"/>
-        <activity android:name="com.joker.thanglong.PostActivity"/>
-        <activity android:name="com.joker.thanglong.CommentPostActivity"/>
-        <activity android:name="com.joker.thanglong.ChatActivity"/>
-        <activity android:name="com.joker.thanglong.SearchActivity"/>
-        <activity android:name="com.joker.thanglong.SettingActivity"/>
-        <activity android:name="com.joker.thanglong.TrangChuDiemDanhActivity"/>
-        <activity android:name="com.joker.thanglong.GroupActivity"/>
-        <activity android:name="com.joker.thanglong.PagesActivity">
+        <activity android:name=".MainActivity"/>
+        <activity android:name=".SignUpIn"/>
+        <activity android:name=".NotificationActivity"/>
+        <activity
+                android:name=".UserProfileActivity"
+                android:launchMode="singleTop"/>
+        <activity android:name=".PostActivity"/>
+        <activity android:name=".CommentPostActivity"/>
+        <activity android:name=".ChatActivity"/>
+        <activity android:name=".SearchActivity"/>
+        <activity android:name=".SettingActivity"/>
+        <activity android:name=".TrangChuDiemDanhActivity"/>
+        <activity android:name=".GroupActivity"/>
+        <activity android:name=".PagesActivity">
         </activity>
-        <activity android:name="com.joker.thanglong.ImagePostActivity">
+        <activity android:name=".ImagePostActivity">
         </activity>
-        <activity android:name="com.joker.thanglong.HomeListGroupActivity">
+        <activity android:name=".HomeListGroupActivity">
         </activity>
-        <activity android:name="com.joker.thanglong.LoadingActivity">
+        <activity android:name=".LoadingActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name="com.joker.thanglong.WelcomeActivity">
+        <activity android:name=".WelcomeActivity">
         </activity>
-        <activity android:name="com.joker.thanglong.FollowActivity">
+        <activity android:name=".FollowActivity">
         </activity>
-        <activity android:name="com.joker.thanglong.DemoActivity">
+        <activity android:name=".DemoActivity">
         </activity>
-        <activity android:name="com.joker.thanglong.EditPostActivity">
+        <activity android:name=".EditPostActivity">
         </activity>
 
-        <service android:name="com.joker.thanglong.Service.MyFirebaseMessagingService">
+        <service android:name=".Service.MyFirebaseMessagingService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT"/>
             </intent-filter>
         </service>
 
-        <activity android:name="com.joker.thanglong.CommentPostFullActivity">
+        <activity
+                android:name=".CommentPostFullActivity"
+                android:launchMode="singleTask">
+        </activity>
+        <activity android:name=".ManagerMemberGroupActivity">
         </activity>
     </application>
 

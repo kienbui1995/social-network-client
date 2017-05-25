@@ -37,8 +37,14 @@
             android:layout_below="@id/headerLayout"
             android:paddingBottom="50dp"
             android:layout_marginBottom="0dp"/>
-
     <LinearLayout
+            android:layout_above="@+id/textboxComment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        <include layout="@layout/users_list" />
+    </LinearLayout>
+    <LinearLayout
+            android:id="@+id/textboxComment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"

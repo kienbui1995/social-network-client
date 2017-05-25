@@ -57,6 +57,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
+import Entity.EntitySetting;
 import Entity.EntityUserProfile;
 import io.realm.Realm;
 
@@ -80,6 +81,7 @@ public class DangNhap extends Fragment implements View.OnClickListener,Validator
     DeviceUltil deviceUltil;
     String recoveryEmail;
     Button btnFacebook;
+    EntitySetting entitySetting;
     //token
 
     //Forgot password
@@ -421,6 +423,7 @@ public class DangNhap extends Fragment implements View.OnClickListener,Validator
                                 Log.d("EntityObj",entityUserProfile.getuID());
                             }
                         });
+                        initSetting();
                         startActivity(new Intent(getActivity(),MainActivity.class));
 
                     } catch (JSONException e) {
@@ -503,6 +506,16 @@ public class DangNhap extends Fragment implements View.OnClickListener,Validator
                 }else {
                     Toast.makeText(getActivity(), "Code Error: "+ code, Toast.LENGTH_SHORT).show();
                 }
+            }
+        });
+    }
+    public void initSetting(){
+        entitySetting = new EntitySetting();
+        entitySetting.setNewsfeed(1);
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                realm.copyToRealmOrUpdate(entitySetting);
             }
         });
     }

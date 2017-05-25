@@ -93,7 +93,6 @@ public class UsersAdapter extends RecyclerArrayAdapter<User, UsersAdapter.UserVi
     private void highlightSearchQueryInUserName(CharSequence userName) {
         if (StringUtils.isNotBlank(currentQuery)) {
             int searchQueryLocation = userName.toString().toLowerCase(Locale.US).indexOf(currentQuery);
-
             if (searchQueryLocation != -1) {
                 Spannable userNameSpannable = (Spannable) userName;
                 userNameSpannable.setSpan(

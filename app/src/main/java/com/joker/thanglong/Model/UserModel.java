@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.joker.thanglong.Ultil.SettingUtil;
 import com.joker.thanglong.Ultil.VolleySingleton;
 
 import org.json.JSONArray;
@@ -117,7 +118,7 @@ public class UserModel {
 
     public void getNewfeed(final PostModel.VolleyCallbackListStatus callback, String type){
         final ArrayList<EntityStatus> items = new ArrayList<>();
-        VolleySingleton.getInstance(activity).get("news_feed" + "?limit=10"+type, null, new Response.Listener<JSONObject>() {
+        VolleySingleton.getInstance(activity).get("news_feed" + "?limit=10"+type+ SettingUtil.getSettingUtil(activity).getNewsfeed(), null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 try {
@@ -125,18 +126,19 @@ public class UserModel {
                     for (int i =0; i< jsonArray.length();i++)
                     {
                         JSONObject jsonObject = (JSONObject) jsonArray.get(i);
+                        JSONObject jsonOwner = jsonObject.getJSONObject("owner");
                         EntityStatus entityStatus = new EntityStatus();
-                        entityStatus.setuId(Integer.parseInt(jsonObject.getString("userid")));
+                        entityStatus.setuId(Integer.parseInt(jsonOwner.getString("id")));
                         entityStatus.setContent(jsonObject.getString("message"));
                         entityStatus.setCreatedTime(Long.parseLong(jsonObject.getString("created_at")));
                         entityStatus.setIdStatus(Integer.parseInt(jsonObject.getString("id")));
-                        entityStatus.setNameId(jsonObject.getString("full_name"));
+                        entityStatus.setNameId(jsonOwner.getString("full_name"));
                         entityStatus.setLike(Boolean.parseBoolean(jsonObject.getString("is_liked")));
                         entityStatus.setStatus(jsonObject.getInt("status"));
                         entityStatus.setCanEdit(jsonObject.getBoolean("can_edit"));
                         entityStatus.setCanDelete(jsonObject.getBoolean("can_delete"));
-                        if (jsonObject.has("avatar")){
-                            entityStatus.setAvatar(jsonObject.getString("avatar"));
+                        if (jsonOwner.has("avatar")){
+                            entityStatus.setAvatar(jsonOwner.getString("avatar"));
                         }
                         if (jsonObject.has("photo")){
                             entityStatus.setImage(jsonObject.getString("photo"));

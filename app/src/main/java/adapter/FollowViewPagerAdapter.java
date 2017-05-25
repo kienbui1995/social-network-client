@@ -21,8 +21,8 @@ public class FollowViewPagerAdapter extends FragmentPagerAdapter {
         super(fm);
         listFragment.add(new FollowingFragment());
         listFragment.add(new FollowerFragment());
-        listName.add("Following");
-        listName.add("Follower");
+        listName.add("Đang theo dõi");
+        listName.add("Người theo dõi");
     }
 
     @Override

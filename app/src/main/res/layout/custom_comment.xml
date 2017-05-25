@@ -5,7 +5,6 @@
               android:layout_marginRight="25dp"
               android:layout_marginTop="5dp"
               android:layout_marginBottom="5dp"
-
               android:layout_width="match_parent"
               android:layout_height="wrap_content">
 <LinearLayout
@@ -14,13 +13,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-    <ImageView
+    <de.hdodenhof.circleimageview.CircleImageView
             android:layout_marginTop="8dp"
             android:layout_marginLeft="10dp"
             android:src="@drawable/avatar1"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:id="@+id/imageView5"/>
+            android:id="@+id/imgAvatar"/>
 
     <LinearLayout
             android:paddingLeft="15dp"

@@ -218,7 +218,7 @@ public class PostActivity extends AppCompatActivity {
             }else {
                 if (selectedImagePath == null){
                     progressDialog = ProgressDialog.show(this,"","Đang cập nhật trạng thái của bạn",true);
-                    postModel.addPost(edtStatusInput.getText().toString().trim(), "posts", null, new PostModel.VolleyCallBackCheck() {
+                    postModel.addPost(edtStatusInput.getText().toString().trim(),privacy, "posts", null, new PostModel.VolleyCallBackCheck() {
                         @Override
                         public void onSuccess(boolean status) {
                             progressDialog.dismiss();
@@ -235,7 +235,7 @@ public class PostActivity extends AppCompatActivity {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                             downloadUri = taskSnapshot.getDownloadUrl();
-                            postModel.addPost(edtStatusInput.getText().toString().trim(), "posts", downloadUri, new PostModel.VolleyCallBackCheck() {
+                            postModel.addPost(edtStatusInput.getText().toString().trim(),privacy, "posts", downloadUri, new PostModel.VolleyCallBackCheck() {
                                 @Override
                                 public void onSuccess(boolean status) {
                                     progressDialog.dismiss();

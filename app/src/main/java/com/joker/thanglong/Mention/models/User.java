@@ -17,11 +17,16 @@ public class User {
     @SerializedName("last_name")
     private String lastName;
 
-    @SerializedName("picture")
+    @SerializedName("userid")
+    private int uId;
+
+    @SerializedName("avatar")
     private String imageUrl;
 
     @SerializedName("username")
     private String username;
+
+
     @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this, ToStringStyle.SHORT_PREFIX_STYLE);
@@ -44,7 +49,7 @@ public class User {
     }
 
     public String getFullName() {
-        return firstName + " " + lastName;
+        return firstName;
     }
 
     public String getImageUrl() {
@@ -61,5 +66,13 @@ public class User {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public int getuId() {
+        return uId;
+    }
+
+    public void setuId(int uId) {
+        this.uId = uId;
     }
 }

@@ -2,6 +2,7 @@ package adapter;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -75,29 +76,42 @@ public class AdapterFollowingList extends ArrayAdapter {
             }
         });
         txtUserNameFollow.setText("@"+items.get(position).getUsername());
-        btnMessage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                new MaterialDialog.Builder(context)
-                        .content("Bạn có muốn bỏ theo dõi "+items.get(position).getFull_name()+ " ?")
-                        .positiveText(R.string.agree)
-                        .theme(Theme.LIGHT)
-                        .onPositive(new MaterialDialog.SingleButtonCallback() {
-                            @Override
-                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+        if (items.get(position).is_followed()){
+            btnMessage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    new MaterialDialog.Builder(context)
+                            .content("Bạn có muốn bỏ theo dõi "+items.get(position).getFull_name()+ " ?")
+                            .positiveText(R.string.agree)
+                            .theme(Theme.LIGHT)
+                            .onPositive(new MaterialDialog.SingleButtonCallback() {
+                                @Override
+                                public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                    Log.d("positionId",items.get(position).getId());
+                                    userModel.unFollow();
+                                    items.remove(position);
+                                    notifyDataSetChanged();
+                                }
+                            })
+                            .negativeText(R.string.disagree)
+                            .show();
 
-                                Log.d("positionId",items.get(position).getId());
-                                userModel.unFollow();
-                                items.remove(position);
-                                notifyDataSetChanged();
-                            }
-                        })
-                        .negativeText(R.string.disagree)
-                        .show();
-
-
-            }
-        });
+                }
+            });
+        }else {
+            btnMessage.setText("Follow");
+            btnMessage.setTextColor(Color.parseColor("#FFFFFF"));
+            btnMessage.setBackgroundResource(R.drawable.btn_following);
+            btnMessage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    userModel.Follow();
+                    btnMessage.setBackgroundResource(R.drawable.btn_unfollow);
+                    btnMessage.setTextColor(Color.parseColor("#FFFFFF"));
+                    btnMessage.setText("Đã theo dõi");
+                }
+            });
+        }
     }
 
 

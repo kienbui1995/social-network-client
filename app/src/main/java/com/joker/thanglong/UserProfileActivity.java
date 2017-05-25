@@ -1,11 +1,9 @@
 package com.joker.thanglong;
 
-import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.AppBarLayout;
@@ -20,6 +18,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -74,6 +73,8 @@ public class UserProfileActivity extends AppCompatActivity {
     private TextView txtFollower;
     private TextView txtFollowing;
     private TextView txtNumberOfPost;
+    private ImageButton imgChangeAvatar;
+
     public static String id = null;
     private UserModel userModel;
     private Bitmap bmp;
@@ -81,11 +82,9 @@ public class UserProfileActivity extends AppCompatActivity {
     private String large_avatar;
     private String small_avatar;
     private RelativeLayout viewRoot;
-
-    Uri downloadUri;
     File file;
     int fileSize;
-    StorageReference mStorageReference;
+    boolean me;
     public UserProfileActivity() {
     firebaseHelper = new FirebaseHelper(this);
     }
@@ -118,13 +117,17 @@ public class UserProfileActivity extends AppCompatActivity {
         Intent intent = getIntent();
         id = intent.getStringExtra("uId");
 //        Log.d("id",id.toString());
-        if (id == null) {
-            id = ProfileInstance.getProfileInstance(this).getProfile().getuID();
+        if (id.equals(ProfileInstance.getProfileInstance(this).getProfile().getuID())) {
             getProfile(id);
+            me = true;
             btnNhanTin.setVisibility(View.GONE);
             btnFollow.setVisibility(View.GONE);
         } else {
+            me =false;
             getProfile(id);
+            imgChangeAvatar.setVisibility(View.GONE);
+            ivUserProfilePhoto.setEnabled(false);
+
         }
     }
 
@@ -227,7 +230,7 @@ public class UserProfileActivity extends AppCompatActivity {
         viewPager = (ViewPager) findViewById(R.id.view_pager);
         txtNumberOfPost = (TextView) findViewById(R.id.txtNumberOfPost);
         viewRoot = (RelativeLayout) findViewById(R.id.viewRoot);
-
+        imgChangeAvatar = (ImageButton) findViewById(R.id.imgChangeAvatar);
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -284,21 +287,30 @@ public class UserProfileActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.profile,menu);
+        if (me){
+            getMenuInflater().inflate(R.menu.profile,menu);
+        }else {
+            getMenuInflater().inflate(R.menu.friendprofile,menu);
+        }
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int mId = item.getItemId();
-        switch (mId){
-            case R.id.itEditProfile:
-                EditProfileFragment editProfileFragment = new EditProfileFragment();
-                getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.slide_out_right,R.anim.slide_in_left)
-                        .add(R.id.viewRoot,editProfileFragment,"editProfile")
-                        .addToBackStack(null)
-                        .commit();
-            case 1:
+        if (me){
+            switch (mId){
+                case R.id.itEditProfile:
+                    EditProfileFragment editProfileFragment = new EditProfileFragment();
+                    getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.slide_out_right,R.anim.slide_in_left)
+                            .add(R.id.viewRoot,editProfileFragment,"editProfile")
+                            .addToBackStack(null)
+                            .commit();
+                case 1:
+
+            }
+
+        }else {
 
         }
         return true;

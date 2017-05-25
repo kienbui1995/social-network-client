@@ -29,6 +29,7 @@ import com.joker.thanglong.Ultil.ProfileInstance;
 import com.joker.thanglong.Ultil.SystemHelper;
 import com.joker.thanglong.Ultil.VolleySingleton;
 import com.like.LikeButton;
+import com.like.OnLikeListener;
 import com.percolate.caffeine.ViewUtils;
 import com.percolate.mentions.Mentions;
 import com.percolate.mentions.QueryListener;
@@ -59,6 +60,7 @@ public class CommentPostFullActivity extends AppCompatActivity implements QueryL
     private ImageButton btnSubmmitComment;
     private Toolbar toolbar;
     private NestedScrollView nsvPost;
+
     AdapterComment adapterComment;
     ArrayList<EntityComment> itemsComment;
     RecyclerView rcvComment;
@@ -102,7 +104,7 @@ public class CommentPostFullActivity extends AppCompatActivity implements QueryL
                 if (user != null) {
                     final Mention mention = new Mention();
                     mention.setMentionName(user.getFullName());
-                    mention.setMentionId("1");
+                    mention.setMentionId(user.getuId());
                     mentions.insertMention(mention);
                 }
 
@@ -161,6 +163,36 @@ public class CommentPostFullActivity extends AppCompatActivity implements QueryL
         postModel.getSinglePost(new PostModel.VolleyCallbackStatus() {
             @Override
             public void onSuccess(EntityStatus entityStatus) {
+                txtNumberLike.setText(entityStatus.getNumberLike()+"");
+                txtNumberComment.setText(entityStatus.getNumberComment()+"");
+                if (entityStatus.isLike()){
+                    btnLove.setLiked(true);
+                }else {
+                    btnLove.setLiked(false);
+                }
+                btnLove.setOnLikeListener(new OnLikeListener() {
+                    @Override
+                    public void liked(LikeButton likeButton) {
+                        postModel.LikePost(new PostModel.VolleyCallBackJson() {
+                            @Override
+                            public void onSuccess(JSONObject jsonObject) throws JSONException {
+                                JSONObject json = jsonObject.getJSONObject("data");
+                                txtNumberLike.setText(json.getString("likes"));
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void unLiked(LikeButton likeButton) {
+                        postModel.UnLikePost(new PostModel.VolleyCallBackJson() {
+                            @Override
+                            public void onSuccess(JSONObject jsonObject) throws JSONException {
+                                JSONObject json = jsonObject.getJSONObject("data");
+                                txtNumberLike.setText(json.getString("likes"));
+                            }
+                        });
+                    }
+                });
                 txtFullName.setText(entityStatus.getNameId());
                 txtContentStatus.setText(entityStatus.getContent());
                 txtTimePostStatus.setText(SystemHelper.getTimeAgo(entityStatus.getCreatedTime()));
@@ -195,14 +227,14 @@ public class CommentPostFullActivity extends AppCompatActivity implements QueryL
                 rcvComment.setNestedScrollingEnabled(false);
                 rcvComment.setAdapter(adapterComment);
                 adapterComment.notifyDataSetChanged();
-                Handler handler =new Handler();
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        float y = rcvComment.getChildAt(itemsComment.size()-1).getY();
-                        nsvPost.smoothScrollTo(0, (int) y);
-                    }
-                },1000);
+//                Handler handler =new Handler();
+//                handler.postDelayed(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        float y = rcvComment.getChildAt(itemsComment.size()-1).getY();
+//                        nsvPost.smoothScrollTo(0, (int) y);
+//                    }
+//                },1000);
             }
         });
     }
@@ -297,5 +329,13 @@ public class CommentPostFullActivity extends AppCompatActivity implements QueryL
         } else {
             ViewUtils.hideView(this, R.id.mentions_list_layout);
         }
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        idPost = intent.getIntExtra("idPost",1);
+        postModel = new PostModel(this,idPost);
+        getPostContent();
     }
 }

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:paddingLeft="10dp"
+              android:paddingTop="10dp"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content">
+<FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+    <de.hdodenhof.circleimageview.CircleImageView
+            android:src="@drawable/demo"
+            android:paddingBottom="5dp"
+            android:id="@+id/imgAvatar"
+            android:paddingRight="10dp"
+            android:layout_width="80dp"
+            android:layout_height="80dp"/>
+    <FrameLayout
+            android:id="@+id/frMore"
+            android:background="#93000000"
+            android:visibility="invisible"
+            android:layout_width="80dp"
+            android:layout_height="80dp">
+        <TextView
+                android:id="@+id/txtMore"
+                android:gravity="center_vertical|center_horizontal"
+                android:layout_gravity="center"
+                android:textColor="@color/white"
+                android:text="20+"
+                android:textSize="18pt"
+                android:layout_width="80dp"
+                android:layout_height="80dp"/>
+    </FrameLayout>
+
+</FrameLayout>
+
+    <TextView
+            android:textColor="#000"
+            android:text="Lập trình hướng đối tượng"
+            android:layout_width="80dp"
+            android:id="@+id/txtNameGroup"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:textSize="15dp"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"/>
+</LinearLayout>

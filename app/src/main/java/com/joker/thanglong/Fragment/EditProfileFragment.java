@@ -124,8 +124,8 @@ public class EditProfileFragment extends Fragment implements Validator.Validatio
         userModel.updateUser(full_name, about, new PostModel.VolleyCallBackCheck() {
             @Override
             public void onSuccess(boolean status) {
-                getFragmentManager().popBackStackImmediate();
                 Toast.makeText(getActivity(), "Cập nhật thông tin thành công", Toast.LENGTH_LONG).show();
+                getFragmentManager().popBackStackImmediate();
             }
         });
     }

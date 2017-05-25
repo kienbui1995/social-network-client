@@ -59,14 +59,13 @@
                             android:layout_marginBottom="10dp"
                             android:layout_marginRight="10dp">
                         <de.hdodenhof.circleimageview.CircleImageView
-                                android:src="@drawable/avatar1"
                                 android:id="@+id/ivUserProfilePhoto"
                                 android:layout_width="88dp"
                                 android:layout_height="88dp"
                                 android:layout_marginBottom="10dp"
                                  />
                         <ImageButton
-
+                                android:id="@+id/imgChangeAvatar"
                                 android:padding="2dp"
                                 android:layout_gravity="bottom|center|center_horizontal"
                                 android:src="@drawable/ic_camera_alt_white_24dp"

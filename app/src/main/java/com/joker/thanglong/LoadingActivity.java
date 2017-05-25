@@ -8,7 +8,12 @@ import com.viksaa.sssplash.lib.activity.AwesomeSplash;
 import com.viksaa.sssplash.lib.cnst.Flags;
 import com.viksaa.sssplash.lib.model.ConfigSplash;
 
+import Entity.EntitySetting;
+import io.realm.Realm;
+
 public class LoadingActivity extends AwesomeSplash {
+    Realm realm;
+    EntitySetting entitySetting;
     @Override
     public void initSplash(ConfigSplash configSplash) {
         /* you don't have to override every property */
@@ -45,6 +50,22 @@ public class LoadingActivity extends AwesomeSplash {
             finish();
             startActivity(new Intent(this,MainActivity.class));
         }
+    }
+
+    public void initSetting(){
+        entitySetting = new EntitySetting();
+        entitySetting.setNewsfeed(1);
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                realm.copyToRealmOrUpdate(entitySetting);
+            }
+        });
+    }
+
+    public void initRealm(){
+        realm.init(this);
+        realm = Realm.getDefaultInstance();
     }
 
 

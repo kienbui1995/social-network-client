@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="horizontal"
+              android:layout_width="match_parent"
+              android:background="@color/white"
+              android:layout_height="wrap_content">
+    <LinearLayout
+            android:padding="10dp"
+            android:layout_weight="0.3"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        <ImageView
+                android:id="@+id/imgAvatar"
+                android:src="@drawable/avatar1"
+                android:layout_width="50dp"
+                android:layout_height="50dp"/>
+        <LinearLayout
+                android:paddingLeft="15dp"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+            <TextView
+                    android:id="@+id/txtFullName"
+                    android:paddingTop="6dp"
+                    android:textStyle="bold"
+                    android:text="Hoài Nam"
+                    android:textSize="15sp"
+                    android:textColor="#000"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            <TextView
+                    android:id="@+id/txtUserNameSearchItem"
+                    android:textColor="#0277BD"
+                    android:text="Nam Dinh, Viet Nam"
+                    android:textStyle="normal"
+                    android:paddingTop="4dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+        </LinearLayout>
+    </LinearLayout>
+    <FrameLayout
+            android:layout_weight="0.1"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent">
+        <LinearLayout
+                android:layout_weight="0.2"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:paddingTop="10dp">
+            <Button
+                    android:textColor="#fff"
+                    android:text="Đồng ý"
+                    android:id="@+id/btnAccept"
+                    android:layout_marginRight="10dp"
+                    android:layout_gravity="center_vertical"
+                    android:textSize="12sp"
+                    android:layout_weight="1"
+                    android:background="@drawable/btn_accept"
+                    android:layout_width="match_parent"
+                    android:layout_height="28dp"/>
+            <Button
+                    android:textColor="#000"
+                    android:text="Từ chối"
+                    android:id="@+id/btnReject"
+                    android:layout_marginRight="10dp"
+                    android:layout_gravity="center_vertical"
+                    android:textSize="12sp"
+                    android:layout_weight="1"
+                    android:background="@drawable/btn_follow_background"
+                    android:layout_width="match_parent"
+                    android:layout_height="28dp"/>
+        </LinearLayout>
+
+        <ImageView
+                android:id="@+id/imgSetting"
+                android:layout_gravity="top|right"
+                android:src="@drawable/orca_emoji_more_back_normal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+    </FrameLayout>
+
+</LinearLayout>
