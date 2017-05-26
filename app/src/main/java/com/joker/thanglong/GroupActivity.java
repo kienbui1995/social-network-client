@@ -1,10 +1,10 @@
 package com.joker.thanglong;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -14,8 +14,9 @@ import android.widget.ImageView;
 import com.joker.thanglong.Ultil.FilePath;
 import com.squareup.picasso.Picasso;
 
-import adapter.GroupViewPagerAdapter;
 import jp.wasabeef.picasso.transformations.BlurTransformation;
+
+import adapter.GroupViewPagerAdapter;
 
 public class GroupActivity extends AppCompatActivity {
     private Toolbar toolbar;
@@ -48,7 +49,9 @@ public class GroupActivity extends AppCompatActivity {
     private void addEvent() {
         toolbar.setTitle("Toán tài chính 1.5");
         setSupportActionBar(toolbar);
+        toolbar.setLogo(R.drawable.avatar1);
         if (getSupportActionBar() != null){
+            getSupportActionBar().setDisplayUseLogoEnabled(true);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }

@@ -1,4 +1,4 @@
-package com.joker.thanglong.Fragment;
+package com.joker.thanglong.Fragment.Group;
 
 
 import android.os.Bundle;

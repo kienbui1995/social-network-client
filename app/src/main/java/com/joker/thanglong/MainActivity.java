@@ -38,7 +38,7 @@ import android.widget.TextView;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.facebook.FacebookSdk;
-import com.joker.thanglong.Fragment.GroupFragment;
+import com.joker.thanglong.Fragment.Group.GroupFragment;
 import com.joker.thanglong.Model.UserModel;
 import com.joker.thanglong.Ultil.DeviceUltil;
 import com.joker.thanglong.Ultil.ProfileInstance;
@@ -51,7 +51,9 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.Map;
 
+import Entity.EntityGroup;
 import Entity.EntityUserProfile;
 import april.yun.JPagerSlidingTabStrip2;
 import april.yun.other.JTabStyleDelegate;
@@ -128,6 +130,16 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
         setSupportActionBar(toolbar);
         //Tabhost
 //        tabHost.setupWithViewPager(viewPager);
+
+
+        EntityGroup entityGroup = new EntityGroup();
+        entityGroup.setName("hahah");
+        Map hashMap = entityGroup.toMap(entityGroup);
+        Log.d("kkkkkk",new JSONObject(hashMap).toString());
+
+
+
+
         int[] mSelectors = new int[] { R.drawable.tab1, R.drawable.tab2, R.drawable.tab3, R.drawable.tab4 };
         setupStrip(tabButtom.getTabStyleDelegate(), STYLE_ROUND);
         viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(),mSelectors);

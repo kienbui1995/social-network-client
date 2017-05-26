@@ -3,9 +3,9 @@ package adapter;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import com.joker.thanglong.Fragment.AboutGroupFragment;
-import com.joker.thanglong.Fragment.HomeGroupFragment;
-import com.joker.thanglong.Fragment.SettingGroupFragment;
+import com.joker.thanglong.Fragment.Group.AboutGroupFragment;
+import com.joker.thanglong.Fragment.Group.HomeGroupFragment;
+import com.joker.thanglong.Fragment.Group.SettingGroupFragment;
 
 import java.util.ArrayList;
 import java.util.List;

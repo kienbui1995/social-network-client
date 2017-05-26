@@ -19,7 +19,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.bumptech.glide.Glide;
 import com.joker.thanglong.Model.PostModel;
 import com.joker.thanglong.R;
-import com.joker.thanglong.Ultil.DialogUlti;
+import com.joker.thanglong.Ultil.DialogUtil;
 import com.joker.thanglong.Ultil.SystemHelper;
 import com.joker.thanglong.UserProfileActivity;
 import com.nineoldandroids.animation.ArgbEvaluator;
@@ -108,7 +108,7 @@ public class AdapterComment extends RecyclerView.Adapter<AdapterComment.Viewhold
             @Override
             public boolean onLongClick(View view) {
                 if (items.get(position).isCanDelete()){
-                    DialogUlti.initDiaglog(context, context.getResources().getString(R.string.deleteComment), new MaterialDialog.SingleButtonCallback() {
+                    DialogUtil.initDiaglog(context, context.getResources().getString(R.string.deleteComment), new MaterialDialog.SingleButtonCallback() {
                         @Override
                         public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                             postModel.DeleteComment(new PostModel.VolleyCallBackCheck() {
