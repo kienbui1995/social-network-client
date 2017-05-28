@@ -114,6 +114,25 @@ public class FirebaseHelper {
         });
     }
 
+    public void changeImageAvatar(String grName,Bitmap bmp,String type,final FirebaseCallback callback){
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bmp.compress(Bitmap.CompressFormat.JPEG, 80, stream);
+        byte[] data = stream.toByteArray();
+        StorageReference filepath = mStorageReference.child("images/" + type +"/"+SystemHelper.getTimeStamp()+"_"+ grName);
+        UploadTask uploadTask = filepath.putBytes(data);
+        uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                callback.onSuccess(taskSnapshot);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+
+            }
+        });
+    }
+
 
 
     public interface FirebaseCallback{

@@ -3,6 +3,7 @@ package adapter;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.util.Log;
 
 import com.joker.thanglong.Fragment.Group.BlockedMemberGroupFragment;
 import com.joker.thanglong.Fragment.Group.MemberGroupFragment;
@@ -18,20 +19,28 @@ import java.util.List;
 public class ManagerMemberGroupPagerAdapter extends FragmentPagerAdapter {
     List<Fragment> listFragment = new ArrayList<Fragment>();
     List<String> listName = new ArrayList<String>();
-    public ManagerMemberGroupPagerAdapter(FragmentManager fm,boolean isAdmin) {
+    public ManagerMemberGroupPagerAdapter(FragmentManager fm,boolean isAdmin,int groupType) {
         super(fm);
-        initFragment(isAdmin);
+        initFragment(isAdmin,groupType);
     }
 
-    private void initFragment(boolean isAdmin) {
+    private void initFragment(boolean isAdmin,int groupType) {
         if (isAdmin){
-            listFragment.add(new MemberGroupFragment());
-            listFragment.add(new MemberRequestGroupFragment());
-            listFragment.add(new BlockedMemberGroupFragment());
-
-            listName.add("Thành viên");
-            listName.add("Yêu cầu");
-            listName.add("Chặn");
+            Log.d("isAdmin","11");
+            if (groupType==1) {
+                Log.d("isAdmin", "12");
+                listFragment.add(new MemberGroupFragment());
+                listFragment.add(new BlockedMemberGroupFragment());
+                listName.add("Thành viên");
+                listName.add("Chặn");
+            }else if(groupType == 2){
+                    listFragment.add(new MemberGroupFragment());
+                    listFragment.add(new MemberRequestGroupFragment());
+                    listFragment.add(new BlockedMemberGroupFragment());
+                    listName.add("Thành viên");
+                    listName.add("Yêu cầu");
+                    listName.add("Chặn");
+            }
         }else {
             listFragment.add(new MemberGroupFragment());
             listName.add("Thành viên");

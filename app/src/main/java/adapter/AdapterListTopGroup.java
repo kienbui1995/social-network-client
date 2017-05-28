@@ -80,7 +80,7 @@ public class AdapterListTopGroup extends RecyclerView.Adapter<AdapterListTopGrou
         public ViewHolder(View view) {
             super(view);
             txtCover = (ImageView) view.findViewById(R.id.txtCover);
-            txtNameGroup = (TextView) view.findViewById(R.id.txtNameGroup);
+            txtNameGroup = (TextView) view.findViewById(R.id.txtNameGroup1);
 
         }
     }

@@ -73,4 +73,8 @@
         <item>Chọn hình ảnh</item>
         <item>Chụp ảnh từ camera</item>
     </string-array>
+    <string-array name="optionChangeImageGroup">
+        <item>Thay ảnh đại diện</item>
+        <item>Thay ảnh bìa</item>
+    </string-array>
 </resources>

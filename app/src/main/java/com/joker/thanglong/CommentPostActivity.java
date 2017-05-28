@@ -10,6 +10,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -17,6 +18,7 @@ import android.widget.TextView;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.joker.thanglong.Fragment.ListLikeFragment;
 import com.joker.thanglong.Interface.EndlessScrollListener;
 import com.joker.thanglong.Mention.adapter.RecyclerItemClickListener;
 import com.joker.thanglong.Mention.adapter.UsersAdapter;
@@ -48,13 +50,14 @@ public class CommentPostActivity extends AppCompatActivity implements QueryListe
     AdapterComment adapterComment;
     private LinearLayout headerLayout;
     private Button btnStatusLike;
+    private FrameLayout frRoot;
     private RecyclerView rcvComment;
     private EditText btnCommentInput;
     private ImageButton btnSubmmitComment;
     private RecyclerView.LayoutManager layoutManager;
     private EndlessScrollListener endlessScrollListener;
     private PostModel postModel;
-    private int idPost;
+    public static int idPost;
     private int numberLike;
     private String message;
     private RecyclerView mentionsList;
@@ -144,6 +147,14 @@ public class CommentPostActivity extends AppCompatActivity implements QueryListe
 
     private void initData() {
         btnStatusLike.setText(numberLike+"");
+        btnStatusLike.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getSupportFragmentManager().beginTransaction().add(R.id.frRoot,new ListLikeFragment(),"listlike")
+                        .addToBackStack(null).setCustomAnimations(R.anim.dialog_enter,R.anim.dialog_exit)
+                        .commit();
+            }
+        });
         //init Array list comment
         dsComment = new ArrayList<>();
         //Get comment
@@ -186,6 +197,7 @@ public class CommentPostActivity extends AppCompatActivity implements QueryListe
         btnSubmmitComment = (ImageButton) findViewById(R.id.btnSubmmitComment);
         mentionsList = (RecyclerView) findViewById(R.id.mentions_list);
         mentionsEmptyView = (TextView) findViewById(R.id.mentions_empty_view);
+        frRoot = (FrameLayout) findViewById(R.id.frRoot);
     }
 
     @Override

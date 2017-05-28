@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
               android:orientation="horizontal"
               android:layout_width="match_parent"
               android:background="@color/white"
@@ -11,8 +12,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
         <ImageView
-                android:id="@+id/imgAvatar"
-                android:src="@drawable/avatar1"
+                android:id="@+id/imgAvatarMember"
                 android:layout_width="50dp"
                 android:layout_height="50dp"/>
         <LinearLayout
@@ -24,15 +24,15 @@
                     android:id="@+id/txtFullName"
                     android:paddingTop="6dp"
                     android:textStyle="bold"
-                    android:text="Hoài Nam"
+                    android:text=""
                     android:textSize="15sp"
                     android:textColor="#000"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
             <TextView
-                    android:id="@+id/txtUserNameSearchItem"
+                    android:id="@+id/txtDateJoin"
                     android:textColor="#0277BD"
-                    android:text="Nam Dinh, Viet Nam"
+                    android:text=""
                     android:textStyle="normal"
                     android:paddingTop="4dp"
                     android:layout_width="wrap_content"
@@ -73,6 +73,7 @@
         </LinearLayout>
 
         <ImageView
+                android:visibility="gone"
                 android:id="@+id/imgSetting"
                 android:layout_gravity="top|right"
                 android:src="@drawable/orca_emoji_more_back_normal"

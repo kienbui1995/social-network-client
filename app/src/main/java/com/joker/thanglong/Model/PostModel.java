@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import Entity.EntityComment;
+import Entity.EntityListLike;
 import Entity.EntityStatus;
 
 /**
@@ -201,6 +202,9 @@ public class PostModel {
                     }
                 });
     }
+
+//    public
+
     public ArrayList<EntityStatus> getListPost(int total,final VolleyCallbackListStatus callback){
         final ArrayList<EntityStatus> statuses = new ArrayList<>();
         VolleySingleton.getInstance(activity).get("users/" + uId + "/posts?type=" + type +"&limit=10"+ "&skip="+ total, null, new Response.Listener<JSONObject>() {
@@ -357,35 +361,42 @@ public class PostModel {
         });
     }
 
-
-
-    public JSONObject itemListToJsonConvert(ArrayList<HashMap<String, String>> list) {
-
-        JSONObject jResult = new JSONObject();// main object
-        JSONArray jArray = new JSONArray();// /ItemDetail jsonArray
-
-        for (int i = 0; i < list.size(); i++) {
-            JSONObject jGroup = new JSONObject();// /sub Object
-
-            try {
-                jGroup.put("ItemMasterID", list.get(i).get("ItemMasterID"));
-                jGroup.put("ID", list.get(i).get("id"));
-                jGroup.put("Name", list.get(i).get("name"));
-                jGroup.put("Category", list.get(i).get("category"));
-
-                jArray.put(jGroup);
-
-                // /itemDetail Name is JsonArray Name
-                jResult.put("itemDetail", jArray);
-                return jResult;
-            } catch (JSONException e) {
-                e.printStackTrace();
+    public void getListLike(final VolleyCallbackListLike callback){
+        final ArrayList<EntityListLike> itemsLikeList = new ArrayList<>();
+        VolleySingleton.getInstance(activity).get("posts/" + idPost + "/likes", null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                JSONArray jsonArray = null;
+                try {
+                    jsonArray = response.getJSONArray("data");
+                    if (jsonArray.equals("null"))
+                    {
+                        System.exit(0);
+                    }else {
+                        for (int i = 0; i< jsonArray.length(); i++)
+                        {
+                            JSONObject jsonObject = (JSONObject) jsonArray.get(i);
+                            EntityListLike entityListLike = new EntityListLike();
+                            entityListLike.setFull_name(jsonObject.getString("full_name"));
+                            entityListLike.setUsername(jsonObject.getString("username"));
+                           if (jsonObject.has("is_followed"))entityListLike.setFollow(jsonObject.getBoolean("is_followed"));
+                            entityListLike.setId(jsonObject.getInt("id"));
+                            itemsLikeList.add(entityListLike);
+                            Log.d("full_name",entityListLike.getFull_name());
+                        }
+                        callback.onSuccess(itemsLikeList);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
-        }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
 
-        return jResult;
+            }
+        });
     }
-
 
 
 
@@ -395,6 +406,11 @@ public class PostModel {
     public interface VolleyCallbackListStatus{
         void onSuccess(ArrayList<EntityStatus> entityStatuses);
     }
+
+    public interface VolleyCallbackListLike{
+        void onSuccess(ArrayList<EntityListLike> entityListLikes);
+    }
+
     public interface VolleyCallbackComment {
         void onSuccess(ArrayList<EntityComment> entityComments);
     }

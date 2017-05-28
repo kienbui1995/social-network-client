@@ -1,0 +1,26 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+              android:orientation="vertical"
+              android:background="@android:color/transparent"
+             android:layout_height="match_parent"
+             tools:context="com.joker.thanglong.Fragment.ListLikeFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+<Button
+        android:id="@+id/btnBack"
+        android:text="Danh sách những người yêu thích"
+        android:textColor="#000"
+        android:textAllCaps="false"
+        android:drawablePadding="10dp"
+        android:gravity="center|left"
+        android:drawableLeft="@drawable/ic_keyboard_arrow_left_grey_500_24dp"
+        android:background="@drawable/bg_search"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+    <ListView
+            android:background="@color/white"
+            android:id="@+id/lvListLike"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"></ListView>
+</LinearLayout>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<item android:title="Bổ nhiệm quản trị viên" android:id="@+id/mn_make_admin_group"/>
+<item android:title="Chặn thành viên" android:id="@+id/mn_block_user"/>
+<item android:title="Xóa thành viên" android:id="@+id/mn_kick_user"/>
+</menu>

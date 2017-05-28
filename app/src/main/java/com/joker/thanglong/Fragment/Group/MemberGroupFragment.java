@@ -11,10 +11,13 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.joker.thanglong.ManagerMemberGroupActivity;
+import com.joker.thanglong.Model.GroupModel;
 import com.joker.thanglong.R;
 
 import java.util.ArrayList;
 
+import Entity.EntityMembership;
 import adapter.AdapterMemberGroup;
 
 /**
@@ -25,8 +28,9 @@ public class MemberGroupFragment extends Fragment {
     private TextView textView18;
     private RecyclerView rcvMember;
     private RecyclerView.LayoutManager layoutManager;
-    ArrayList<String> listMember;
-    AdapterMemberGroup adapterMemberGroup;
+    private ArrayList<EntityMembership> listMembers;
+    private AdapterMemberGroup adapterMemberGroup;
+    private GroupModel groupModel;
     public MemberGroupFragment() {
         // Required empty public constructor
     }
@@ -37,6 +41,7 @@ public class MemberGroupFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_member_group, container, false);
+        groupModel = new GroupModel(getActivity());
         addView(view);
         initData();
         return view;
@@ -49,15 +54,19 @@ public class MemberGroupFragment extends Fragment {
     }
 
     private void initData() {
-        listMember = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            listMember.add("hihihi");
-        }
-        layoutManager = new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false);
-        adapterMemberGroup = new AdapterMemberGroup(getActivity(),listMember,1);
-        rcvMember.setLayoutManager(layoutManager);
-        rcvMember.setAdapter(adapterMemberGroup);
-        adapterMemberGroup.notifyDataSetChanged();
+        listMembers = new ArrayList<>();
+        groupModel.getListMemberGroup(ManagerMemberGroupActivity.idGr, new GroupModel.VolleyCallbackListMemberGroup() {
+            @Override
+            public void onSuccess(ArrayList<EntityMembership> listMember) {
+                listMembers=listMember;
+                layoutManager = new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false);
+                adapterMemberGroup = new AdapterMemberGroup(getActivity(),listMembers,1);
+                rcvMember.setLayoutManager(layoutManager);
+                rcvMember.setAdapter(adapterMemberGroup);
+                adapterMemberGroup.notifyDataSetChanged();
+            }
+        });
+
     }
 
 }

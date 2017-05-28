@@ -45,7 +45,7 @@ public class HomeGroupFragment extends Fragment {
 //        adapterHome = new AdapterHome(getActivity(), list);
 //        recyclerView.setLayoutManager(layoutManager);
 //        recyclerView.setAdapter(adapterHome);
-//        recyclerView.setNestedScrollingEnabled(false);
+//        recyclerView.setNestedScrollingEnabled(true);
 //        adapterHome.notifyDataSetChanged();
         return view;
     }

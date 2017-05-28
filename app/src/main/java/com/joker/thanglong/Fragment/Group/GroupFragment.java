@@ -3,6 +3,7 @@ package com.joker.thanglong.Fragment.Group;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -30,6 +31,7 @@ public class GroupFragment extends Fragment {
     private Toolbar toolbar;
     private RecyclerView rcvMyGroup;
     private AdapterMyGroup adapterMyGroup;
+    private SwipeRefreshLayout swrGroup;
     private RecyclerView rcvGroupPopular;
     private ArrayList<EntityGroup> myListGroup;
     private ArrayList<EntityGroup> groupPopular;
@@ -57,6 +59,16 @@ public class GroupFragment extends Fragment {
         groupModel = new GroupModel(getActivity());
         initPopularGroup();
         initMyGroup();
+        swrGroup.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                initPopularGroup();
+                initMyGroup();
+                if (swrGroup.isRefreshing()){
+                    swrGroup.setRefreshing(false);
+                }
+            }
+        });
     }
 
     private void initMyGroup() {
@@ -109,6 +121,7 @@ public class GroupFragment extends Fragment {
         rcvMyGroup = (RecyclerView) view.findViewById(R.id.rcvMyGroup);
         txtViewAllGroup = (TextView) view.findViewById(R.id.txtViewAllGroup);
         rcvGroupPopular = (RecyclerView) view.findViewById(R.id.rcvGroupPopular);
+        swrGroup = (SwipeRefreshLayout) view.findViewById(R.id.swrGroup);
     }
 
 }

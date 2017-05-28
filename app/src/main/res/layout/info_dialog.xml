@@ -17,7 +17,7 @@
                     android:scaleType="fitXY"
                     android:scaleX="1.4"
                     android:id="@+id/imgCover"
-                    android:src="@drawable/anhbia2"
+
                     android:layout_width="match_parent"
                     android:layout_height="200dp"/>
             <LinearLayout
@@ -27,7 +27,7 @@
                 <de.hdodenhof.circleimageview.CircleImageView
                         android:layout_weight="0.2"
                         android:id="@+id/imgAvatar"
-                        android:src="@drawable/avatar1"
+
                         app:civ_border_color="@color/white"
                         app:civ_border_width="2dp"
                         android:layout_marginLeft="10dp"
@@ -44,11 +44,11 @@
                             android:padding="5dp"
                             android:layout_marginLeft="10dp"
                             android:background="#4d000000"
-                            android:id="@+id/txtNameGroup"
+                            android:id="@+id/txtNameGroup1"
                             android:paddingRight="5dp"
                             android:textStyle="bold"
                             android:textColor="@color/white"
-                            android:text="Hội những người yêu chó mèo"
+                            android:text=""
                             android:textSize="16sp"
                             android:maxLines="2"
                             android:layout_width="wrap_content"
@@ -68,10 +68,11 @@
                 android:orientation="vertical"
                 android:layout_height="wrap_content">
             <Button
+                    android:id="@+id/btnTotalMember"
                     android:textAllCaps="false"
                     android:gravity="left|center_vertical"
                     android:textColor="#000"
-                    android:text="500 thành viên"
+                    android:text=""
                     android:paddingLeft="10dp"
                     android:layout_marginBottom="1dp"
                     android:drawableLeft="@drawable/ic_people_grey_700_18dp"
@@ -81,10 +82,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="45dp"/>
             <Button
+                    android:id="@+id/btnTotalPost"
                     android:textAllCaps="false"
                     android:gravity="left|center_vertical"
                     android:textColor="#000"
-                    android:text="134 bài viết"
+                    android:text=""
                     android:paddingLeft="10dp"
                     android:drawableLeft="@drawable/ic_local_post_office_grey_500_18dp"
                     android:background="@color/white"
@@ -101,7 +103,7 @@
                 android:padding="10dp"
                 android:textColor="#000"
                 android:textSize="15sp"
-                android:text="@string/demo"
+                android:text=""
                 android:layout_width="match_parent"
                 android:maxLines="5"
                 android:fadeScrollbars="true"

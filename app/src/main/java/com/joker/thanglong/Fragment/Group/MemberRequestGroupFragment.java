@@ -9,10 +9,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.joker.thanglong.GroupActivity;
+import com.joker.thanglong.Model.GroupModel;
 import com.joker.thanglong.R;
 
 import java.util.ArrayList;
 
+import Entity.EntityMembership;
 import adapter.AdapterMemberGroup;
 
 /**
@@ -20,9 +23,10 @@ import adapter.AdapterMemberGroup;
  */
 public class MemberRequestGroupFragment extends Fragment {
     private RecyclerView rcvMemberRequest;
-    private ArrayList<String> listMemberRequest;
+    private ArrayList<EntityMembership> listMemberRequest;
     private AdapterMemberGroup adapter;
     private RecyclerView.LayoutManager layoutManager;
+    GroupModel groupModel;
     public MemberRequestGroupFragment() {
         // Required empty public constructor
     }
@@ -33,6 +37,7 @@ public class MemberRequestGroupFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_member_request_group, container, false);
+        groupModel = new GroupModel(getActivity());
         addView(view);
         initData();
         return view;
@@ -40,14 +45,17 @@ public class MemberRequestGroupFragment extends Fragment {
 
     private void initData() {
         listMemberRequest = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            listMemberRequest.add("hihihi");
-        }
-        layoutManager = new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false);
-        adapter = new AdapterMemberGroup(getActivity(),listMemberRequest,2);
-        rcvMemberRequest.setLayoutManager(layoutManager);
-        rcvMemberRequest.setAdapter(adapter);
-        adapter.notifyDataSetChanged();
+        groupModel.getListMemberRequest(GroupActivity.groupInfo.getId(), new GroupModel.VolleyCallbackListMemberGroup() {
+            @Override
+            public void onSuccess(ArrayList<EntityMembership> listMember) {
+                listMemberRequest = listMember;
+                layoutManager = new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false);
+                adapter = new AdapterMemberGroup(getActivity(),listMemberRequest,2);
+                rcvMemberRequest.setLayoutManager(layoutManager);
+                rcvMemberRequest.setAdapter(adapter);
+                adapter.notifyDataSetChanged();
+            }
+        });
     }
 
     private void addView(View view) {

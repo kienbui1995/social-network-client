@@ -515,7 +515,7 @@ public class AdapterHome extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 //
 ////            private void addEventListLike(final int position) {
 ////                itemsLikeList = new ArrayList<EntityListLike>();
-////                volleyHelper.get("posts/" + items.get(position).getIdStatus() + "/likes", null, new Response.Listener<JSONObject>() {
+//                volleyHelper.get("posts/" + items.get(position).getIdStatus() + "/likes", null, new Response.Listener<JSONObject>() {
 ////                    @Override
 ////                    public void onResponse(JSONObject response) {
 ////                        try {

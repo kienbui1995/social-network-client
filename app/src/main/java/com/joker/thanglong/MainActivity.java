@@ -51,9 +51,7 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.util.HashMap;
-import java.util.Map;
 
-import Entity.EntityGroup;
 import Entity.EntityUserProfile;
 import april.yun.JPagerSlidingTabStrip2;
 import april.yun.other.JTabStyleDelegate;
@@ -131,15 +129,6 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
         //Tabhost
 //        tabHost.setupWithViewPager(viewPager);
 
-
-        EntityGroup entityGroup = new EntityGroup();
-        entityGroup.setName("hahah");
-        Map hashMap = entityGroup.toMap(entityGroup);
-        Log.d("kkkkkk",new JSONObject(hashMap).toString());
-
-
-
-
         int[] mSelectors = new int[] { R.drawable.tab1, R.drawable.tab2, R.drawable.tab3, R.drawable.tab4 };
         setupStrip(tabButtom.getTabStyleDelegate(), STYLE_ROUND);
         viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(),mSelectors);
@@ -210,7 +199,7 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
                         manager = getSupportFragmentManager();
                         transaction = manager.beginTransaction();
                         GroupFragment groupFragment = new GroupFragment();
-                        transaction.add(R.id.frContentHome,groupFragment);
+                        transaction.add(R.id.frContentHome,groupFragment,"GROUP");
                         transaction.addToBackStack(null);
                         transaction.commit();
                         drawerLayout.closeDrawers();

@@ -88,7 +88,7 @@ public class AdapterMyGroup extends RecyclerView.Adapter<AdapterMyGroup.ViewHold
             frItemGroup = (LinearLayout) view.findViewById(R.id.frItemGroup);
             frMore = (FrameLayout) view.findViewById(R.id.frMore);
             txtMore = (TextView) view.findViewById(R.id.txtMore);
-            txtNameGroup = (TextView) view.findViewById(R.id.txtNameGroup);
+            txtNameGroup = (TextView) view.findViewById(R.id.txtNameGroup1);
         }
     }
 }
