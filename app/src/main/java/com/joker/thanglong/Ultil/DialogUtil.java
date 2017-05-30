@@ -112,7 +112,7 @@ public class DialogUtil {
                     @Override
                     public void onClick(final View view) {
                         GroupModel groupModel = new GroupModel(context);
-                        groupModel.joinGroup(item.getId(),item.getPrivacy(), new PostModel.VolleyCallBackCheck() {
+                        groupModel.joinGroup(item.getId(), new PostModel.VolleyCallBackCheck() {
                             @Override
                             public void onSuccess(boolean status) {
                                 Snackbar.make(view,"Thành công",Snackbar.LENGTH_INDEFINITE)
@@ -137,14 +137,22 @@ public class DialogUtil {
                 });
             }
         } else if (item.is_pending()){
-            Button btnReject = (Button) view1.findViewById(R.id.btnReject);
-            Button btnAccept = (Button) view1.findViewById(R.id.btnAccept);
+            final Button btnReject = (Button) view1.findViewById(R.id.btnReject);
+            final Button btnAccept = (Button) view1.findViewById(R.id.btnAccept);
             btnAccept.setText("Đang chờ được xét duyệt");
             btnReject.setText("Hủy bỏ yêu cầu");
             btnReject.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View view) {
+                public void onClick(final View view) {
                     GroupModel groupModel = new GroupModel(context);
+                    groupModel.leaveGroup(item.getId(), new PostModel.VolleyCallBackCheck() {
+                        @Override
+                        public void onSuccess(boolean status) {
+                            btnAccept.setText("Yêu cầu tham gia nhóm");
+                            btnReject.setVisibility(View.GONE);
+                            Snackbar.make(view,"Hủy bỏ thành công",Snackbar.LENGTH_SHORT).show();
+                        }
+                    });
 //                    groupModel.requestAction();
                 }
             });
@@ -157,7 +165,7 @@ public class DialogUtil {
                 @Override
                 public void onClick(final View view) {
                     GroupModel groupModel = new GroupModel(context);
-                    groupModel.joinGroup(item.getId(),item.getPrivacy(), new PostModel.VolleyCallBackCheck() {
+                    groupModel.joinGroup(item.getId(), new PostModel.VolleyCallBackCheck() {
                         @Override
                         public void onSuccess(boolean status) {
                             Snackbar.make(view,"Thành công",1000).show();
@@ -165,6 +173,10 @@ public class DialogUtil {
                     });
                 }
             });
+        }else {
+            Button btnReject = (Button) view1.findViewById(R.id.btnReject);
+            btnReject.setVisibility(View.GONE);
+            Button btnAccept = (Button) view1.findViewById(R.id.btnAccept);
         }
 
         txtBio.setMovementMethod(new ScrollingMovementMethod());
@@ -181,6 +193,12 @@ public class DialogUtil {
         Intent intent = new Intent(context,GroupActivity.class);
         intent.putExtra("idGroup",idGr);
         context.startActivity(intent);
+    }
 
+    public static void alert(String message,Context context){
+        MaterialDialog dialog = new MaterialDialog.Builder(context)
+                .content(message)
+                .positiveText(R.string.agree)
+                .show();
     }
 }

@@ -17,7 +17,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
 import com.joker.thanglong.Mention.adapter.RecyclerItemClickListener;
 import com.joker.thanglong.Mention.adapter.UsersAdapter;
@@ -299,12 +298,7 @@ public class CommentPostFullActivity extends AppCompatActivity implements QueryL
                         }
 
                     }
-                }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-
-                    }
-                });
+                },getApplicationContext());
 
             }
         },1000);

@@ -34,4 +34,8 @@
     <dimen name="desc_padding">40dp</dimen>
     <dimen name="tabstrip_textsize">4dp</dimen>
     <dimen name="sug_event_tabheight">3dp</dimen>
+    <dimen name="width">10dp</dimen>
+    <dimen name="textSize">70dp</dimen>
+    <dimen name="metricSize">14dp</dimen>
+    <dimen name="metricPaddingY">25dp</dimen>
 </resources>

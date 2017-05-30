@@ -55,7 +55,7 @@ public class MemberGroupFragment extends Fragment {
 
     private void initData() {
         listMembers = new ArrayList<>();
-        groupModel.getListMemberGroup(ManagerMemberGroupActivity.idGr, new GroupModel.VolleyCallbackListMemberGroup() {
+        groupModel.getListMemberGroup(ManagerMemberGroupActivity.idGr,"", new GroupModel.VolleyCallbackListMemberGroup() {
             @Override
             public void onSuccess(ArrayList<EntityMembership> listMember) {
                 listMembers=listMember;

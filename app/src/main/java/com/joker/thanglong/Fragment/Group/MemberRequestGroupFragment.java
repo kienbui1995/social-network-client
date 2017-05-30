@@ -45,7 +45,7 @@ public class MemberRequestGroupFragment extends Fragment {
 
     private void initData() {
         listMemberRequest = new ArrayList<>();
-        groupModel.getListMemberRequest(GroupActivity.groupInfo.getId(), new GroupModel.VolleyCallbackListMemberGroup() {
+        groupModel.getListMemberGroup(GroupActivity.groupInfo.getId(),"pending", new GroupModel.VolleyCallbackListMemberGroup() {
             @Override
             public void onSuccess(ArrayList<EntityMembership> listMember) {
                 listMemberRequest = listMember;

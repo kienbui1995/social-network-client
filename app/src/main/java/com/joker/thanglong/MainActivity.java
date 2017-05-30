@@ -164,7 +164,9 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
         btnPostStatus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(getApplicationContext(),PostActivity.class));
+                Intent intent = new Intent(getApplicationContext(),PostActivity.class);
+                intent.putExtra("postAt",1);
+                startActivity(intent);
             }
         });
 
@@ -241,6 +243,7 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if( requestCode == REQUEST_IMAGE && resultCode == Activity.RESULT_OK ){
             Intent intent = new Intent(this, PostActivity.class);
+            intent.putExtra("postAt",1);
             intent.putExtra("path",destination.getAbsolutePath());
             startActivity(intent);
         }
@@ -341,7 +344,7 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
         HashMap<String,String> parram = new HashMap<>();
         parram.put("token", PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString("token",""));
         Log.d("token",new JSONObject(parram).toString());
-        VolleySingleton.getInstance(getApplicationContext()).post("logout", new JSONObject(parram), new Response.Listener<JSONObject>() {
+        VolleySingleton.getInstance(getApplicationContext()).post(getApplicationContext(),"logout", new JSONObject(parram), new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 realm.executeTransaction(new Realm.Transaction() {
@@ -353,12 +356,6 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
                         startActivity(new Intent(getApplicationContext(),SignUpIn.class));
                     }
                 });
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.d("errorCode1",VolleyHelper.checkErrorCode(error)+"");
-//                Toast.makeText(getApplicationContext(), VolleyHelper.checkErrorCode(error), Toast.LENGTH_SHORT).show();
             }
         });
     }

@@ -17,7 +17,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.joker.thanglong.Fragment.ListLikeFragment;
 import com.joker.thanglong.Interface.EndlessScrollListener;
 import com.joker.thanglong.Mention.adapter.RecyclerItemClickListener;
@@ -245,12 +244,7 @@ public class CommentPostActivity extends AppCompatActivity implements QueryListe
                         }
 
                     }
-                }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-
-                    }
-                });
+                },getApplicationContext());
 
             }
         },1000);

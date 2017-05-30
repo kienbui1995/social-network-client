@@ -21,7 +21,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
 import com.joker.thanglong.CommentPostActivity;
 import com.joker.thanglong.EditPostActivity;
@@ -228,7 +227,7 @@ public class AdapterHome extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
                 holderText.btnLove.setOnLikeListener(new OnLikeListener() {
                     @Override
                     public void liked(LikeButton likeButton) {
-                        VolleySingleton.getInstance(activity).post("posts/" + items.get(position).getIdStatus() + "/likes", null, new Response.Listener<JSONObject>() {
+                        VolleySingleton.getInstance(activity).post(context,"posts/" + items.get(position).getIdStatus() + "/likes", null, new Response.Listener<JSONObject>() {
                             @Override
                             public void onResponse(JSONObject response) {
                                 JSONObject jsonObject = null;
@@ -240,17 +239,12 @@ public class AdapterHome extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
                                 }
 
                             }
-                        }, new Response.ErrorListener() {
-                            @Override
-                            public void onErrorResponse(VolleyError error) {
-                                Log.d("Like",VolleyHelper.checkErrorCode(error)+"");
-                            }
                         });
                     }
 
                     @Override
                     public void unLiked(LikeButton likeButton) {
-                        VolleySingleton.getInstance(activity).delete("posts/" + items.get(position).getIdStatus() + "/likes", null, new Response.Listener<JSONObject>() {
+                        VolleySingleton.getInstance(activity).delete(context,"posts/" + items.get(position).getIdStatus() + "/likes", null, new Response.Listener<JSONObject>() {
                             @Override
                             public void onResponse(JSONObject response) {
                                 Log.d("Like","Like: + " + items.get(position).getIdStatus());
@@ -262,11 +256,6 @@ public class AdapterHome extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
                                     e.printStackTrace();
                                 }
 
-                            }
-                        }, new Response.ErrorListener() {
-                            @Override
-                            public void onErrorResponse(VolleyError error) {
-                                Log.d("Like",VolleyHelper.checkErrorCode(error)+"");
                             }
                         });
                     }
@@ -404,7 +393,7 @@ public class AdapterHome extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
                 holderPhoto.btnLove.setOnLikeListener(new OnLikeListener() {
                     @Override
                     public void liked(LikeButton likeButton) {
-                        VolleySingleton.getInstance(activity).post("posts/" + items.get(position).getIdStatus() + "/likes", null, new Response.Listener<JSONObject>() {
+                        VolleySingleton.getInstance(activity).post(context,"posts/" + items.get(position).getIdStatus() + "/likes", null, new Response.Listener<JSONObject>() {
                             @Override
                             public void onResponse(JSONObject response) {
                                 JSONObject jsonObject = null;
@@ -415,18 +404,13 @@ public class AdapterHome extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
                                     e.printStackTrace();
                                 }
 
-                            }
-                        }, new Response.ErrorListener() {
-                            @Override
-                            public void onErrorResponse(VolleyError error) {
-                                Log.d("Like",VolleyHelper.checkErrorCode(error)+"");
                             }
                         });
                     }
 
                     @Override
                     public void unLiked(LikeButton likeButton) {
-                        VolleySingleton.getInstance(activity).delete("posts/" + items.get(position).getIdStatus() + "/likes", null, new Response.Listener<JSONObject>() {
+                        VolleySingleton.getInstance(activity).delete(context,"posts/" + items.get(position).getIdStatus() + "/likes", null, new Response.Listener<JSONObject>() {
                             @Override
                             public void onResponse(JSONObject response) {
                                 JSONObject jsonObject = null;
@@ -436,11 +420,6 @@ public class AdapterHome extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
-                            }
-                        }, new Response.ErrorListener() {
-                            @Override
-                            public void onErrorResponse(VolleyError error) {
-                                Log.d("Like",VolleyHelper.checkErrorCode(error)+"");
                             }
                         });
                     }

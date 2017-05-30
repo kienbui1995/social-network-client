@@ -18,7 +18,6 @@ import android.widget.Toast;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.Theme;
 import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.github.piasy.biv.BigImageViewer;
 import com.github.piasy.biv.loader.glide.GlideImageLoader;
 import com.github.piasy.biv.view.BigImageView;
@@ -93,12 +92,7 @@ public class ImagePostActivity extends AppCompatActivity {
                 }
 
             }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-
-            }
-        });
+        },getApplicationContext());
     }
 
     private void addEvent() {

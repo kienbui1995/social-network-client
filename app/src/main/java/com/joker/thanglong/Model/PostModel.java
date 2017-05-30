@@ -5,8 +5,6 @@ import android.net.Uri;
 import android.util.Log;
 
 import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.joker.thanglong.Ultil.VolleyHelper;
 import com.joker.thanglong.Ultil.VolleySingleton;
 
 import org.json.JSONArray;
@@ -86,12 +84,7 @@ public class PostModel {
                     e.printStackTrace();
                 }
             }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.d("editPost",VolleySingleton.getInstance(activity).checkErrorCode(error)+"");
-            }
-        });
+        },activity);
     }
     public void setEntityStatus(EntityStatus entityStatus){
         this.entityStatus=entityStatus;
@@ -108,15 +101,10 @@ public class PostModel {
         parram.put("status",1);
         parrams.putAll(parram);
         Log.d("hashmap", new JSONObject(parrams).toString());
-        VolleySingleton.getInstance(activity).put("posts/" + idPost , new JSONObject(parrams), new Response.Listener<JSONObject>() {
+        VolleySingleton.getInstance(activity).put(activity,"posts/" + idPost , new JSONObject(parrams), new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 callback.onSuccess(true);
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-
             }
         });
     }
@@ -152,16 +140,11 @@ public class PostModel {
                         }
 
                     }
-                }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-
-                    }
-                });
+                },activity);
         return entityComments;
     }
 
-    public void addPost(String message,int privacy,String type,Uri downloadUri, final VolleyCallBackCheck callback) {
+    public void addPost(String message,String type,int privacy,Uri downloadUri, final VolleyCallBackCheck callback) {
         HashMap<String,String> parram = new HashMap<>();
         parram.put("message",message);
         if (downloadUri !=null){
@@ -171,15 +154,10 @@ public class PostModel {
         parramNumber.put("status",1);
         parramNumber.put("privacy", privacy);
         parram.putAll(parramNumber);
-        VolleySingleton.getInstance(activity).post("users/" + uId + "/"+type, new JSONObject(parram), new Response.Listener<JSONObject>() {
+        VolleySingleton.getInstance(activity).post(activity,type+"/" + uId + "/posts", new JSONObject(parram), new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 callback.onSuccess(true);
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-
             }
         });
     }
@@ -188,18 +166,12 @@ public class PostModel {
         final EntityComment entityComment = new EntityComment();
         HashMap<String,String> parrams = new HashMap<>();
         parrams.put("message",content);
-        VolleySingleton.getInstance(activity).post("posts/" + idPost + "/comments", new JSONObject(parrams),
+        VolleySingleton.getInstance(activity).post(activity,"posts/" + idPost + "/comments", new JSONObject(parrams),
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
 
                         }
-                }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.d("postCommentSucees",VolleySingleton.getInstance(activity).checkErrorCode(error)+"");
-
-                    }
                 });
     }
 
@@ -250,30 +222,20 @@ public class PostModel {
 
                     callback.onSuccess(statuses);
             }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-
-            }
-        });
+        },activity);
         return statuses;
     }
     public void DeletePost(int idPost1,final VolleyCallBackCheck callback){
-        VolleySingleton.getInstance(activity).delete("posts/" + idPost1, null, new Response.Listener<JSONObject>() {
+        VolleySingleton.getInstance(activity).delete(activity,"posts/" + idPost1, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 callback.onSuccess(true);
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-
             }
         });
     }
 
     public void LikePost(final VolleyCallBackJson callback){
-        VolleySingleton.getInstance(activity).post("posts/" + idPost + "/likes", null, new Response.Listener<JSONObject>() {
+        VolleySingleton.getInstance(activity).post(activity,"posts/" + idPost + "/likes", null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 try {
@@ -283,17 +245,12 @@ public class PostModel {
                     e.printStackTrace();
                 }
             }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.d("Like",VolleySingleton.getInstance(activity).checkErrorCode(error)+"");
-            }
         });
 
     }
 
     public void UnLikePost(final VolleyCallBackJson callback){
-        VolleySingleton.getInstance(activity).delete("posts/" + idPost + "/likes", null, new Response.Listener<JSONObject>() {
+        VolleySingleton.getInstance(activity).delete(activity,"posts/" + idPost + "/likes", null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 try {
@@ -302,11 +259,6 @@ public class PostModel {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.d("UnLike",VolleySingleton.getInstance(activity).checkErrorCode(error)+"");
             }
         });
 
@@ -324,7 +276,7 @@ public class PostModel {
             parrams.putAll(map);
         }
         Log.d("JsonComment",new JSONObject(parrams).toString());
-        VolleySingleton.getInstance(activity).post("posts/" + idPost + "/comments", new JSONObject(parrams),
+        VolleySingleton.getInstance(activity).post(activity,"posts/" + idPost + "/comments", new JSONObject(parrams),
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
@@ -335,30 +287,64 @@ public class PostModel {
                         }
 
                     }
-                }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.d("addComment", VolleyHelper.checkErrorCode(error)+"");
-
-                    }
                 });
 
     }
 
 
     public void DeleteComment(final VolleyCallBackCheck callback, final int idComment){
-        VolleySingleton.getInstance(activity).delete("comments/" + idComment, null, new Response.Listener<JSONObject>() {
+        VolleySingleton.getInstance(activity).delete(activity,"comments/" + idComment, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 Log.d("delete",idComment+"");
                 callback.onSuccess(true);
             }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                callback.onSuccess(true);
-            }
         });
+    }
+
+    public void getPostGroup(final PostModel.VolleyCallbackListStatus callback, String type){
+        final ArrayList<EntityStatus> items = new ArrayList<>();
+        VolleySingleton.getInstance(activity).get("groups/"+ uId + "/posts"+"?limit=10"+type+ "", null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+                    JSONArray jsonArray = response.getJSONArray("data");
+                    for (int i =0; i< jsonArray.length();i++)
+                    {
+                        JSONObject jsonObject = (JSONObject) jsonArray.get(i);
+                        JSONObject jsonOwner = jsonObject.getJSONObject("owner");
+                        EntityStatus entityStatus = new EntityStatus();
+                        entityStatus.setuId(Integer.parseInt(jsonOwner.getString("id")));
+                        entityStatus.setContent(jsonObject.getString("message"));
+                        entityStatus.setCreatedTime(Long.parseLong(jsonObject.getString("created_at")));
+                        entityStatus.setIdStatus(Integer.parseInt(jsonObject.getString("id")));
+                        entityStatus.setNameId(jsonOwner.getString("full_name"));
+                        entityStatus.setLike(Boolean.parseBoolean(jsonObject.getString("is_liked")));
+                        entityStatus.setStatus(jsonObject.getInt("status"));
+                        entityStatus.setCanEdit(jsonObject.getBoolean("can_edit"));
+                        entityStatus.setCanDelete(jsonObject.getBoolean("can_delete"));
+                        if (jsonOwner.has("avatar")){
+                            entityStatus.setAvatar(jsonOwner.getString("avatar"));
+                        }
+                        if (jsonObject.has("photo")){
+                            entityStatus.setImage(jsonObject.getString("photo"));
+                        }
+                        if (!jsonObject.isNull("comments"))
+                        {
+                            entityStatus.setNumberComment(jsonObject.getInt("comments"));
+                        }
+                        if (!jsonObject.isNull("likes"))
+                        {
+                            entityStatus.setNumberLike(jsonObject.getInt("likes"));
+                        }
+                        items.add(entityStatus);
+                    }
+                    callback.onSuccess(items);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        },activity);
     }
 
     public void getListLike(final VolleyCallbackListLike callback){
@@ -390,12 +376,7 @@ public class PostModel {
                     e.printStackTrace();
                 }
             }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-
-            }
-        });
+        },activity);
     }
 
 

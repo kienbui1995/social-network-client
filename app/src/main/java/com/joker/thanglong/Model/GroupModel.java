@@ -1,12 +1,9 @@
 package com.joker.thanglong.Model;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.joker.thanglong.Ultil.ProfileInstance;
-import com.joker.thanglong.Ultil.VolleyHelper;
 import com.joker.thanglong.Ultil.VolleySingleton;
 
 import org.json.JSONArray;
@@ -65,12 +62,7 @@ public class GroupModel {
                 }
                 callback.onSuccess(lisGroups);
             }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-
-            }
-        });
+        },context);
     }
 
     public void getInfoGroup(int idGroup,final VolleyCallbackInfoGroup callback){
@@ -103,12 +95,7 @@ public class GroupModel {
                 }
                 callback.onSuccess(entityGroup);
             }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-
-            }
-        });
+        },context);
     }
 
     public void getListGroupJoin(final VolleyCallbackListGroup callback){
@@ -147,57 +134,27 @@ public class GroupModel {
                 }
                 callback.onSuccess(lisGroups);
             }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-
-            }
-        });
+        },context);
 
     }
     public void editInfoGroup(int idGr,EntityGroup entityGroup){
         Map parrams = entityGroup.toMap(entityGroup);
-        VolleySingleton.getInstance(context).put("groups/" + idGr, new JSONObject(parrams), new Response.Listener<JSONObject>() {
+        VolleySingleton.getInstance(context).put(context,"groups/" + idGr, new JSONObject(parrams), new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
 
             }
         });
     }
 
-    public void joinGroup(int idGr,int privacy, final PostModel.VolleyCallBackCheck callback){
-        if (privacy == 1){
-            VolleySingleton.getInstance(context).post("groups/" + idGr + "/members", null, new Response.Listener<JSONObject>() {
+    public void joinGroup(int idGr, final PostModel.VolleyCallBackCheck callback){
+            VolleySingleton.getInstance(context).post(context,"groups/" + idGr + "/members", null, new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject response) {
                     callback.onSuccess(true);
                 }
-            }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    Log.d("joinGroup",VolleyHelper.checkErrorCode(error)+"");
-                }
             });
-        }else if (privacy ==2)
-        {
-            VolleySingleton.getInstance(context).post("groups/" + idGr + "/requests", null, new Response.Listener<JSONObject>() {
-                @Override
-                public void onResponse(JSONObject response) {
-                    callback.onSuccess(true);
-                }
-            }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    Log.d("joinGroup",VolleyHelper.checkErrorCode(error)+"");
-                }
-            });
-        }
-    }
+            }
 
     public void getListMemberRequest(int idGr, final VolleyCallbackListMemberGroup callback){
         final ArrayList<EntityMembership> listMember = new ArrayList<>();
@@ -223,48 +180,34 @@ public class GroupModel {
                     e.printStackTrace();
                 }
             }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-
-            }
-        });
+        },context);
     }
 
-    public void requestAction(int id,int type,final PostModel.VolleyCallBackCheck callback){
+    public void requestAction(int id,int type,int role,final PostModel.VolleyCallBackCheck callback){
         EntityMembership entityMembership = new EntityMembership();
         entityMembership.setStatus(type);
-        VolleySingleton.getInstance(context).put("group_membership_requests/" + id, new JSONObject(entityMembership.toMap(entityMembership)), new Response.Listener<JSONObject>() {
+        entityMembership.setRole(role);
+        VolleySingleton.getInstance(context).put(context,"group_memberships/" + id, new JSONObject(entityMembership.toMap(entityMembership)), new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 callback.onSuccess(true);
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-
             }
         });
     }
 
     public void leaveGroup(int idGr, final PostModel.VolleyCallBackCheck callback){
-        VolleySingleton.getInstance(context).delete("groups/" + idGr + "/members", null, new Response.Listener<JSONObject>() {
+        VolleySingleton.getInstance(context).delete(context,"groups/" + idGr + "/members", null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
 
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                callback.onSuccess(true);
             }
         });
 
     }
 
-    public void getListMemberGroup(int idGr,VolleyCallbackListMemberGroup callback){
+    public void getListMemberGroup(int idGr,String type,VolleyCallbackListMemberGroup callback){
         final ArrayList<EntityMembership> listMember = new ArrayList<>();
-        VolleySingleton.getInstance(context).get("groups/" + idGr + "/members", null, new Response.Listener<JSONObject>() {
+        VolleySingleton.getInstance(context).get("groups/" + idGr + "/members?role=" + type, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 try {
@@ -276,10 +219,10 @@ public class GroupModel {
                         if (jsonUser.has("avatar")) membership.setAvatar(jsonUser.getString("avatar"));
                         membership.setuId(jsonUser.getInt("id"));
                         membership.setUsername(jsonUser.getString("username"));
-                        membership.setFull_name(jsonUser.getString("full_name"));
-                        membership.setRole(jsonObject.getInt("role"));
-                        membership.setIdGr(jsonObject.getInt("id"));
-                        membership.setCreated_at(jsonObject.getLong("created_at"));
+                        if (jsonUser.has("full_name")) membership.setFull_name(jsonUser.getString("full_name"));
+                        if (jsonObject.has("role")) membership.setRole(jsonObject.getInt("role"));
+                        if (jsonObject.has("id")) membership.setIdGr(jsonObject.getInt("id"));
+                        if (jsonObject.has("created_at")) membership.setCreated_at(jsonObject.getLong("created_at"));
                         if (jsonObject.has("can_edit")) membership.setCan_edit(jsonObject.getBoolean("can_edit"));
                         if (jsonObject.has("can_delete")) membership.setCan_edit(jsonObject.getBoolean("can_delete"));
                         if (jsonObject.has("updated_at")) membership.setUpdated_at(jsonObject.getLong("updated_at"));
@@ -289,12 +232,7 @@ public class GroupModel {
                     e.printStackTrace();
                 }
             }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-
-            }
-        });
+        },context);
         callback.onSuccess(listMember);
     }
 
@@ -302,31 +240,21 @@ public class GroupModel {
         EntityMembership entityMembership = new EntityMembership();
         entityMembership.setRole(role);
 
-        VolleySingleton.getInstance(context).put("group_memberships/" + idMembership,
+        VolleySingleton.getInstance(context).put(context,"group_memberships/" + idMembership,
                 new JSONObject(entityMembership.toMap(entityMembership)), new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
                         callback.onSuccess(true);
                     }
-                }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.d("setRole",VolleyHelper.checkErrorCode(error)+"");
-                    }
                 });
     }
 
     public void kickUser(int idMembership,final PostModel.VolleyCallBackCheck callback){
-        VolleySingleton.getInstance(context).delete("group_memberships/" + idMembership,
+        VolleySingleton.getInstance(context).delete(context,"group_memberships/" + idMembership,
                 null, new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
                         callback.onSuccess(true);
-                    }
-                }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.d("kickUser",VolleyHelper.checkErrorCode(error)+"");
                     }
                 });
 

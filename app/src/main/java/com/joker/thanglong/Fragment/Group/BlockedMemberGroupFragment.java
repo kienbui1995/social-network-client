@@ -9,6 +9,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.joker.thanglong.GroupActivity;
+import com.joker.thanglong.Model.GroupModel;
 import com.joker.thanglong.R;
 
 import java.util.ArrayList;
@@ -24,7 +26,7 @@ public class BlockedMemberGroupFragment extends Fragment {
     private ArrayList<EntityMembership> listMemberBlock;
     private AdapterMemberGroup adapter;
     private RecyclerView.LayoutManager layoutManager;
-
+    private GroupModel groupModel;
 
 
     public BlockedMemberGroupFragment() {
@@ -37,21 +39,27 @@ public class BlockedMemberGroupFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_blocked_member_group, container, false);
+        groupModel = new GroupModel(getActivity());
+
         addView(view);
-//        initData();
+        initData();
         return view;
     }
 
     private void initData() {
         listMemberBlock = new ArrayList<>();
-//        for (int i = 0; i < 10; i++) {
-//            listMemberBlock.add("hihihi");
-//        }
-        layoutManager = new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false);
-        adapter = new AdapterMemberGroup(getActivity(),listMemberBlock,3);
-        rcvMemberBlock.setLayoutManager(layoutManager);
-        rcvMemberBlock.setAdapter(adapter);
-        adapter.notifyDataSetChanged();
+        groupModel.getListMemberGroup(GroupActivity.groupInfo.getId(), "blocked", new GroupModel.VolleyCallbackListMemberGroup() {
+            @Override
+            public void onSuccess(ArrayList<EntityMembership> listMember) {
+                listMemberBlock = listMember;
+                layoutManager = new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false);
+                adapter = new AdapterMemberGroup(getActivity(),listMemberBlock,3);
+                rcvMemberBlock.setLayoutManager(layoutManager);
+                rcvMemberBlock.setAdapter(adapter);
+                adapter.notifyDataSetChanged();
+            }
+        });
+
     }
 
     private void addView(View view) {

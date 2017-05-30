@@ -16,6 +16,16 @@
                 android:layout_height="?attr/actionBarSize"/>
 
     </android.support.design.widget.AppBarLayout>
+    <com.joker.thanglong.CustomView.CircularCounter
+            xmlns:counter="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/counter"
+            android:layout_width="300dp"
+            android:layout_height="300dp"
+            counter:range="60"
+            counter:textSize="100sp"
+            counter:textColor="#ffffff"
+            counter:metricSize="20sp"
+            counter:metricText="metric"/>
     <FrameLayout
             android:orientation="vertical"
             android:layout_width="match_parent"

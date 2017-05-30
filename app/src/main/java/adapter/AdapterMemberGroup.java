@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -62,7 +63,22 @@ public class AdapterMemberGroup extends RecyclerView.Adapter<AdapterMemberGroup.
             case 2:
                 initListMemberRequest(holder,position);
             case 3:
+                initListBlock(holder,position);
         }
+    }
+
+    private void initListBlock(Viewholder holder, final int position) {
+        holder.txtFullName.setText(items.get(position).getFull_name());
+        Glide.with(context).load(items.get(position).getAvatar()).crossFade().fitCenter().into(holder.imgAvatar);
+        holder.txtDateJoin.setText("Tham gia: "+ SystemHelper.getTimeAgo(items.get(position).getCreated_at()));
+        holder.btnAccept.setVisibility(View.GONE);
+        holder.btnReject.setText("Bỏ chặn");
+        holder.btnReject.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                controlAction("Bạn có muốn bỏ chặn thành viên này?",1,position);
+            }
+        });
     }
 
     private void initListMemberRequest(final Viewholder holder, final int position) {
@@ -75,7 +91,7 @@ public class AdapterMemberGroup extends RecyclerView.Adapter<AdapterMemberGroup.
                 DialogUtil.initDiaglog(context, "Bạn có muốn thêm thành viên này vào nhóm?", new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        groupModel.requestAction(items.get(position).getIdGr(), 2, new PostModel.VolleyCallBackCheck() {
+                        groupModel.requestAction(items.get(position).getIdGr(),1,1, new PostModel.VolleyCallBackCheck() {
                             @Override
                             public void onSuccess(boolean status) {
                                 items.remove(position);
@@ -92,7 +108,7 @@ public class AdapterMemberGroup extends RecyclerView.Adapter<AdapterMemberGroup.
                 DialogUtil.initDiaglog(context, "Bạn có muốn từ chối thành viên này vào nhóm?", new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        groupModel.requestAction(items.get(position).getIdGr(), 3, new PostModel.VolleyCallBackCheck() {
+                        groupModel.leaveGroup(items.get(position).getIdGr(),new PostModel.VolleyCallBackCheck() {
                             @Override
                             public void onSuccess(boolean status) {
                                 items.remove(position);
@@ -131,7 +147,6 @@ public class AdapterMemberGroup extends RecyclerView.Adapter<AdapterMemberGroup.
                                         break;
                                     case R.id.mn_block_user:
                                         controlAction("Bạn có muốn chặn thành viên này?",4,position);
-                                        items.remove(position);
                                         notifyDataSetChanged();
                                         break;
                                     case R.id.mn_kick_user:
@@ -215,6 +230,8 @@ public class AdapterMemberGroup extends RecyclerView.Adapter<AdapterMemberGroup.
         private Button btnReject;
         private ImageView imgSetting;
         private TextView txtDateJoin;
+        private LinearLayout lnRoot;
+
         public Viewholder(View itemView) {
             super(itemView);
             txtDateJoin = (TextView) itemView.findViewById(R.id.txtDateJoin);
@@ -223,6 +240,7 @@ public class AdapterMemberGroup extends RecyclerView.Adapter<AdapterMemberGroup.
             btnAccept = (Button) itemView.findViewById(R.id.btnAccept);
             btnReject = (Button) itemView.findViewById(R.id.btnReject);
             imgSetting = (ImageView) itemView.findViewById(R.id.imgSetting);
+            lnRoot = (LinearLayout) itemView.findViewById(R.id.ln_root);
         }
     }
 }

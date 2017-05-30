@@ -4,10 +4,15 @@ import android.content.Context;
 import android.preference.PreferenceManager;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.NetworkError;
 import com.android.volley.NetworkResponse;
+import com.android.volley.NoConnectionError;
+import com.android.volley.ParseError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.ServerError;
+import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
@@ -19,7 +24,7 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
+    /**
  * Created by joker on 5/19/17.
  */
 
@@ -45,7 +50,7 @@ public class VolleySingleton {
 
     public RequestQueue getRequestQueue() {
         if (mRequestQueue == null) {
-            // getApplicationContext() is key. It should not be activity context,
+            // getApplicationContext() is key. It should not be mCtx context,
             // or else RequestQueue won't last for the lifetime of your app
             mRequestQueue = Volley.newRequestQueue(mCtx.getApplicationContext());
         }
@@ -62,9 +67,14 @@ public class VolleySingleton {
 
     //Setup method GET,SET,POST,DELTE
     public void get(String method, JSONObject jsonRequest,
-                    Response.Listener<JSONObject> listener, Response.ErrorListener errorListener) {
+                    Response.Listener<JSONObject> listener, final Context activity) {
 
-        JsonObjectRequest objRequest = new JsonObjectRequest(Request.Method.GET, contructUrl(method), jsonRequest, listener, errorListener) {
+        JsonObjectRequest objRequest = new JsonObjectRequest(Request.Method.GET, contructUrl(method), jsonRequest, listener, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                handlerError(error,activity);
+            }
+        }) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 HashMap<String, String> map = new HashMap<>();
@@ -76,10 +86,15 @@ public class VolleySingleton {
         mRequestQueue.add(objRequest);
     }
 
-    public void post(String method, JSONObject jsonRequest,
-                     Response.Listener<JSONObject> listener, Response.ErrorListener errorListener) {
+    public void post(final Context context, String method, JSONObject jsonRequest,
+                     Response.Listener<JSONObject> listener) {
 
-        JsonObjectRequest objRequest = new JsonObjectRequest(Request.Method.POST, contructUrl(method), jsonRequest, listener, errorListener){
+        JsonObjectRequest objRequest = new JsonObjectRequest(Request.Method.POST, contructUrl(method), jsonRequest, listener, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                handlerError(error,context);
+            }
+        }){
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 HashMap<String, String> map = new HashMap<>();
@@ -91,10 +106,15 @@ public class VolleySingleton {
         mRequestQueue.add(objRequest);
     }
 
-    public void delete(String method, JSONObject jsonRequest,
-                       Response.Listener<JSONObject> listener, Response.ErrorListener errorListener){
+    public void delete(final Context context, String method, JSONObject jsonRequest,
+                       Response.Listener<JSONObject> listener){
 
-        JsonObjectRequest objRequest = new JsonObjectRequest(Request.Method.DELETE, contructUrl(method), jsonRequest, listener, errorListener){
+        JsonObjectRequest objRequest = new JsonObjectRequest(Request.Method.DELETE, contructUrl(method), jsonRequest, listener, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                handlerError(error,context);
+            }
+        }){
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 HashMap<String, String> map = new HashMap<>();
@@ -106,10 +126,15 @@ public class VolleySingleton {
         mRequestQueue.add(objRequest);
     }
 
-    public void put(String method, JSONObject jsonRequest,
-                    Response.Listener<JSONObject> listener, Response.ErrorListener errorListener){
+    public void put(final Context context, String method, JSONObject jsonRequest,
+                    Response.Listener<JSONObject> listener){
 
-        JsonObjectRequest objRequest = new JsonObjectRequest(Request.Method.PUT, contructUrl(method), jsonRequest, listener, errorListener){
+        JsonObjectRequest objRequest = new JsonObjectRequest(Request.Method.PUT, contructUrl(method), jsonRequest, listener, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                handlerError(error,context);
+            }
+        }){
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 HashMap<String, String> map = new HashMap<>();
@@ -156,4 +181,28 @@ public class VolleySingleton {
         }
         return trimmedString;
     }
+    
+    public void handlerError(VolleyError error, Context activity){
+        {
+            if (error instanceof TimeoutError || error instanceof NoConnectionError) {
+                DialogUtil.alert("Không có kết nối mạng, vui lòng kiểm tra lại",activity);
+            } else if (error instanceof AuthFailureError) {
+                //TODO
+                DialogUtil.alert("Lỗi xác thực,vui lòng đăng nhập lại",activity);
+            } else if (error instanceof ServerError) {
+                //TODO
+                DialogUtil.alert("Lỗi server",activity);
+            } else if (error instanceof NetworkError) {
+                //TODO
+                DialogUtil.alert("Lỗi mạng, xin vui lòng thử lại",activity);
+            } else if (error instanceof ParseError) {
+                //TODO
+                DialogUtil.alert("Lỗi trong quá trình lấy dữ liệu ",activity);
+            }
+//                Log.d("findUser",VolleySingleton.getInstance(mCtx).checkErrorCode(error)+"");
+        }
+
+
+    }
+
 }

@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.util.Log;
 
 import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.joker.thanglong.Ultil.SettingUtil;
 import com.joker.thanglong.Ultil.VolleySingleton;
 
@@ -19,8 +18,6 @@ import Entity.EntityFollow;
 import Entity.EntityStatus;
 import Entity.EntityUserProfile;
 import Entity.EntityUserSearch;
-
-import static com.joker.thanglong.Ultil.VolleyHelper.checkErrorCode;
 
 /**
  * Created by joker on 5/12/17.
@@ -38,29 +35,19 @@ public class UserModel {
     }
 
     public void unFollow(){
-        VolleySingleton.getInstance(activity).delete("users/" +uId + "/subscriptions", null, new Response.Listener<JSONObject>() {
+        VolleySingleton.getInstance(activity).delete(activity,"users/" +uId + "/subscriptions", null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 Log.d("follow",response.toString());
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.d("follow", checkErrorCode(error)+"");
             }
         });
     }
 
     public void Follow(){
-        VolleySingleton.getInstance(activity).post("users/" +uId + "/subscriptions", null, new Response.Listener<JSONObject>() {
+        VolleySingleton.getInstance(activity).post(activity,"users/" +uId + "/subscriptions", null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 Log.d("follow",response.toString());
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.d("follow", checkErrorCode(error)+"");
             }
         });
     }
@@ -90,12 +77,7 @@ public class UserModel {
                     e.printStackTrace();
                 }
             }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.d("findUser", VolleySingleton.getInstance(activity).checkErrorCode(error)+"");
-            }
-        });
+        },activity);
     }
     public void getProfile(final PostModel.VolleyCallBackJson callback){
         VolleySingleton.getInstance(activity).get("users/" + uId, null, new Response.Listener<JSONObject>() {
@@ -108,12 +90,7 @@ public class UserModel {
                     e.printStackTrace();
                 }
             }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.d("getInfoUser", VolleySingleton.getInstance(activity).checkErrorCode(error) + "");
-            }
-        });
+        },activity);
     }
 
     public void getNewfeed(final PostModel.VolleyCallbackListStatus callback, String type){
@@ -158,12 +135,7 @@ public class UserModel {
                     e.printStackTrace();
                 }
             }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-
-            }
-        });
+        },activity);
     }
 
     public void search(CharSequence sequence,final VolleyCallBackSearch callback){
@@ -194,27 +166,17 @@ public class UserModel {
                 }
                 callback.onSuccess(listUser);
             }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-//                Log.d("findUser",VolleySingleton.getInstance(activity).checkErrorCode(error)+"");
-            }
-        });
+        },activity);
     }
 
     public void updateAvatar(String large, String small, final PostModel.VolleyCallBackCheck callback){
         HashMap<String,String> parrams = new HashMap<>();
         parrams.put("large_avatar",large);
         parrams.put("avatar",small);
-        VolleySingleton.getInstance(activity).put("users/" + uId, new JSONObject(parrams), new Response.Listener<JSONObject>() {
+        VolleySingleton.getInstance(activity).put(activity,"users/" + uId, new JSONObject(parrams), new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 callback.onSuccess(true);
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-
             }
         });
     }
@@ -223,15 +185,10 @@ public class UserModel {
         HashMap<String,String> parrams = new HashMap<>();
         parrams.put("full_name",full_name);
         parrams.put("about",about);
-        VolleySingleton.getInstance(activity).put("users/" + uId, new JSONObject(parrams), new Response.Listener<JSONObject>() {
+        VolleySingleton.getInstance(activity).put(activity,"users/" + uId, new JSONObject(parrams), new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 callback.onSuccess(true);
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-
             }
         });
     }

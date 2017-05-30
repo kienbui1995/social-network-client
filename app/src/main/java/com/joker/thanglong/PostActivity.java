@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -27,8 +28,11 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.joker.thanglong.Model.PostModel;
 import com.joker.thanglong.Ultil.DeviceUltil;
+import com.joker.thanglong.Ultil.DialogUtil;
 import com.joker.thanglong.Ultil.FilePath;
 import com.joker.thanglong.Ultil.FirebaseHelper;
 import com.joker.thanglong.Ultil.ImagePicker;
@@ -60,6 +64,8 @@ public class PostActivity extends AppCompatActivity {
     Activity activity;
     PostModel postModel;
     FirebaseHelper firebaseHelper;
+    private int postAt;
+    String type;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,7 +73,14 @@ public class PostActivity extends AppCompatActivity {
         activity =this;
         Intent intent = getIntent();
         selectedImagePath = intent.getStringExtra("path");
-        postModel = new PostModel(this,Integer.parseInt(ProfileInstance.getProfileInstance(this).getProfile().getuID()),"");
+        postAt = intent.getIntExtra("postAt",1);
+        if (postAt == 1){
+            type = "users";
+            postModel = new PostModel(this,Integer.parseInt(ProfileInstance.getProfileInstance(this).getProfile().getuID()),"");
+        }else if (postAt == 2){
+            type = "groups";
+            postModel = new PostModel(this,GroupActivity.groupInfo.getId(),"");
+        }
         firebaseHelper = new FirebaseHelper(this);
         addControl();
         if (selectedImagePath != null){
@@ -218,7 +231,7 @@ public class PostActivity extends AppCompatActivity {
             }else {
                 if (selectedImagePath == null){
                     progressDialog = ProgressDialog.show(this,"","Đang cập nhật trạng thái của bạn",true);
-                    postModel.addPost(edtStatusInput.getText().toString().trim(),privacy, "posts", null, new PostModel.VolleyCallBackCheck() {
+                    postModel.addPost(edtStatusInput.getText().toString().trim(),type,privacy, null, new PostModel.VolleyCallBackCheck() {
                         @Override
                         public void onSuccess(boolean status) {
                             progressDialog.dismiss();
@@ -235,7 +248,7 @@ public class PostActivity extends AppCompatActivity {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                             downloadUri = taskSnapshot.getDownloadUrl();
-                            postModel.addPost(edtStatusInput.getText().toString().trim(),privacy, "posts", downloadUri, new PostModel.VolleyCallBackCheck() {
+                            postModel.addPost(edtStatusInput.getText().toString().trim(),type,privacy, downloadUri, new PostModel.VolleyCallBackCheck() {
                                 @Override
                                 public void onSuccess(boolean status) {
                                     progressDialog.dismiss();
@@ -296,7 +309,17 @@ public class PostActivity extends AppCompatActivity {
 //                }
 
             }
-
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        DialogUtil.initDiaglog(getApplicationContext(), "Bạn có chắc chắn muốn hủy bỏ post bài?", new MaterialDialog.SingleButtonCallback() {
+            @Override
+            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                finish();
+            }
+        });
     }
 }
