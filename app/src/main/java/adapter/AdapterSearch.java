@@ -90,7 +90,7 @@ public class AdapterSearch extends ArrayAdapter {
                                     btnFollowUser.setTextColor(Color.parseColor("#FFFFFF"));
                                     btnFollowUser.setText("Đã theo dõi");
                                     btnFollowUser.setEnabled(false);
-                                    userModel.Follow();
+                                    userModel.Follow(Integer.parseInt(items.get(position).getId()));
                                     Intent intent = new Intent(context, UserProfileActivity.class);
                                     intent.putExtra("uId",items.get(position).getId());
                                     context.startActivity(intent);

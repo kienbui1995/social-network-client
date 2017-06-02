@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
               android:orientation="vertical"
               android:layout_marginLeft="5dp"
               android:layout_marginBottom="10dp"
@@ -21,7 +22,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
                 <de.hdodenhof.circleimageview.CircleImageView
-                        android:src="@drawable/demo"
+                        android:id="@+id/imgAvatar"
                         android:layout_width="46dp"
                         android:layout_height="46dp"/>
                 <LinearLayout
@@ -32,9 +33,10 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content">
                         <TextView
+                                android:id="@+id/imgFullName"
                                 android:textColor="@android:color/black"
                                 android:textSize="15sp"
-                                android:textStyle="bold"
+                                android:textStyle="normal"
                                 android:paddingTop="5dp"
                                 android:paddingLeft="10dp"
                                 android:paddingBottom="3dp"
@@ -44,12 +46,13 @@
                         <TextView
                                 android:paddingRight="2dp"
                                 android:paddingLeft="2dp"
-                                android:textSize="17sp"
+                                android:textSize="13sp"
                                 android:text="▶"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"/>
                         <TextView
-                                android:textStyle="bold"
+                                android:id="@+id/txtNameGroup"
+                                android:textStyle="normal"
                                 android:textColor="@android:color/black"
                                 android:text="Kinh tế học đại cương"
                                 android:layout_width="wrap_content"
@@ -72,7 +75,6 @@
             <ImageView
                     android:id="@+id/imgPostContent"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/imgdemo"
                     android:layout_width="match_parent"
                     android:layout_height="250dp"/>
             <TextView
@@ -86,38 +88,41 @@
                     android:paddingLeft="20dp"
                     android:orientation="horizontal"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-                <TextView
-                        android:id="@+id/txtLove"
-                        android:text="Love"
-                        android:textColor="#fa3d56"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
-                <TextView
-                        android:textStyle="bold"
-                        android:textColor="@color/colorGrey"
-                        android:layout_marginLeft="10dp"
-                        android:textSize="25sp"
-                        android:layout_marginRight="10dp"
-                        android:text="."
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
-                <ImageView
-                        android:layout_marginTop="3dp"
+                    android:layout_height="30dp">
+
+                <com.like.LikeButton
                         android:layout_gravity="center_vertical"
-                        android:src="@drawable/heart"
-                        android:id="@+id/imgNumberLove"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
+                        android:paddingTop="8dp"
+                        android:paddingBottom="5dp"
+                        android:gravity="center_horizontal|center_vertical"
+                        app:icon_type="heart"
+                        app:anim_scale_factor="1.5"
+                        app:icon_size="31dp"
+                        android:id="@+id/btnLove"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        />
+
                 <TextView
-                        android:id="@+id/txtNumberLove"
+                        android:layout_gravity="center_vertical"
                         android:textColor="@color/bgToolbar"
-                        android:text="20"
-                        android:layout_weight="2"
+                        android:layout_weight="9"
                         android:layout_marginLeft="10dp"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
+                        android:layout_height="wrap_content"
+                        android:id="@+id/txtNumberLike"/>
+                <TextView
+                        android:layout_gravity="center_vertical"
+                        android:textColor="@color/bgToolbar"
+                        android:layout_weight="1"
+                        android:layout_marginLeft="10dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/txtNumberComment"/>
+
                 <Button
+                        android:layout_marginBottom="3dp"
+                        android:textSize="13sp"
                         android:id="@+id/btnComment"
                         android:layout_weight="0.1"
                         android:background="@android:color/transparent"

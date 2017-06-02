@@ -46,6 +46,7 @@
         app:layout_constraintHorizontal_bias="0.0" />
 
     <ImageButton
+            android:visibility="gone"
         android:id="@+id/imgThayAnhBia"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

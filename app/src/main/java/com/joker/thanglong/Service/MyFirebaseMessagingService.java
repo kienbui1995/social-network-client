@@ -32,9 +32,11 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         super.onMessageReceived(remoteMessage);
         String token = PreferenceManager.getDefaultSharedPreferences(this).getString("token","");
         if(token != null){
+//            DialogUtil.showPopUpAlert(getApplicationContext());
             int id = Integer.parseInt(remoteMessage.getData().get("id"));
             Intent intent = new Intent(this, CommentPostFullActivity.class);
             intent.putExtra("idPost", id);
+            intent.putExtra("type", 2);
             PendingIntent pIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         Bitmap bitmap = getBitmapFromURL("https://firebasestorage.googleapis.com/v0/b/hoclazada.appspot.com/o/images%2Favatar%2Fsmall%2F1495434748_null?alt=media&token=f845459a-9f67-4109-a236-6c95cf458d0d");
         /*build the notification here this is only supported for API 11. Since we've targeted API 11 there will be no problem on this*/
@@ -45,6 +47,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                     .setSmallIcon(R.drawable.heart)
                     .setLargeIcon(bitmap)
                     .setVibrate(new long[]{500,500,500})
+//                    .setOngoing(true)
                     .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
                     .setTicker("Echo: your file is ready for download")
                     .setContentIntent(pIntent);

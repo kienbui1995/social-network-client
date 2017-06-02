@@ -34,8 +34,8 @@ public class UserModel {
         this.activity = activity;
     }
 
-    public void unFollow(){
-        VolleySingleton.getInstance(activity).delete(activity,"users/" +uId + "/subscriptions", null, new Response.Listener<JSONObject>() {
+    public void unFollow(int id){
+        VolleySingleton.getInstance(activity).delete(activity,"users/" +id + "/subscriptions", null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 Log.d("follow",response.toString());
@@ -43,8 +43,8 @@ public class UserModel {
         });
     }
 
-    public void Follow(){
-        VolleySingleton.getInstance(activity).post(activity,"users/" +uId + "/subscriptions", null, new Response.Listener<JSONObject>() {
+    public void Follow(int id){
+        VolleySingleton.getInstance(activity).post(activity,"users/" +id + "/subscriptions", null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 Log.d("follow",response.toString());
@@ -103,19 +103,30 @@ public class UserModel {
                     for (int i =0; i< jsonArray.length();i++)
                     {
                         JSONObject jsonObject = (JSONObject) jsonArray.get(i);
-                        JSONObject jsonOwner = jsonObject.getJSONObject("owner");
                         EntityStatus entityStatus = new EntityStatus();
-                        entityStatus.setuId(Integer.parseInt(jsonOwner.getString("id")));
+                        EntityStatus.Place place = entityStatus.new Place();
+                        if (jsonObject.has("place")){
+                            JSONObject jsonPlace = jsonObject.getJSONObject("place");
+                            place.setId(jsonPlace.getInt("id"));
+                            place.setName(jsonPlace.getString("name"));
+                            place.setAvatar(jsonPlace.getString("avatar"));
+                            entityStatus.setPlace(place);
+                        }
+                        if (jsonObject.has("owner")){
+                            JSONObject jsonOwner = jsonObject.getJSONObject("owner");
+                            entityStatus.setuId(Integer.parseInt(jsonOwner.getString("id")));
+                            entityStatus.setNameId(jsonOwner.getString("full_name"));
+                            if (jsonOwner.has("avatar")){
+                                entityStatus.setAvatar(jsonOwner.getString("avatar"));
+                        }
+
                         entityStatus.setContent(jsonObject.getString("message"));
                         entityStatus.setCreatedTime(Long.parseLong(jsonObject.getString("created_at")));
                         entityStatus.setIdStatus(Integer.parseInt(jsonObject.getString("id")));
-                        entityStatus.setNameId(jsonOwner.getString("full_name"));
-                        entityStatus.setLike(Boolean.parseBoolean(jsonObject.getString("is_liked")));
+                        if (jsonObject.has("is_liked"))entityStatus.setLike(Boolean.parseBoolean(jsonObject.getString("is_liked")));
                         entityStatus.setStatus(jsonObject.getInt("status"));
-                        entityStatus.setCanEdit(jsonObject.getBoolean("can_edit"));
-                        entityStatus.setCanDelete(jsonObject.getBoolean("can_delete"));
-                        if (jsonOwner.has("avatar")){
-                            entityStatus.setAvatar(jsonOwner.getString("avatar"));
+                        if (jsonObject.has("can_edit")) entityStatus.setCanEdit(jsonObject.getBoolean("can_edit"));
+                        if (jsonObject.has("can_delete")) entityStatus.setCanDelete(jsonObject.getBoolean("can_delete"));
                         }
                         if (jsonObject.has("photo")){
                             entityStatus.setImage(jsonObject.getString("photo"));

@@ -75,6 +75,7 @@ public class CommentPostFullActivity extends AppCompatActivity implements QueryL
     private MentionsLoaderUtils mentionsLoaderUtils;
     private RecyclerView mentionsList;
     Handler handler;
+    private int type;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -216,7 +217,7 @@ public class CommentPostFullActivity extends AppCompatActivity implements QueryL
 
     private void addEvent() {
         itemsComment = new ArrayList<>();
-        postModel.getComment(0,new PostModel.VolleyCallbackComment() {
+        postModel.getComment(0,2,new PostModel.VolleyCallbackComment() {
             @Override
             public void onSuccess(ArrayList<EntityComment> entityComments) {
                 itemsComment = entityComments;

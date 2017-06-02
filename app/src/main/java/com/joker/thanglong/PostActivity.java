@@ -10,7 +10,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -28,11 +27,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.afollestad.materialdialogs.DialogAction;
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.joker.thanglong.Model.PostModel;
 import com.joker.thanglong.Ultil.DeviceUltil;
-import com.joker.thanglong.Ultil.DialogUtil;
 import com.joker.thanglong.Ultil.FilePath;
 import com.joker.thanglong.Ultil.FirebaseHelper;
 import com.joker.thanglong.Ultil.ImagePicker;
@@ -230,7 +226,7 @@ public class PostActivity extends AppCompatActivity {
                 edtStatusInput.setError("Xin mời bạn nhập nội dung");
             }else {
                 if (selectedImagePath == null){
-                    progressDialog = ProgressDialog.show(this,"","Đang cập nhật trạng thái của bạn",true);
+                    progressDialog = ProgressDialog.show(this,"","Đang cập nhật trạng thái của bạn",true,true);
                     postModel.addPost(edtStatusInput.getText().toString().trim(),type,privacy, null, new PostModel.VolleyCallBackCheck() {
                         @Override
                         public void onSuccess(boolean status) {
@@ -312,14 +308,14 @@ public class PostActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        DialogUtil.initDiaglog(getApplicationContext(), "Bạn có chắc chắn muốn hủy bỏ post bài?", new MaterialDialog.SingleButtonCallback() {
-            @Override
-            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                finish();
-            }
-        });
-    }
+//    @Override
+//    public void onBackPressed() {
+//        super.onBackPressed();
+//        DialogUtil.initDiaglog(getApplicationContext(), "Bạn có chắc chắn muốn hủy bỏ post bài?", new MaterialDialog.SingleButtonCallback() {
+//            @Override
+//            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+//                finish();
+//            }
+//        });
+//    }
 }

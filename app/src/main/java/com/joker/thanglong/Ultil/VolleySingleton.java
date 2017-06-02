@@ -2,6 +2,7 @@ package com.joker.thanglong.Ultil;
 
 import android.content.Context;
 import android.preference.PreferenceManager;
+import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkError;
@@ -24,7 +25,9 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
-    /**
+import me.dlkanth.stethovolley.StethoVolleyStack;
+
+/**
  * Created by joker on 5/19/17.
  */
 
@@ -39,6 +42,7 @@ public class VolleySingleton {
         mBaseUrl = mCtx.getResources().getString(R.string.url);
         mRequestQueue = getRequestQueue();
         token =PreferenceManager.getDefaultSharedPreferences(mCtx).getString("token","");
+
     }
 
     public static synchronized VolleySingleton getInstance(Context context) {
@@ -52,7 +56,7 @@ public class VolleySingleton {
         if (mRequestQueue == null) {
             // getApplicationContext() is key. It should not be mCtx context,
             // or else RequestQueue won't last for the lifetime of your app
-            mRequestQueue = Volley.newRequestQueue(mCtx.getApplicationContext());
+            mRequestQueue = Volley.newRequestQueue(mCtx.getApplicationContext(),new StethoVolleyStack());
         }
         return mRequestQueue;
     }
@@ -147,7 +151,7 @@ public class VolleySingleton {
     }
 
 //Resolve error code from Json respone
-    public  int checkErrorCode(VolleyError error){
+    public int checkErrorCode(VolleyError error){
         String json = null;
         NetworkResponse response = error.networkResponse;
         if(response != null && response.data != null){
@@ -188,20 +192,23 @@ public class VolleySingleton {
                 DialogUtil.alert("Không có kết nối mạng, vui lòng kiểm tra lại",activity);
             } else if (error instanceof AuthFailureError) {
                 //TODO
-                DialogUtil.alert("Lỗi xác thực,vui lòng đăng nhập lại",activity);
+                DialogUtil.alert("Lỗi xác thực,vui lòng đăng nhập lại"+error.networkResponse.statusCode,activity);
             } else if (error instanceof ServerError) {
                 //TODO
-                DialogUtil.alert("Lỗi server",activity);
+                if (error.networkResponse.statusCode == 204){
+                    Toast.makeText(activity, "Xóa thành công", Toast.LENGTH_SHORT).show();
+                }else {
+                    DialogUtil.alert("Lỗi hệ thống: "+ error.networkResponse.statusCode,activity);
+                }
             } else if (error instanceof NetworkError) {
                 //TODO
                 DialogUtil.alert("Lỗi mạng, xin vui lòng thử lại",activity);
             } else if (error instanceof ParseError) {
                 //TODO
-                DialogUtil.alert("Lỗi trong quá trình lấy dữ liệu ",activity);
+//                DialogUtil.alert("Lỗi trong quá trình lấy dữ liệu ",activity);
             }
 //                Log.d("findUser",VolleySingleton.getInstance(mCtx).checkErrorCode(error)+"");
         }
-
 
     }
 

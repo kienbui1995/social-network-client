@@ -4,10 +4,14 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.design.widget.Snackbar;
 import android.text.method.ScrollingMovementMethod;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -17,7 +21,7 @@ import com.afollestad.materialdialogs.Theme;
 import com.bumptech.glide.Glide;
 import com.joker.thanglong.GroupActivity;
 import com.joker.thanglong.Model.GroupModel;
-import com.joker.thanglong.Model.PostModel;
+    import com.joker.thanglong.Model.PostModel;
 import com.joker.thanglong.R;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -40,6 +44,22 @@ public class DialogUtil {
                 .onPositive(callback)
                 .negativeText(R.string.disagree)
                 .show();
+    }
+    public static void showPopUpAlert(final Context context){
+        Handler handler = new Handler(Looper.getMainLooper());
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Dialog settingsDialog = new Dialog(context);
+                settingsDialog.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
+                settingsDialog.getWindow().setWindowAnimations(R.style.DialogAnimation);
+                LayoutInflater view = (LayoutInflater) context.getSystemService( Context.LAYOUT_INFLATER_SERVICE );
+                View view1 =view.inflate(R.layout.info_dialog,null);
+                settingsDialog.setContentView(view1);
+                settingsDialog.show();
+
+            }
+        },1000);
     }
     public static void showInfoGroup(final Activity context, final EntityGroup item){
         final Dialog settingsDialog = new Dialog(context);
@@ -80,18 +100,18 @@ public class DialogUtil {
                     groupModel.leaveGroup(item.getId(), new PostModel.VolleyCallBackCheck() {
                         @Override
                         public void onSuccess(boolean status) {
-                            Snackbar.make(view,"Ra khỏi nhóm thành công, kéo xuống để làm mới danh sách",Snackbar.LENGTH_LONG).show();
-                            Timer timer = new Timer();
-                            timer.schedule(new TimerTask() {
-                                @Override
-                                public void run() {
-                                    settingsDialog.dismiss();
-                                }
-                            },1000);
                         }
                     });
-
+                    Snackbar.make(view,"Ra khỏi nhóm thành công, kéo xuống để làm mới danh sách",Snackbar.LENGTH_LONG).show();
+                    Timer timer = new Timer();
+                    timer.schedule(new TimerTask() {
+                        @Override
+                        public void run() {
+                            settingsDialog.dismiss();
+                        }
+                    },1000);
                 }
+
             });
             Button btnAccept = (Button) view1.findViewById(R.id.btnAccept);
             btnAccept.setText("Vào nhóm");
@@ -201,4 +221,6 @@ public class DialogUtil {
                 .positiveText(R.string.agree)
                 .show();
     }
+
+
 }

@@ -58,7 +58,7 @@ public class PostModel {
                     entityStatus.setPrivacy(jsonObject.getInt("privacy"));
                     entityStatus.setNameId(jsonOwner.getString("full_name"));
                     entityStatus.setCreatedTime(jsonObject.getLong("created_at"));
-                    entityStatus.setLike(jsonObject.getBoolean("is_liked"));
+                    if (jsonObject.has("is_liked")) entityStatus.setLike(jsonObject.getBoolean("is_liked"));
                     if (jsonOwner.has("avatar")){
                         entityStatus.setAvatar(jsonOwner.getString("avatar"));
                     }
@@ -108,9 +108,15 @@ public class PostModel {
             }
         });
     }
-    public  ArrayList<EntityComment> getComment(int number,final VolleyCallbackComment callback){
+    public  ArrayList<EntityComment> getComment(int number,int type,final VolleyCallbackComment callback){
         final ArrayList<EntityComment> entityComments = new ArrayList<>();
-        VolleySingleton.getInstance(activity).get("posts/" + idPost + "/comments?sort=-created_at&limit=15&skip="+ number, null,
+        String sort;
+        if (type == 1){
+            sort = "";
+        }else {
+            sort = "-";
+        }
+        VolleySingleton.getInstance(activity).get("posts/" + idPost + "/comments?sort="+sort+"created_at&limit=5&skip="+ number, null,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
@@ -194,10 +200,10 @@ public class PostModel {
                         entityStatus.setCreatedTime(Long.parseLong(jsonObject.getString("created_at")));
                         entityStatus.setIdStatus(Integer.parseInt(jsonObject.getString("id")));
                         entityStatus.setNameId(jsonOwner.getString("full_name"));
-                        entityStatus.setLike(Boolean.parseBoolean(jsonObject.getString("is_liked")));
+                        if (jsonObject.has("is_liked")) entityStatus.setLike(Boolean.parseBoolean(jsonObject.getString("is_liked")));
                         entityStatus.setStatus(jsonObject.getInt("status"));
-                        entityStatus.setCanEdit(jsonObject.getBoolean("can_edit"));
-                        entityStatus.setCanDelete(jsonObject.getBoolean("can_delete"));
+                        if (jsonObject.has("can_edit")) entityStatus.setCanEdit(jsonObject.getBoolean("can_edit"));
+                        if (jsonObject.has("can_delete")) entityStatus.setCanDelete(jsonObject.getBoolean("can_delete"));
                         if (jsonOwner.has("avatar")){
                             entityStatus.setAvatar(jsonOwner.getString("avatar"));
                         }
@@ -319,10 +325,10 @@ public class PostModel {
                         entityStatus.setCreatedTime(Long.parseLong(jsonObject.getString("created_at")));
                         entityStatus.setIdStatus(Integer.parseInt(jsonObject.getString("id")));
                         entityStatus.setNameId(jsonOwner.getString("full_name"));
-                        entityStatus.setLike(Boolean.parseBoolean(jsonObject.getString("is_liked")));
+                        if (jsonObject.has("is_liked")) entityStatus.setLike(Boolean.parseBoolean(jsonObject.getString("is_liked")));
                         entityStatus.setStatus(jsonObject.getInt("status"));
-                        entityStatus.setCanEdit(jsonObject.getBoolean("can_edit"));
-                        entityStatus.setCanDelete(jsonObject.getBoolean("can_delete"));
+                        if (jsonObject.has("can_edit")) entityStatus.setCanEdit(jsonObject.getBoolean("can_edit"));
+                        if (jsonObject.has("can_delete")) entityStatus.setCanDelete(jsonObject.getBoolean("can_delete"));
                         if (jsonOwner.has("avatar")){
                             entityStatus.setAvatar(jsonOwner.getString("avatar"));
                         }

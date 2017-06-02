@@ -78,7 +78,7 @@ public class AdapterHomeGroup extends RecyclerView.Adapter<AdapterHomeGroup.View
         public ViewHolder(View itemView) {
             super(itemView);
             btnComment = (Button) itemView.findViewById(R.id.btnComment);
-            txtLove = (TextView) itemView.findViewById(R.id.txtLove);
+//            txtLove = (TextView) itemView.findViewById(R.id.txtLove);
             txtNumberLove = (TextView) itemView.findViewById(R.id.txtNumberLove);
         }
     }

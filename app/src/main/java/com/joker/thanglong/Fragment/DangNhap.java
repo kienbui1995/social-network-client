@@ -404,7 +404,6 @@ public class DangNhap extends Fragment implements View.OnClickListener,Validator
             params.put("username",username);
             params.put("password",password);
             params.put("device", FirebaseInstanceId.getInstance().getToken().toString());
-            Log.d("HashMapX",new JSONObject(params).toString());
             volleyHelper.post("login", new JSONObject(params), new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject response) {

@@ -24,6 +24,7 @@ import com.android.volley.Response;
 import com.bumptech.glide.Glide;
 import com.joker.thanglong.CommentPostActivity;
 import com.joker.thanglong.EditPostActivity;
+import com.joker.thanglong.GroupActivity;
 import com.joker.thanglong.ImagePostActivity;
 import com.joker.thanglong.Interface.EndlessScrollListener;
 import com.joker.thanglong.Model.PostModel;
@@ -224,6 +225,20 @@ public class AdapterHome extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
                 }else {
                     holderText.btnLove.setLiked(false);
                 }
+                if (items.get(position).getPlace() != null){
+                    holderText.txtSymbol.setVisibility(View.VISIBLE);
+                    holderText.txtNameGroup.setVisibility(View.VISIBLE);
+                    holderText.txtNameGroup.setText(items.get(position).getPlace().getName());
+                    holderText.txtNameGroup.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Intent intent = new Intent(context, GroupActivity.class);
+                            intent.putExtra("idGroup",items.get(position).getPlace().getId());
+                            context.startActivity(intent);
+                        }
+                    });
+                }
+
                 holderText.btnLove.setOnLikeListener(new OnLikeListener() {
                     @Override
                     public void liked(LikeButton likeButton) {
@@ -278,6 +293,20 @@ public class AdapterHome extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
                         .centerCrop()
                         .crossFade()
                         .into(holderPhoto.imgAvatar);
+
+                if (items.get(position).getPlace() != null){
+                    holderPhoto.txtSymbol.setVisibility(View.VISIBLE);
+                    holderPhoto.txtNameGroup.setVisibility(View.VISIBLE);
+                    holderPhoto.txtNameGroup.setText(items.get(position).getPlace().getName());
+                    holderPhoto.txtNameGroup.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Intent intent = new Intent(context, GroupActivity.class);
+                            intent.putExtra("idGroup",items.get(position).getPlace().getId());
+                            context.startActivity(intent);
+                        }
+                    });
+                }
 
                 holderPhoto.txtOption.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -336,8 +365,8 @@ public class AdapterHome extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
                     }
                 });
 
-                holderPhoto.txtFullName.setText(items.get(position).getNameId());
-                holderPhoto.txtFullName.setOnClickListener(new View.OnClickListener() {
+                holderPhoto.txtFullNameFeed.setText(items.get(position).getNameId());
+                holderPhoto.txtFullNameFeed.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         Intent intent = new Intent(context, UserProfileActivity.class);
@@ -635,7 +664,8 @@ public class AdapterHome extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
         private TextView txtNumberLike;
         private TextView txtNumberComment;
         private CircleImageView imgAvatar;
-
+        private TextView txtSymbol;
+        private TextView txtNameGroup;
         Button btnComment;
         public ViewHolderText(View itemView) {
             super(itemView);
@@ -648,11 +678,14 @@ public class AdapterHome extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
             txtNumberLike = (TextView) itemView.findViewById(R.id.txtNumberLike);
             txtNumberComment = (TextView) itemView.findViewById(R.id.txtNumberComment);
             imgAvatar = (CircleImageView) itemView.findViewById(R.id.imgAvatar);
+            txtSymbol = (TextView) itemView.findViewById(R.id.txtSymbol);
+            txtNameGroup = (TextView) itemView.findViewById(R.id.txtNameGroup);
+
         }
     }
 
     public class ViewHolderPhoto extends RecyclerView.ViewHolder{
-        private TextView txtFullName;
+        private TextView txtFullNameFeed;
         private TextView txtTimePostStatus;
         private TextView txtContentStatus;
         private ImageView imgPostContent;
@@ -662,13 +695,12 @@ public class AdapterHome extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
         private Button btnComment;
         private TextView txtOption;
         private CircleImageView imgAvatar;
-
-
-
+        private TextView txtSymbol;
+        private TextView txtNameGroup;
 
         public ViewHolderPhoto(View itemView) {
             super(itemView);
-            txtFullName = (TextView) itemView.findViewById(R.id.txtFullName);
+            txtFullNameFeed = (TextView) itemView.findViewById(R.id.txtFullNameFeed);
             txtTimePostStatus = (TextView) itemView.findViewById(R.id.txtTimePostStatus);
             txtContentStatus = (TextView) itemView.findViewById(R.id.txtContentStatus);
             imgPostContent = (ImageView) itemView.findViewById(R.id.imgPostContent);
@@ -678,9 +710,12 @@ public class AdapterHome extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
             txtNumberComment = (TextView) itemView.findViewById(R.id.txtNumberComment);
             btnComment = (Button) itemView.findViewById(R.id.btnComment);
             imgAvatar = (CircleImageView) itemView.findViewById(R.id.imgAvatar);
+            txtSymbol = (TextView) itemView.findViewById(R.id.txtSymbol);
+            txtNameGroup = (TextView) itemView.findViewById(R.id.txtNameGroup);
 
         }
     }
+
 
     @Override
     public int getItemViewType(int position) {

@@ -62,8 +62,10 @@ public class AdapterMemberGroup extends RecyclerView.Adapter<AdapterMemberGroup.
                 break;
             case 2:
                 initListMemberRequest(holder,position);
+                break;
             case 3:
                 initListBlock(holder,position);
+                break;
         }
     }
 

@@ -94,31 +94,35 @@ public class GroupActivity extends AppCompatActivity {
         groupViewPagerAdapter = new GroupViewPagerAdapter(getSupportFragmentManager());
         viewPager.setAdapter(groupViewPagerAdapter);
 
-        imgThayAnhBia.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                new MaterialDialog.Builder(GroupActivity.this)
-                        .items(R.array.optionChangeImageGroup)
-                        .theme(Theme.LIGHT)
-                        .itemsCallback(new MaterialDialog.ListCallback() {
-                            @Override
-                            public void onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
-                                switch (which){
-                                    case 0:
-                                        choose= 0;
-                                        ChangeAvatar();
-                                        break;
-                                    case 1:
-                                        choose =1;
-                                        ChangeAvatar();
-                                        break;
+        if (groupInfo.is_admin()){
+            imgThayAnhBia.setVisibility(View.VISIBLE);
+            imgThayAnhBia.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    new MaterialDialog.Builder(GroupActivity.this)
+                            .items(R.array.optionChangeImageGroup)
+                            .theme(Theme.LIGHT)
+                            .itemsCallback(new MaterialDialog.ListCallback() {
+                                @Override
+                                public void onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
+                                    switch (which){
+                                        case 0:
+                                            choose= 0;
+                                            ChangeAvatar();
+                                            break;
+                                        case 1:
+                                            choose =1;
+                                            ChangeAvatar();
+                                            break;
+                                    }
                                 }
-                            }
-                        })
-                        .show();
+                            })
+                            .show();
 
-            }
-        });
+                }
+            });
+
+        }
     }
 
     private void ChangeCover() {

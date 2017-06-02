@@ -36,6 +36,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -67,6 +68,9 @@ public class CommentPostActivity extends AppCompatActivity implements QueryListe
     private MentionsLoaderUtils mentionsLoaderUtils;
     Handler handler;
     private Timer timer;
+    private Button btnLoadPrevious;
+    int i=5;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -141,8 +145,11 @@ public class CommentPostActivity extends AppCompatActivity implements QueryListe
 
         }else {
             btnCommentInput.setError("Mời bạn nhập nội dung");
+
         }
     }
+
+
 
     private void initData() {
         btnStatusLike.setText(numberLike+"");
@@ -157,10 +164,14 @@ public class CommentPostActivity extends AppCompatActivity implements QueryListe
         //init Array list comment
         dsComment = new ArrayList<>();
         //Get comment
-        postModel.getComment(0, new PostModel.VolleyCallbackComment() {
+        postModel.getComment(0,2, new PostModel.VolleyCallbackComment() {
             @Override
             public void onSuccess(ArrayList<EntityComment> entityComments) {
                 dsComment = entityComments;
+                Collections.reverse(dsComment);
+                if (entityComments.size()<5){
+                    btnLoadPrevious.setVisibility(View.GONE);
+                }
                 loadMore();
             }
         });
@@ -171,20 +182,40 @@ public class CommentPostActivity extends AppCompatActivity implements QueryListe
         adapterComment = new AdapterComment(this,dsComment);
         rcvComment.setLayoutManager(layoutManager);
         rcvComment.setAdapter(adapterComment);
+        rcvComment.setNestedScrollingEnabled(false);
         adapterComment.notifyDataSetChanged();
-        endlessScrollListener = new EndlessScrollListener((LinearLayoutManager) layoutManager) {
+        btnLoadPrevious.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
-                postModel.getComment(totalItemsCount,new PostModel.VolleyCallbackComment() {
+            public void onClick(View view) {
+                postModel.getComment(i, 2, new PostModel.VolleyCallbackComment() {
                     @Override
                     public void onSuccess(ArrayList<EntityComment> entityComments) {
-                        dsComment.addAll(entityComments);
+                        dsComment.addAll(0,entityComments);
                         adapterComment.notifyDataSetChanged();
+                        if (entityComments.size()<5){
+                            btnLoadPrevious.setVisibility(View.GONE);
+                        }
+                        i+=5;
                     }
                 });
             }
-        };
-        rcvComment.setOnScrollListener(endlessScrollListener);
+        });
+
+
+//        endlessScrollListener = new EndlessScrollListener((LinearLayoutManager) layoutManager) {
+//            @Override
+//            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+//                postModel.getComment(totalItemsCount,1,new PostModel.VolleyCallbackComment() {
+//                    @Override
+//                    public void onSuccess(ArrayList<EntityComment> entityComments) {
+//                        dsComment.addAll(entityComments);
+//                        adapterComment.notifyDataSetChanged();
+//                    }
+//                });
+//            }
+//        };
+
+//        rcvComment.setOnScrollListener(endlessScrollListener);
     }
 
 
@@ -197,6 +228,7 @@ public class CommentPostActivity extends AppCompatActivity implements QueryListe
         mentionsList = (RecyclerView) findViewById(R.id.mentions_list);
         mentionsEmptyView = (TextView) findViewById(R.id.mentions_empty_view);
         frRoot = (FrameLayout) findViewById(R.id.frRoot);
+        btnLoadPrevious = (Button) findViewById(R.id.btnLoadPrevious);
     }
 
     @Override

@@ -19,10 +19,12 @@ public class EntityStatus {
     private boolean canEdit;
     private boolean canDelete;
     private String avatar;
+    private Place place;
     public EntityStatus() {
     }
 
-    public EntityStatus(int idStatus, int uId, String nameId, String content, long createdTime, String image, boolean isLike, int status,String avatar ,int numberLike, int numberComment, int privacy, boolean canEdit, boolean canDelete) {
+    public EntityStatus(int idStatus, int uId, String nameId, String content, long createdTime, String image, boolean isLike, int status,String avatar
+            ,int numberLike, int numberComment, int privacy, boolean canEdit, boolean canDelete,Place place) {
         this.idStatus = idStatus;
         this.uId = uId;
         this.nameId = nameId;
@@ -37,6 +39,15 @@ public class EntityStatus {
         this.canEdit = canEdit;
         this.canDelete = canDelete;
         this.avatar = avatar;
+        this.place =place;
+    }
+
+    public Place getPlace() {
+        return place;
+    }
+
+    public void setPlace(Place place) {
+        this.place = place;
     }
 
     public int getIdStatus() {
@@ -149,5 +160,44 @@ public class EntityStatus {
 
     public void setAvatar(String avatar) {
         this.avatar = avatar;
+    }
+
+    public class Place {
+        int id;
+        String name;
+        String avatar;
+
+        public Place(int id, String name, String avatar) {
+            this.id = id;
+            this.name = name;
+            this.avatar = avatar;
+        }
+
+        public Place() {
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public void setId(int id) {
+            this.id = id;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public String getAvatar() {
+            return avatar;
+        }
+
+        public void setAvatar(String avatar) {
+            this.avatar = avatar;
+        }
     }
 }

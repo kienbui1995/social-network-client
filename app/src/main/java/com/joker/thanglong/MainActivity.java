@@ -37,7 +37,6 @@ import android.widget.TextView;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.facebook.FacebookSdk;
 import com.joker.thanglong.Fragment.Group.GroupFragment;
 import com.joker.thanglong.Model.UserModel;
 import com.joker.thanglong.Ultil.DeviceUltil;
@@ -93,7 +92,6 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        FacebookSdk.sdkInitialize(getApplicationContext());
         boolean check = ProfileInstance.getProfileInstance(this).checkLogin();
         setContentView(R.layout.activity_main);
         //Khoi tao realm
@@ -128,6 +126,9 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
         setSupportActionBar(toolbar);
         //Tabhost
 //        tabHost.setupWithViewPager(viewPager);
+
+
+
 
         int[] mSelectors = new int[] { R.drawable.tab1, R.drawable.tab2, R.drawable.tab3, R.drawable.tab4 };
         setupStrip(tabButtom.getTabStyleDelegate(), STYLE_ROUND);
