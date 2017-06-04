@@ -21,6 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
 import com.joker.thanglong.CommentPostActivity;
 import com.joker.thanglong.EditPostActivity;
@@ -174,14 +175,9 @@ public class AdapterHome extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
                                         postModel1.DeletePost(items.get(position).getIdStatus(),new PostModel.VolleyCallBackCheck() {
                                             @Override
                                             public void onSuccess(boolean status) {
-                                                if (status==true){
-                                                    progressDialog.dismiss();
-                                                    items.remove(position);
-                                                    notifyDataSetChanged();
-                                                }
-//                                                else {
-//                                                    progressDialog.dismiss();
-//                                                }
+                                                progressDialog.dismiss();
+                                                items.remove(position);
+                                                notifyDataSetChanged();
                                             }
                                         });
                                         break;
@@ -259,10 +255,10 @@ public class AdapterHome extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
                     @Override
                     public void unLiked(LikeButton likeButton) {
-                        VolleySingleton.getInstance(activity).delete(context,"posts/" + items.get(position).getIdStatus() + "/likes", null, new Response.Listener<JSONObject>() {
+                        VolleySingleton.getInstance(activity).delete(context, "posts/" + items.get(position).getIdStatus() + "/likes", null, new Response.Listener<JSONObject>() {
                             @Override
                             public void onResponse(JSONObject response) {
-                                Log.d("Like","Like: + " + items.get(position).getIdStatus());
+                                Log.d("Like", "Like: + " + items.get(position).getIdStatus());
                                 JSONObject jsonObject = null;
                                 try {
                                     jsonObject = response.getJSONObject("data");
@@ -270,6 +266,11 @@ public class AdapterHome extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
+
+                            }
+                        }, new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
 
                             }
                         });
@@ -345,11 +346,9 @@ public class AdapterHome extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
                                         postModel1.DeletePost(items.get(position).getIdStatus(),new PostModel.VolleyCallBackCheck() {
                                             @Override
                                             public void onSuccess(boolean status) {
-                                                if (status==true){
-                                                    progressDialog.dismiss();
-                                                    items.remove(position);
-                                                    notifyDataSetChanged();
-                                                }
+                                                progressDialog.dismiss();
+                                                items.remove(position);
+                                                notifyDataSetChanged();
 //                                                else {
 //                                                    progressDialog.dismiss();
 //                                                }
@@ -439,7 +438,7 @@ public class AdapterHome extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
                     @Override
                     public void unLiked(LikeButton likeButton) {
-                        VolleySingleton.getInstance(activity).delete(context,"posts/" + items.get(position).getIdStatus() + "/likes", null, new Response.Listener<JSONObject>() {
+                        VolleySingleton.getInstance(activity).delete(context, "posts/" + items.get(position).getIdStatus() + "/likes", null, new Response.Listener<JSONObject>() {
                             @Override
                             public void onResponse(JSONObject response) {
                                 JSONObject jsonObject = null;
@@ -449,6 +448,11 @@ public class AdapterHome extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
+                            }
+                        }, new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+
                             }
                         });
                     }
@@ -651,7 +655,11 @@ public class AdapterHome extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
     @Override
     public int getItemCount() {
-        return items.size();
+        if (items==null){
+            return 0;
+        }else {
+            return items.size();
+        }
     }
 
     //2.Ham nay chay thu 2, find view o day, nhan cai return o Buoc 1

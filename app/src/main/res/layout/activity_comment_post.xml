@@ -46,6 +46,7 @@
                 android:textAllCaps="false"
                 android:textColor="#000000"
                 android:paddingLeft="10dp"
+                android:visibility="gone"
                 android:paddingRight="10dp"
                 android:drawableLeft="@drawable/ic_replay_black_18dp"
                 android:background="@android:color/transparent"

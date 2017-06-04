@@ -3,6 +3,7 @@ package com.joker.thanglong.Model;
 import android.content.Context;
 
 import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.joker.thanglong.Ultil.ProfileInstance;
 import com.joker.thanglong.Ultil.VolleySingleton;
 
@@ -196,9 +197,14 @@ public class GroupModel {
     }
 
     public void leaveGroup(int idGr, final PostModel.VolleyCallBackCheck callback){
-        VolleySingleton.getInstance(context).delete(context,"groups/" + idGr + "/members", null, new Response.Listener<JSONObject>() {
+        VolleySingleton.getInstance(context).delete(context, "groups/" + idGr + "/members", null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
 
             }
         });
@@ -250,11 +256,16 @@ public class GroupModel {
     }
 
     public void kickUser(int idMembership,final PostModel.VolleyCallBackCheck callback){
-        VolleySingleton.getInstance(context).delete(context,"group_memberships/" + idMembership,
+        VolleySingleton.getInstance(context).delete(context, "group_memberships/" + idMembership,
                 null, new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
                         callback.onSuccess(true);
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+
                     }
                 });
 

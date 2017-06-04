@@ -63,11 +63,11 @@ public class AdapterComment extends RecyclerView.Adapter<AdapterComment.Viewhold
         postModel = new PostModel(context);
         addDataForView(holder,position);
 //        setAnimation(holder.lnComment,position);
-        if (position == 0){
+        if (items.size() > 5 &&( (position >= 0) && (position <5))){
             int colorFrom = context.getResources().getColor(R.color.background_tab_pressed);
             int colorTo = context.getResources().getColor(R.color.white);
             ValueAnimator colorAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), colorFrom, colorTo);
-            colorAnimation.setDuration(5250); // milliseconds
+            colorAnimation.setDuration(3250); // milliseconds
             colorAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                 @Override
                 public void onAnimationUpdate(ValueAnimator animator) {
@@ -116,9 +116,9 @@ public class AdapterComment extends RecyclerView.Adapter<AdapterComment.Viewhold
                                 public void onSuccess(boolean status) {
                                     items.remove(position);
                                     notifyDataSetChanged();
-
                                 }
                             },items.get(position).getIdComment());
+
                         }
                     });
                 }
@@ -130,7 +130,11 @@ public class AdapterComment extends RecyclerView.Adapter<AdapterComment.Viewhold
 
     @Override
     public int getItemCount() {
-        return items.size();
+        if (items==null){
+            return 0;
+        }else {
+            return items.size();
+        }
     }
 
     public class Viewholder extends RecyclerView.ViewHolder {
@@ -149,7 +153,7 @@ public class AdapterComment extends RecyclerView.Adapter<AdapterComment.Viewhold
             lnComment = (LinearLayout) itemView.findViewById(R.id.lnComment);
         }
     }
-    private void setAnimation(View viewToAnimate, int position)
+    public void setAnimation(View viewToAnimate, int position)
     {
         // If the bound view wasn't previously displayed on screen, it's animated
         if (position > lastPosition)

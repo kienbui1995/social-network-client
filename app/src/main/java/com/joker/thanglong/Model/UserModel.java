@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.util.Log;
 
 import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.joker.thanglong.Ultil.SettingUtil;
 import com.joker.thanglong.Ultil.VolleySingleton;
 
@@ -35,10 +36,15 @@ public class UserModel {
     }
 
     public void unFollow(int id){
-        VolleySingleton.getInstance(activity).delete(activity,"users/" +id + "/subscriptions", null, new Response.Listener<JSONObject>() {
+        VolleySingleton.getInstance(activity).delete(activity, "users/" + id + "/subscriptions", null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                Log.d("follow",response.toString());
+                Log.d("follow", response.toString());
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
             }
         });
     }

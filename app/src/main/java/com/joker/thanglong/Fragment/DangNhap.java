@@ -420,10 +420,10 @@ public class DangNhap extends Fragment implements View.OnClickListener,Validator
                             public void execute(Realm realm) {
                                 realm.copyToRealmOrUpdate(entityUserProfile);
                                 Log.d("EntityObj",entityUserProfile.getuID());
+                                startActivity(new Intent(getActivity(),MainActivity.class));
                             }
                         });
                         initSetting();
-                        startActivity(new Intent(getActivity(),MainActivity.class));
 
                     } catch (JSONException e) {
                         e.printStackTrace();

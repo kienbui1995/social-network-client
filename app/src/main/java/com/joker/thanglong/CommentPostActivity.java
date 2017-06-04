@@ -169,7 +169,7 @@ public class CommentPostActivity extends AppCompatActivity implements QueryListe
             public void onSuccess(ArrayList<EntityComment> entityComments) {
                 dsComment = entityComments;
                 Collections.reverse(dsComment);
-                if (entityComments.size()<5){
+                if (dsComment.size()<5){
                     btnLoadPrevious.setVisibility(View.GONE);
                 }
                 loadMore();

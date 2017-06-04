@@ -111,14 +111,9 @@ public class VolleySingleton {
     }
 
     public void delete(final Context context, String method, JSONObject jsonRequest,
-                       Response.Listener<JSONObject> listener){
+                       Response.Listener<JSONObject> listener,Response.ErrorListener errorListener){
 
-        JsonObjectRequest objRequest = new JsonObjectRequest(Request.Method.DELETE, contructUrl(method), jsonRequest, listener, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                handlerError(error,context);
-            }
-        }){
+        JsonObjectRequest objRequest = new JsonObjectRequest(Request.Method.DELETE, contructUrl(method), jsonRequest, listener, errorListener){
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 HashMap<String, String> map = new HashMap<>();

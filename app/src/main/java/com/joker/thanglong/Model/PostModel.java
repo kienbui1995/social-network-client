@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.util.Log;
 
 import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.joker.thanglong.Ultil.VolleySingleton;
 
 import org.json.JSONArray;
@@ -232,9 +233,14 @@ public class PostModel {
         return statuses;
     }
     public void DeletePost(int idPost1,final VolleyCallBackCheck callback){
-        VolleySingleton.getInstance(activity).delete(activity,"posts/" + idPost1, null, new Response.Listener<JSONObject>() {
+        VolleySingleton.getInstance(activity).delete(activity, "posts/" + idPost1, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
                 callback.onSuccess(true);
             }
         });
@@ -256,15 +262,20 @@ public class PostModel {
     }
 
     public void UnLikePost(final VolleyCallBackJson callback){
-        VolleySingleton.getInstance(activity).delete(activity,"posts/" + idPost + "/likes", null, new Response.Listener<JSONObject>() {
+        VolleySingleton.getInstance(activity).delete(activity, "posts/" + idPost + "/likes", null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 try {
                     callback.onSuccess(response);
-                    Log.d("Unlike","Unlike: + " + idPost);
+                    Log.d("Unlike", "Unlike: + " + idPost);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
             }
         });
 
@@ -299,10 +310,16 @@ public class PostModel {
 
 
     public void DeleteComment(final VolleyCallBackCheck callback, final int idComment){
-        VolleySingleton.getInstance(activity).delete(activity,"comments/" + idComment, null, new Response.Listener<JSONObject>() {
+        VolleySingleton.getInstance(activity).delete(activity, "comments/" + idComment, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                Log.d("delete",idComment+"");
+                Log.d("delete", idComment + "");
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d("delete", idComment + "");
                 callback.onSuccess(true);
             }
         });
