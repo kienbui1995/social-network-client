@@ -38,7 +38,7 @@ public class ApiHelper {
                 try {
                     infoUser = response.getJSONObject("data");
                     profile.setFull_name(infoUser.getString("full_name"));
-                    profile.setuID(infoUser.getString("id"));
+                    profile.setuID(infoUser.getInt("id"));
                     profile.setUserName(infoUser.getString("username"));
                     setEntityUserProfile(profile);
                 } catch (JSONException e) {

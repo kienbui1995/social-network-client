@@ -9,7 +9,7 @@ import io.realm.annotations.PrimaryKey;
 
 public class EntityUserProfile extends RealmObject {
     @PrimaryKey
-    String uID;
+    int uID;
     String userName;
     String fbID;
     String last_name;
@@ -20,8 +20,9 @@ public class EntityUserProfile extends RealmObject {
     String email;
     String avatar;
     String gender;
+    Long timeUpdate;
 
-    public EntityUserProfile(String uID, String userName, String fbID, String last_name, String first_name,String full_name, String tokenFB, String token, String email, String gender, String avatar) {
+    public EntityUserProfile(int uID, String userName, String fbID, String last_name, String first_name,String full_name, String tokenFB, String token, String email, String gender, String avatar) {
         this.uID = uID;
         this.userName = userName;
         this.fbID = fbID;
@@ -46,11 +47,11 @@ public class EntityUserProfile extends RealmObject {
         this.full_name = full_name;
     }
 
-    public String getuID() {
+    public int getuID() {
         return uID;
     }
 
-    public void setuID(String uID) {
+    public void setuID(int uID) {
         this.uID = uID;
     }
 
@@ -124,6 +125,14 @@ public class EntityUserProfile extends RealmObject {
 
     public void setAvatar(String avatar) {
         this.avatar = avatar;
+    }
+
+    public Long getTimeUpdate() {
+        return timeUpdate;
+    }
+
+    public void setTimeUpdate(Long timeUpdate) {
+        this.timeUpdate = timeUpdate;
     }
 
     @Override

@@ -1,11 +1,13 @@
 package com.joker.thanglong.Model;
 
 import android.app.Activity;
+import android.content.Context;
 import android.util.Log;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.joker.thanglong.Ultil.SettingUtil;
+import com.joker.thanglong.Ultil.SystemHelper;
 import com.joker.thanglong.Ultil.VolleySingleton;
 
 import org.json.JSONArray;
@@ -19,20 +21,24 @@ import Entity.EntityFollow;
 import Entity.EntityStatus;
 import Entity.EntityUserProfile;
 import Entity.EntityUserSearch;
+import io.realm.Realm;
 
 /**
  * Created by joker on 5/12/17.
  */
 
 public class UserModel {
-    String uId;
+    int uId;
     Activity activity;
-    public UserModel(Activity activity, String uId){
+    public UserModel(Activity activity, int uId){
         this.uId = uId;
         this.activity = activity;
     }
     public UserModel(Activity activity){
         this.activity = activity;
+    }
+
+    public UserModel() {
     }
 
     public void unFollow(int id){
@@ -110,8 +116,8 @@ public class UserModel {
                     {
                         JSONObject jsonObject = (JSONObject) jsonArray.get(i);
                         EntityStatus entityStatus = new EntityStatus();
-                        EntityStatus.Place place = entityStatus.new Place();
                         if (jsonObject.has("place")){
+                            EntityStatus.Place place = entityStatus.new Place();
                             JSONObject jsonPlace = jsonObject.getJSONObject("place");
                             place.setId(jsonPlace.getInt("id"));
                             place.setName(jsonPlace.getString("name"));
@@ -153,6 +159,74 @@ public class UserModel {
                 }
             }
         },activity);
+    }
+
+    public static void realmUser(final Context context, final int id,final VolleyCallBackProfileUser callback) {
+        final Realm realm =Realm.getDefaultInstance();
+        EntityUserProfile userProfile = realm.where(EntityUserProfile.class).
+                equalTo("uID",id).findFirst();
+        if (userProfile == null){
+            VolleySingleton.getInstance(context).get("users/" + id, null, new Response.Listener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject response) {
+                    try {
+                        JSONObject infoUser = response.getJSONObject("data");
+                        final EntityUserProfile profile = new EntityUserProfile();
+                        profile.setFull_name(infoUser.getString("full_name"));
+                        profile.setuID(infoUser.getInt("id"));
+                        profile.setUserName(infoUser.getString("username"));
+                        profile.setAvatar(infoUser.getString("avatar"));
+                        profile.setTimeUpdate(SystemHelper.getTimeStamp());
+                        realm.executeTransaction(new Realm.Transaction() {
+                            @Override
+                            public void execute(final Realm realm) {
+                                realm.copyToRealmOrUpdate(profile);
+                            }
+                        });
+                        callback.onSuccess(profile);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            },context);
+        }
+//        else {
+
+//            if (!(SystemHelper.getTimeStamp() - userProfile.getTimeUpdate() >300000))
+//            {
+//                VolleySingleton.getInstance(context).get("users/" + id, null, new Response.Listener<JSONObject>() {
+//                    @Override
+//                    public void onResponse(JSONObject response) {
+//                        try {
+//                            JSONObject infoUser = response.getJSONObject("data");
+//                            final EntityUserProfile profile = new EntityUserProfile();
+//                            profile.setFull_name(infoUser.getString("full_name"));
+//                            profile.setuID(infoUser.getInt("id"));
+//                            profile.setUserName(infoUser.getString("username"));
+//                            profile.setAvatar(infoUser.getString("avatar"));
+//                            profile.setTimeUpdate(SystemHelper.getTimeStamp());
+//                            realm.executeTransaction(new Realm.Transaction() {
+//                                @Override
+//                                public void execute(final Realm realm) {
+//                                    realm.copyToRealmOrUpdate(profile);
+//                                }
+//                            });
+//                            callback.onSuccess(profile);
+//                        } catch (JSONException e) {
+//                            e.printStackTrace();
+//                        }
+//                    }
+//                },context);
+//
+//            }
+            else {
+                EntityUserProfile profile = realm.where(EntityUserProfile.class).equalTo("uID",id)
+                        .findFirst();
+                callback.onSuccess(profile);
+            }
+//        }
+
+        realm.close();
     }
 
     public void search(CharSequence sequence,final VolleyCallBackSearch callback){
@@ -218,5 +292,8 @@ public class UserModel {
     }
     public interface VolleyCallBackSearch {
         void onSuccess(ArrayList<EntityUserSearch> listUser);
+    }
+    public interface VolleyCallUser {
+        void onSuccess(EntityUserProfile userProfile);
     }
 }

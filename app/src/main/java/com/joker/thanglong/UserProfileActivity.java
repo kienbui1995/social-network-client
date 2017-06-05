@@ -132,7 +132,7 @@ public class UserProfileActivity extends AppCompatActivity {
     }
 
     private void getProfile(final String id) {
-        userModel = new UserModel(this, id);
+        userModel = new UserModel(this, Integer.parseInt(id));
         userModel.getProfile(new PostModel.VolleyCallBackJson() {
             @Override
             public void onSuccess(JSONObject jsonObject) throws JSONException {

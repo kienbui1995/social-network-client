@@ -52,7 +52,7 @@ public class FirebaseHelper {
     public void setOnline(int code){
         HashMap<String,Integer> status = new HashMap<>();
         status.put("code",code);
-        databaseReference.child("user").child(entityUserProfile.getuID()).child("status").setValue(status);
+        databaseReference.child("user").child(entityUserProfile.getuID()+"").child("status").setValue(status);
     }
 
     public void checkOnline(int uId,final callbackStatus callback){

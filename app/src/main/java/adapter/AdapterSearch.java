@@ -51,7 +51,7 @@ public class AdapterSearch extends ArrayAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         LayoutInflater inflater = this.context.getLayoutInflater();
         View row = inflater.inflate(this.resource,null);
-        userModel = new UserModel(context,items.get(position).getId());
+        userModel = new UserModel(context,Integer.parseInt(items.get(position).getId()));
         addControl(row);
         addData(position);
         return row;

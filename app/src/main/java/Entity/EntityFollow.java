@@ -1,10 +1,14 @@
 package Entity;
 
+import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
+
 /**
  * Created by joker on 4/25/17.
  */
 
-public class EntityFollow {
+public class EntityFollow extends RealmObject{
+    @PrimaryKey
     private String id;
     private String username;
     private String avatar;

@@ -15,12 +15,18 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.joker.thanglong.Model.ChatItem;
+import com.joker.thanglong.Ultil.ProfileInstance;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -32,12 +38,15 @@ import java.util.Map;
 import java.util.TimeZone;
 
 import Entity.EntityConversation;
-import adapter.ViewHolderChat;
+import Entity.EntityUserProfile;
 import hani.momanii.supernova_emoji_library.Actions.EmojIconActions;
 import hani.momanii.supernova_emoji_library.Helper.EmojiconEditText;
+import hani.momanii.supernova_emoji_library.Helper.EmojiconTextView;
+import io.realm.Realm;
 
-import static com.joker.thanglong.R.layout.item_chat_friend;
 public class ChatActivity extends AppCompatActivity {
+    public static final int ME = 1;
+    public static final int FRIENDS = 2;
     private EmojIconActions emojIcon;
     private ImageView emojiButton;
     private LinearLayout activityChat;
@@ -46,13 +55,15 @@ public class ChatActivity extends AppCompatActivity {
     private EmojiconEditText edtNewMessage;
     private ImageView submitButton;
     private DatabaseReference mdatabase;
-    private FirebaseRecyclerAdapter<ChatItem,ViewHolderChat> mdapter;
+    private FirebaseRecyclerAdapter<ChatItem,RecyclerView.ViewHolder> mdapter;
     private LinearLayoutManager linearLayoutManager;
     private ArrayList<String> chatItems;
     public ChatItem chatItem;
-    String myId;
+    int myId;
     String uId;
     String idRoom;
+    Realm realm;
+    EntityUserProfile userProfile;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,7 +72,9 @@ public class ChatActivity extends AppCompatActivity {
         mdatabase = FirebaseDatabase.getInstance().getReference();
         Intent intent = getIntent();
         uId = intent.getStringExtra("uId") ;
-
+        realm = Realm.getDefaultInstance();
+//        userProfile = realm.where(EntityUserProfile.class).equalTo("uID",Integer.parseInt(uId)).findFirst();
+        myId = ProfileInstance.getProfileInstance(this).getProfile().getuID();
         mdatabase.child("conversation").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -88,7 +101,6 @@ public class ChatActivity extends AppCompatActivity {
 
             }
         });
-        myId = MainActivity.entityUserProfile.getuID();
         addControll();
         setupEmoji();
         setupTabs();
@@ -118,95 +130,47 @@ public class ChatActivity extends AppCompatActivity {
         chatItems = new ArrayList<>();
         Log.d("idRoom1",idRoom.toString());
         final Query query = mdatabase.child("conversation/"+idRoom);
-        mdapter = new FirebaseRecyclerAdapter<ChatItem,ViewHolderChat>(ChatItem.class, item_chat_friend,ViewHolderChat.class,query) {
+        mdapter = new FirebaseRecyclerAdapter<ChatItem,RecyclerView.ViewHolder>(ChatItem.class, R.layout.item_chat_me,RecyclerView.ViewHolder.class,query) {
             @Override
-            protected void populateViewHolder(ViewHolderChat viewHolder, ChatItem model, int position) {
-//                FirebaseHelper.getFirebaseHelper(getApplicationContext()).setOnline(2);
-//                Log.d("itemss",chatItems.size()+"");
-//                viewHolder.setIsRecyclable(false);
-//                if (isOnline){
-//                    mdatabase.child("user").child(ProfileInstance.getProfileInstance(getApplicationContext()).getProfile().getuID())
-//                            .child("conversation")
-//                            .child(idRoom).child("timeRead").setValue(1);
-//                }
-                if (model.getUserName().equals(myId))
-                {
-                    viewHolder.txtDate.setText(convertTime(Long.valueOf(model.getTimeStamp().toString())));
-                    viewHolder.txtMessageContent.setText(model.getContent());
-                    viewHolder.txtMessageContent.setBackgroundResource(R.drawable.bg_item_chat_round_me);
-                    viewHolder.txtMessageContent.setPadding(40,20,20,40);
-//                    Picasso.with(getApplicationContext())
-//                            .load(prefs.getString("fb_profileURL",null))
-//                            .into(viewHolder.imgAvartarChat);
+            public int getItemViewType(int position) {
+                ChatItem chatItem = getItem(position);
+                if (chatItem.getUserName().equals(myId)){
+                    return ME;
+                }else {
+                    return FRIENDS;
                 }
-                else {
-                    chatItem=model;
-                    viewHolder.txtDate.setText(convertTime(Long.valueOf(model.getTimeStamp().toString())));
-                    viewHolder.txtMessageContent.setText(model.getContent());
-//                    viewHolder.txtMessageContent.setBackgroundResource(R.drawable.bg_item_chat_round_me);
-//                    Picasso.with(getApplicationContext())
-//                            .load("https://graph.facebook.com/" + model.getUserName() + "/picture?type=small")
-//                            .into(viewHolder.imgAvartarChat);
-                }
-//                Log.d("ModelArray",chatItem.getUserName()+" "+ prefs.getString("fb_id", null));
             }
 
+            @Override
+            protected void populateViewHolder(RecyclerView.ViewHolder viewHolder, ChatItem model, int position) {
+                if (model.getUserName().equals(myId)){
+                    ViewHolderMe viewHolderMe = (ViewHolderMe)viewHolder;
+                    viewHolderMe.txtMessageContent.setText(model.getContent());
+                    viewHolderMe.txtDate.setText(getDate((Long) model.getTimeStamp()));
+                }else {
+                    ViewHolderFriend viewHolderFriend = (ViewHolderFriend) viewHolder;
+                    viewHolderFriend.txtMessageContent.setText(model.getContent());
+                    viewHolderFriend.txtDate.setText(getDate((Long) model.getTimeStamp()));
+                }
+//                Toast.makeText(getApplicationContext(),model.getUserName()+ " "+ userProfile.getUserName(),Toast.LENGTH_LONG).show();
 
+            }
+
+            @Override
+            public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+                switch (viewType){
+                    case ME:
+                        View userType1 = LayoutInflater.from(parent.getContext())
+                                .inflate(R.layout.item_chat_me, parent, false);
+                        return new ViewHolderMe(userType1);
+                    case FRIENDS:
+                        View userType2 = LayoutInflater.from(parent.getContext())
+                                .inflate(R.layout.item_chat_friend, parent, false);
+                        return new ViewHolderFriend(userType2);
+                }
+                return super.onCreateViewHolder(parent, viewType);
+            }
         };
-//        mdatabase.child("chat/433174420346960KienBui1").limitToLast(1).addChildEventListener(new ChildEventListener() {
-//            @Override
-//            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-//                if ((dataSnapshot.child("userName").getValue().toString()).equals(prefs.getString("fb_id",null)))
-//                {
-//                    return;
-//                }
-//                strContent = dataSnapshot.child("content").getValue().toString();
-//                mBuilder =
-//                        (NotificationCompat.Builder) new NotificationCompat.Builder(getApplicationContext())
-//                                .setSmallIcon(R.drawable.ic_send_light)
-//                                .setContentTitle(dataSnapshot.child("userName").getValue().toString())
-//                                .setContentText(strContent);
-//                long[] pattern = {500,500,500};
-//                mBuilder.setVibrate(pattern);
-//                Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-//                mBuilder.setSound(alarmSound);
-//                mNotifyMgr =
-//                        (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-//                mNotifyMgr.notify(mNotificationId, mBuilder.build());
-//                Intent resultIntent = new Intent(getApplicationContext(), ChatItem.class);
-////                resultIntent.putExtra("content", strContent);
-//
-//                PendingIntent resultPendingIntent =
-//                        PendingIntent.getActivity(
-//                                getApplicationContext(),
-//                                0,
-//                                resultIntent,
-//                                PendingIntent.FLAG_UPDATE_CURRENT
-//                        );
-//                // Set content intent;
-//                mBuilder.setContentIntent(resultPendingIntent);
-//            }
-//
-//            @Override
-//            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-//
-//            }
-//
-//            @Override
-//            public void onChildRemoved(DataSnapshot dataSnapshot) {
-//
-//            }
-//
-//            @Override
-//            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-//
-//            }
-//
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//
-//            }
-//        });
 
         mdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             @Override
@@ -246,25 +210,17 @@ public class ChatActivity extends AppCompatActivity {
             return;
         }
 
-//        HashMap<String,Object> timeFirebase = new HashMap<>();
-//        timeFirebase.put("date", ServerValue.TIMESTAMP);
-//        Log.d("aaaa",timeFirebase.get("date").toString());
-//        Long tsLong = System.currentTimeMillis()/1000;
-//        final String timeStamp1 = tsLong.toString();
-        ChatItem chatItem = new ChatItem(myId, content);
+        ChatItem chatItem = new ChatItem(myId+"", content);
         Map<String, Object> chatValues = chatItem.toMap();
         HashMap<String, Object> childUpdate = new HashMap<>();
-//        String key = mdatabase.child("user").child("433174420346960KienBui1").push().getKey();
-//        childUpdate.put("//" + "433174420346960"+ "KienBui1/" +  , chatValues);
-        EntityConversation entityConversation = new EntityConversation(idRoom,myId,uId,content, 0);
-        EntityConversation entityConversation1 = new EntityConversation(idRoom,myId,uId,content,0);
+        EntityConversation entityConversation = new EntityConversation(idRoom,myId+"",uId,content, 0);
+        EntityConversation entityConversation1 = new EntityConversation(idRoom,myId+"",uId,content,0);
         Map<String,Object> conversation =entityConversation.toMap();
         Map<String,Object> conversation1 =entityConversation1.toMap();
         mdatabase.child("user").child(uId).child("conversation").child(idRoom).setValue(conversation1);
-        mdatabase.child("user").child(myId).child("conversation").child(idRoom).setValue(conversation);
+        mdatabase.child("user").child(myId+"").child("conversation").child(idRoom).setValue(conversation);
         String key = mdatabase.child("conversation").child(idRoom).push().getKey();
         childUpdate.put("conversation/"+idRoom+"/" + key,chatValues);
-//        mdatabase.child("user").child(uId).child("conversation").child(uId+"_"+MainActivity.entityUserProfile.getuID()).setValue();
         mdatabase.updateChildren(childUpdate);
         edtNewMessage.setText("");
     }
@@ -312,21 +268,31 @@ public class ChatActivity extends AppCompatActivity {
         return dateFormatter.format(dateObject);
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-//        FirebaseHelper.getFirebaseHelper(this).setOnline(2);
+
+    private class ViewHolderMe extends RecyclerView.ViewHolder {
+        private TextView txtMessageContent;
+        private TextView txtDate;
+        private CircleImageView imgAvartarChat;
+
+        public ViewHolderMe(View itemView) {
+            super(itemView);
+            txtMessageContent = (TextView) itemView.findViewById(R.id.txtMessageContent);
+            txtDate = (TextView) itemView.findViewById(R.id.txtDate);
+            imgAvartarChat = (CircleImageView) itemView.findViewById(R.id.imgAvartarChat);
+        }
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-//        FirebaseHelper.getFirebaseHelper(this).setOnline(2);
-    }
+    private class ViewHolderFriend extends RecyclerView.ViewHolder {
+        private CircleImageView imgAvartarChat;
+        private EmojiconTextView txtMessageContent;
+        private TextView txtDate;
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-//        FirebaseHelper.getFirebaseHelper(this).setOnline(2);
+        public ViewHolderFriend(View itemView) {
+            super(itemView);
+            imgAvartarChat = (CircleImageView) itemView.findViewById(R.id.imgAvartarChat);
+            txtMessageContent = (EmojiconTextView) itemView.findViewById(R.id.txtMessageContent);
+            txtDate = (TextView) itemView.findViewById(R.id.txtDate);
+
+        }
     }
 }

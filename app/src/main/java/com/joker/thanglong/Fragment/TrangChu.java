@@ -1,6 +1,8 @@
 package com.joker.thanglong.Fragment;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -13,10 +15,10 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 
 import com.joker.thanglong.Interface.EndlessScrollListener;
-import com.joker.thanglong.R;
 import com.joker.thanglong.Model.PostModel;
-import com.joker.thanglong.Ultil.ProfileInstance;
 import com.joker.thanglong.Model.UserModel;
+import com.joker.thanglong.R;
+import com.joker.thanglong.Ultil.ProfileInstance;
 
 import java.util.ArrayList;
 
@@ -68,14 +70,26 @@ public class TrangChu extends Fragment{
     }
 
     public void getData() {
-        items = new ArrayList<>();
-        userModel.getNewfeed(new PostModel.VolleyCallbackListStatus() {
+        final ProgressDialog progressDialog = new ProgressDialog(getActivity());
+        progressDialog.setMessage("Đang tải dữ liệu");
+        progressDialog.show();
+
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
             @Override
-            public void onSuccess(ArrayList<EntityStatus> entityStatuses) {
-                itemsAdapter=entityStatuses;
-                initData();
+            public void run() {
+                items = new ArrayList<>();
+                userModel.getNewfeed(new PostModel.VolleyCallbackListStatus() {
+                    @Override
+                    public void onSuccess(ArrayList<EntityStatus> entityStatuses) {
+                        itemsAdapter=entityStatuses;
+                        progressDialog.dismiss();
+                        initData();
+                    }
+                },"");
             }
-        },"");
+        },1000);
+
     }
 
     private void initData() {

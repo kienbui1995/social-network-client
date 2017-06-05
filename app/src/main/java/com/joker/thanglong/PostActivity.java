@@ -72,7 +72,7 @@ public class PostActivity extends AppCompatActivity {
         postAt = intent.getIntExtra("postAt",1);
         if (postAt == 1){
             type = "users";
-            postModel = new PostModel(this,Integer.parseInt(ProfileInstance.getProfileInstance(this).getProfile().getuID()),"");
+            postModel = new PostModel(this,ProfileInstance.getProfileInstance(this).getProfile().getuID(),"");
         }else if (postAt == 2){
             type = "groups";
             postModel = new PostModel(this,GroupActivity.groupInfo.getId(),"");

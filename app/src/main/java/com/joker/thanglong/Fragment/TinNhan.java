@@ -19,6 +19,7 @@ import android.widget.TextView;
 import com.firebase.ui.database.FirebaseListAdapter;
 import com.joker.thanglong.ChatActivity;
 import com.joker.thanglong.MainActivity;
+import com.joker.thanglong.Model.UserModel;
 import com.joker.thanglong.R;
 import com.joker.thanglong.Ultil.VolleyHelper;
 
@@ -50,7 +51,7 @@ public class TinNhan extends Fragment{
 //    private  notti;
     private Notti notti;
     int positions;
-
+    int check = -1;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -70,7 +71,7 @@ public class TinNhan extends Fragment{
 //        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
         mReference = FirebaseDatabase.getInstance().getReference();
 
-        Query query = mReference.child("user").child(MainActivity.entityUserProfile.getuID()).child("conversation");
+        Query query = mReference.child("user").child(MainActivity.entityUserProfile.getuID()+"").child("conversation");
         mAdapter = new FirebaseListAdapter<EntityRoomChat>(getActivity(),EntityRoomChat.class,R.layout.custom_item_list_chat,query){
 
 //            @Override
@@ -88,8 +89,16 @@ public class TinNhan extends Fragment{
                 ((TextView)v.findViewById(R.id.txtLastMessage)).setText(model.getLastMessage());
                 ((TextView)v.findViewById(R.id.txtTimeChat)).setText(convertTime(model.getTime()));
                 entityUserProfile = new EntityUserProfile();
-//                if (model.getIdTo().equals(MainActivity.entityUserProfile.getuID()))
-//                {
+                if (model.getIdTo().equals(MainActivity.entityUserProfile.getuID()))
+                {
+                    UserModel.realmUser(getActivity(), Integer.parseInt(model.getIdFrom()), new UserModel.VolleyCallBackProfileUser() {
+                        @Override
+                        public void onSuccess(EntityUserProfile profile) {
+                            ((TextView)v.findViewById(R.id.txtNameChat)).setText(profile.getFull_name());
+                        }
+                    });
+
+
 //                    UserModel userModel = new UserModel(getActivity(),model.getIdFrom());
 //                    userModel.getProfile(new PostModel.VolleyCallBackJson() {
 //                        @Override
@@ -104,23 +113,7 @@ public class TinNhan extends Fragment{
 //                                handler.postDelayed(new Runnable() {
 //                                    @Override
 //                                    public void run() {
-//                                        FirebaseHelper.getFirebaseHelper(getActivity()).checkOnline(255, new FirebaseHelper.callbackStatus() {
-//                                            @Override
-//                                            public void onSuccess(Integer status) {
-//                                                if (status == 1){
-//                                                    ((TextView)v.findViewById(R.id.txtOnline)).setVisibility(View.VISIBLE);
-//                                                    notti = new Notti(getActivity(),new NottiConf(R.drawable.heart));
-//                                                    long[] pattern = {100, 200, 100, 200};
-//                                                    boolean shouldVibrate = true;
-//                                                    VibrationSettings vibrationSettings = new VibrationSettings(pattern, shouldVibrate);
-//                                                    notti.show(NottiFactory.get(NottiFactory.TYPE.STANDARD,entityUserProfile.getFull_name()
-//                                                            ,model.getLastMessage()).setInboxSummary("hihihi").setVibrationSettings(vibrationSettings));
-//                                                }
-//                                                else {
-//                                                    ((TextView)v.findViewById(R.id.txtOnline)).setVisibility(View.INVISIBLE);
-//                                                }
-//                                            }
-//                                        });
+////                                        ;
 //                                    }
 //                                },2000);
 //                                Log.d("getInfoUser",entityUserProfile.toString());
@@ -129,48 +122,15 @@ public class TinNhan extends Fragment{
 //                            }
 //                        }
 //                    });
-//                }else {
-//                    UserModel userModel = new UserModel(getActivity(),model.getIdTo());
-//                    userModel.getProfile(new PostModel.VolleyCallBackJson() {
-//                        @Override
-//                        public void onSuccess(JSONObject jsonObject) throws JSONException {
-//                            try {
-//                                JSONObject infoUser = jsonObject;
-//                                entityUserProfile.setFull_name(infoUser.getString("full_name"));
-//                                entityUserProfile.setuID(infoUser.getString("id"));
-//                                entityUserProfile.setUserName(infoUser.getString("username"));
-//                                ((TextView)v.findViewById(R.id.txtNameChat)).setText(entityUserProfile.getFull_name());
-//                                Handler handler = new Handler();
-//                                handler.postDelayed(new Runnable() {
-//                                    @Override
-//                                    public void run() {
-//                                        FirebaseHelper.getFirebaseHelper(getActivity()).checkOnline(255, new FirebaseHelper.callbackStatus() {
-//                                            @Override
-//                                            public void onSuccess(Integer status) {
-//                                                if (status == 1){
-//                                                    ((TextView)v.findViewById(R.id.txtOnline)).setVisibility(View.VISIBLE);
-//                                                    notti = new Notti(getActivity(),new NottiConf(R.drawable.heart));
-//                                                    long[] pattern = {100, 200, 100, 200};
-//                                                    boolean shouldVibrate = true;
-//                                                    VibrationSettings vibrationSettings = new VibrationSettings(pattern, shouldVibrate);
-//                                                    notti.show(NottiFactory.get(NottiFactory.TYPE.STANDARD,entityUserProfile.getFull_name()
-//                                                            ,model.getLastMessage()).setInboxSummary("hihihi").setVibrationSettings(vibrationSettings));
-//                                                }
-//                                                else {
-//                                                    ((TextView)v.findViewById(R.id.txtOnline)).setVisibility(View.INVISIBLE);
-//                                                }
-//                                            }
-//                                        });
-//                                    }
-//                                },2000);
-//                                Log.d("getInfoUser",entityUserProfile.toString());
-//                            } catch (JSONException e) {
-//                                e.printStackTrace();
-//                            }
-//                        }
-//                    });
-//
-//                }
+                }else {
+                    UserModel.realmUser(getActivity(), Integer.parseInt(model.getIdTo()), new UserModel.VolleyCallBackProfileUser() {
+                        @Override
+                        public void onSuccess(EntityUserProfile profile) {
+                            ((TextView)v.findViewById(R.id.txtNameChat)).setText(profile.getFull_name());
+                        }
+                    });
+
+                }
                 v.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {

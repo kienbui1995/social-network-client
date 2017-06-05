@@ -3,15 +3,14 @@ package com.joker.thanglong.Fragment;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
+import com.joker.thanglong.Model.UserModel;
 import com.joker.thanglong.R;
 import com.joker.thanglong.Ultil.ProfileInstance;
-import com.joker.thanglong.Model.UserModel;
 
 import java.util.ArrayList;
 

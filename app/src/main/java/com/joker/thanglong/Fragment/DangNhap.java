@@ -2,6 +2,7 @@ package com.joker.thanglong.Fragment;
 
 import com.google.firebase.iid.FirebaseInstanceId;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -404,13 +405,14 @@ public class DangNhap extends Fragment implements View.OnClickListener,Validator
             params.put("username",username);
             params.put("password",password);
             params.put("device", FirebaseInstanceId.getInstance().getToken().toString());
+            Log.d("device",FirebaseInstanceId.getInstance().getToken().toString());
             volleyHelper.post("login", new JSONObject(params), new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject response) {
                     try {
                         JSONObject json = response.getJSONObject("data");
                         entityUserProfile.setToken(json.getString("token"));
-                        entityUserProfile.setuID(json.getString("id"));
+                        entityUserProfile.setuID(json.getInt("id"));
                         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
                         SharedPreferences.Editor editor = prefs.edit();
                         editor.putString("token",json.getString("token") );
@@ -419,8 +421,18 @@ public class DangNhap extends Fragment implements View.OnClickListener,Validator
                             @Override
                             public void execute(Realm realm) {
                                 realm.copyToRealmOrUpdate(entityUserProfile);
-                                Log.d("EntityObj",entityUserProfile.getuID());
-                                startActivity(new Intent(getActivity(),MainActivity.class));
+                                Log.d("EntityObj",entityUserProfile.getuID()+"");
+                                final ProgressDialog progressDialog = new ProgressDialog(getActivity());
+                                progressDialog.show();
+                                progressDialog.setMessage("Xin hãy chờ trong giây lát");
+                                Handler handler = new Handler();
+                                handler.postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        progressDialog.dismiss();
+                                        startActivity(new Intent(getActivity(),MainActivity.class));
+                                    }
+                                },1000);
                             }
                         });
                         initSetting();
