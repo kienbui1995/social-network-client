@@ -12,10 +12,12 @@ import android.media.RingtoneManager;
 import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
-import android.util.Log;
 
 import com.joker.thanglong.CommentPostFullActivity;
 import com.joker.thanglong.R;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -31,20 +33,39 @@ import java.util.Map;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
     public static final int LIKE = 1;
+    public static final int COMMENT = 2;
+    public static final int MENTION = 4;
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
         String token = PreferenceManager.getDefaultSharedPreferences(this).getString("token","");
         Map<String, String> notication = remoteMessage.getData();
-        Map<String,String> actor = splitString(remoteMessage.getData().get("actor"));
-        Map<String,String>  post = splitString(remoteMessage.getData().get("last_post"));
-        Log.d("notifcation",notication.toString());
-        switch (Integer.parseInt(notication.get("action"))){
-            case LIKE:
-                showNotification(Integer.parseInt(post.get("id")),"Thông báo",actor.get("full_name"),"like bài viết của bạn",
-                       post.get("message"), Integer.parseInt(notication.get("total_action")));
-                break;
+        try {
+            JSONObject actor = new JSONObject(notication.get("actor"));
+            JSONObject post = new JSONObject(notication.get("last_post"));
+            switch (Integer.parseInt(notication.get("action"))){
+                case LIKE:
+                    showNotification(post.getInt("id"),"Thông báo",actor.getString("full_name"),
+                            actor.getString("avatar"),"like bài viết của bạn",
+                            post.getString("message"), Integer.parseInt(notication.get("total_action")));
+                    break;
+                case COMMENT:
+                    break;
+                case MENTION:
+                    break;
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
+//        Map<String,String> actor = splitString(remoteMessage.getData().get("actor"));
+//        Map <String,Object> map1 = new HashMap<>();
+//        map1.putAll(notication);
+//        Map<String,String>  post = splitString(remoteMessage.getData().get("last_post"));
+//        try {
+//            Log.d("notifcation",new JSONObject(notication.get("actor")).getString("avatar"));
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
 //        if(token != null){
 //
 ////            Object remoteMessage1 = remoteMessage.getData().get("data");
@@ -58,18 +79,18 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     }
 
-    public void showNotification(int id,String title,String Actor,String message,String postContent,int total){
+    public void showNotification(int id,String title,String Actor,String avatar,String message,String postContent,int total){
         String and = null;
         if (total == 1){
             and = "";
         }else {
-            and = " và " + total + " người khác";
+            and = " và " + (total -1)+ " người khác";
         }
         Intent intent = new Intent(this, CommentPostFullActivity.class);
         intent.putExtra("idPost", id);
         intent.putExtra("type", 2);
         PendingIntent pIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        Bitmap bitmap = getBitmapFromURL("https://firebasestorage.googleapis.com/v0/b/hoclazada.appspot.com/o/images%2Favatar%2Fsmall%2F1495434748_null?alt=media&token=f845459a-9f67-4109-a236-6c95cf458d0d");
+        Bitmap bitmap = getBitmapFromURL(avatar);
         /*build the notification here this is only supported for API 11. Since we've targeted API 11 there will be no problem on this*/
         NotificationCompat.Builder notify = new NotificationCompat.Builder(this)
                 .setContentTitle("Thang long")

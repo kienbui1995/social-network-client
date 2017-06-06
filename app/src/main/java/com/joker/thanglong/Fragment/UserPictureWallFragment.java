@@ -31,7 +31,7 @@ public class UserPictureWallFragment extends Fragment {
     private SwipeRefreshLayout swrPictureWall;
     private EndlessScrollListener endlessScrollListener;
     PostModel postModel;
-    String uID;
+    int uID;
     boolean isLoad = false;
     public UserPictureWallFragment() {
         // Required empty public constructor
@@ -71,7 +71,7 @@ public class UserPictureWallFragment extends Fragment {
 
     private void getData() {
         listPhoto = new ArrayList<>();
-        postModel = new PostModel(getActivity(),Integer.parseInt(uID),"photo");
+        postModel = new PostModel(getActivity(),uID,"photo");
         postModel.getListPost(0,new PostModel.VolleyCallbackListStatus() {
             @Override
             public void onSuccess(ArrayList<EntityStatus> entityStatuses) {

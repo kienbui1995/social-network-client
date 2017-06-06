@@ -22,6 +22,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.joker.thanglong.Model.ChatItem;
 import com.joker.thanglong.Ultil.ProfileInstance;
@@ -60,7 +61,7 @@ public class ChatActivity extends AppCompatActivity {
     private ArrayList<String> chatItems;
     public ChatItem chatItem;
     int myId;
-    String uId;
+    int uId;
     String idRoom;
     Realm realm;
     EntityUserProfile userProfile;
@@ -71,9 +72,9 @@ public class ChatActivity extends AppCompatActivity {
 
         mdatabase = FirebaseDatabase.getInstance().getReference();
         Intent intent = getIntent();
-        uId = intent.getStringExtra("uId") ;
+        uId = intent.getIntExtra("uId",1) ;
         realm = Realm.getDefaultInstance();
-//        userProfile = realm.where(EntityUserProfile.class).equalTo("uID",Integer.parseInt(uId)).findFirst();
+        userProfile = realm.where(EntityUserProfile.class).equalTo("uID",uId).findFirst();
         myId = ProfileInstance.getProfileInstance(this).getProfile().getuID();
         mdatabase.child("conversation").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -122,8 +123,6 @@ public class ChatActivity extends AppCompatActivity {
 
     private void setupChat() {
         chatItem = new ChatItem();
-//        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-//        myId=prefs.getString("fb_id",null);
         linearLayoutManager = new LinearLayoutManager(this);
 //        linearLayoutManager.setReverseLayout(false);
         linearLayoutManager.setStackFromEnd(true);
@@ -134,7 +133,7 @@ public class ChatActivity extends AppCompatActivity {
             @Override
             public int getItemViewType(int position) {
                 ChatItem chatItem = getItem(position);
-                if (chatItem.getUserName().equals(myId)){
+                if (chatItem.getId() == myId){
                     return ME;
                 }else {
                     return FRIENDS;
@@ -143,17 +142,18 @@ public class ChatActivity extends AppCompatActivity {
 
             @Override
             protected void populateViewHolder(RecyclerView.ViewHolder viewHolder, ChatItem model, int position) {
-                if (model.getUserName().equals(myId)){
+                if (model.getId() == myId){
                     ViewHolderMe viewHolderMe = (ViewHolderMe)viewHolder;
                     viewHolderMe.txtMessageContent.setText(model.getContent());
-                    viewHolderMe.txtDate.setText(getDate((Long) model.getTimeStamp()));
+                    viewHolderMe.txtDate.setText(convertTime((Long) model.getTimeStamp()));
+
                 }else {
                     ViewHolderFriend viewHolderFriend = (ViewHolderFriend) viewHolder;
                     viewHolderFriend.txtMessageContent.setText(model.getContent());
-                    viewHolderFriend.txtDate.setText(getDate((Long) model.getTimeStamp()));
+                    viewHolderFriend.txtDate.setText(convertTime((Long) model.getTimeStamp()));
+                    Glide.with(getApplicationContext()).load(userProfile.getAvatar())
+                            .crossFade().centerCrop().into(viewHolderFriend.imgAvartarChat);
                 }
-//                Toast.makeText(getApplicationContext(),model.getUserName()+ " "+ userProfile.getUserName(),Toast.LENGTH_LONG).show();
-
             }
 
             @Override
@@ -210,14 +210,14 @@ public class ChatActivity extends AppCompatActivity {
             return;
         }
 
-        ChatItem chatItem = new ChatItem(myId+"", content);
+        ChatItem chatItem = new ChatItem(myId, content);
         Map<String, Object> chatValues = chatItem.toMap();
         HashMap<String, Object> childUpdate = new HashMap<>();
-        EntityConversation entityConversation = new EntityConversation(idRoom,myId+"",uId,content, 0);
-        EntityConversation entityConversation1 = new EntityConversation(idRoom,myId+"",uId,content,0);
+        EntityConversation entityConversation = new EntityConversation(idRoom,myId,uId,content, 0);
+        EntityConversation entityConversation1 = new EntityConversation(idRoom,myId,uId,content,0);
         Map<String,Object> conversation =entityConversation.toMap();
         Map<String,Object> conversation1 =entityConversation1.toMap();
-        mdatabase.child("user").child(uId).child("conversation").child(idRoom).setValue(conversation1);
+        mdatabase.child("user").child(uId+"").child("conversation").child(idRoom).setValue(conversation1);
         mdatabase.child("user").child(myId+"").child("conversation").child(idRoom).setValue(conversation);
         String key = mdatabase.child("conversation").child(idRoom).push().getKey();
         childUpdate.put("conversation/"+idRoom+"/" + key,chatValues);
@@ -235,7 +235,7 @@ public class ChatActivity extends AppCompatActivity {
 
     }
     private void setupTabs() {
-        toolbarNotification.setTitle("Hoài Nam");
+        toolbarNotification.setTitle(userProfile.getFull_name());
         setSupportActionBar(toolbarNotification);
         if (getSupportActionBar() != null){
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);

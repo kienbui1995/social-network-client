@@ -24,7 +24,7 @@
                     android:layout_width="10dp"
                     android:layout_height="10dp"/>
             <ImageView
-                    android:src="@drawable/avatar1"
+                    android:id="@+id/imgAvatar"
                     android:layout_width="50dp"
                     android:layout_height="50dp"/>
         </FrameLayout>

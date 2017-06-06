@@ -65,7 +65,7 @@ public class AdapterFollowingList extends ArrayAdapter {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(context, UserProfileActivity.class);
-                intent.putExtra("uId",items.get(position).getId());
+                intent.putExtra("uId",Integer.parseInt(items.get(position).getId()));
                 context.startActivity(intent);
             }
         });
@@ -74,7 +74,7 @@ public class AdapterFollowingList extends ArrayAdapter {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(context, UserProfileActivity.class);
-                intent.putExtra("uId",items.get(position).getId());
+                intent.putExtra("uId",Integer.parseInt(items.get(position).getId()));
                 context.startActivity(intent);
             }
         });

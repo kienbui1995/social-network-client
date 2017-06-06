@@ -51,7 +51,7 @@ public class AdapterSearch extends ArrayAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         LayoutInflater inflater = this.context.getLayoutInflater();
         View row = inflater.inflate(this.resource,null);
-        userModel = new UserModel(context,Integer.parseInt(items.get(position).getId()));
+        userModel = new UserModel(context,items.get(position).getId());
         addControl(row);
         addData(position);
         return row;
@@ -85,12 +85,12 @@ public class AdapterSearch extends ArrayAdapter {
                             .onPositive(new MaterialDialog.SingleButtonCallback() {
                                 @Override
                                 public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                    Log.d("positionId",items.get(position).getId());
+                                    Log.d("positionId",items.get(position).getId()+"");
                                     btnFollowUser.setBackgroundResource(R.drawable.btn_unfollow);
                                     btnFollowUser.setTextColor(Color.parseColor("#FFFFFF"));
                                     btnFollowUser.setText("Đã theo dõi");
                                     btnFollowUser.setEnabled(false);
-                                    userModel.Follow(Integer.parseInt(items.get(position).getId()));
+                                    userModel.Follow(items.get(position).getId());
                                     Intent intent = new Intent(context, UserProfileActivity.class);
                                     intent.putExtra("uId",items.get(position).getId());
                                     context.startActivity(intent);

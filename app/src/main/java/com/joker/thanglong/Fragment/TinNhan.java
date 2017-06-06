@@ -12,10 +12,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.firebase.ui.database.FirebaseListAdapter;
 import com.joker.thanglong.ChatActivity;
 import com.joker.thanglong.MainActivity;
@@ -52,25 +54,20 @@ public class TinNhan extends Fragment{
     private Notti notti;
     int positions;
     int check = -1;
+    private ImageView imgAvatar;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.tinnhan,container,false);
         addControll(view);
         notti = new Notti(getActivity(),new NottiConf(R.drawable.heart));
-
+        addEvent();
         return view;
     }
 
-    private void addControll(View view) {
-        txtOnline = (TextView) view.findViewById(R.id.txtOnline);
-        lnChat = (LinearLayout) view.findViewById(R.id.lnChat);
-        lvListChat = (ListView) view.findViewById(R.id.lvListChat);
-        txtLastmess = (TextView) view.findViewById(R.id.txtLastMessage);
-        listChat = new ArrayList<>();
-//        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+    private void addEvent() {
         mReference = FirebaseDatabase.getInstance().getReference();
-
         Query query = mReference.child("user").child(MainActivity.entityUserProfile.getuID()+"").child("conversation");
         mAdapter = new FirebaseListAdapter<EntityRoomChat>(getActivity(),EntityRoomChat.class,R.layout.custom_item_list_chat,query){
 
@@ -89,12 +86,14 @@ public class TinNhan extends Fragment{
                 ((TextView)v.findViewById(R.id.txtLastMessage)).setText(model.getLastMessage());
                 ((TextView)v.findViewById(R.id.txtTimeChat)).setText(convertTime(model.getTime()));
                 entityUserProfile = new EntityUserProfile();
-                if (model.getIdTo().equals(MainActivity.entityUserProfile.getuID()))
+                if (model.getIdTo() == MainActivity.entityUserProfile.getuID())
                 {
-                    UserModel.realmUser(getActivity(), Integer.parseInt(model.getIdFrom()), new UserModel.VolleyCallBackProfileUser() {
+                    UserModel.realmUser(getActivity(), model.getIdFrom(), new UserModel.VolleyCallBackProfileUser() {
                         @Override
                         public void onSuccess(EntityUserProfile profile) {
                             ((TextView)v.findViewById(R.id.txtNameChat)).setText(profile.getFull_name());
+                            Glide.with(getActivity()).load(profile.getAvatar()).centerCrop().
+                                    crossFade().into(((ImageView) v.findViewById(R.id.imgAvatar)));
                         }
                     });
 
@@ -123,7 +122,7 @@ public class TinNhan extends Fragment{
 //                        }
 //                    });
                 }else {
-                    UserModel.realmUser(getActivity(), Integer.parseInt(model.getIdTo()), new UserModel.VolleyCallBackProfileUser() {
+                    UserModel.realmUser(getActivity(), model.getIdTo(), new UserModel.VolleyCallBackProfileUser() {
                         @Override
                         public void onSuccess(EntityUserProfile profile) {
                             ((TextView)v.findViewById(R.id.txtNameChat)).setText(profile.getFull_name());
@@ -135,7 +134,7 @@ public class TinNhan extends Fragment{
                     @Override
                     public void onClick(View view) {
                         Log.d("checkIf",model.getIdTo()+ "  "+ MainActivity.entityUserProfile.getuID());
-                        if (model.getIdTo().equals(MainActivity.entityUserProfile.getuID())){
+                        if (model.getIdTo() == MainActivity.entityUserProfile.getuID()){
 //                            mReference.child("user").child(ProfileInstance.getProfileInstance(getActivity()).getProfile().getuID())
 //                                    .child("conversation")
 //                                    .child(model.getName()).child("timeRead").setValue(1);
@@ -149,17 +148,14 @@ public class TinNhan extends Fragment{
 //                                    .child(model.getName()).child("timeRead").setValue(1);
                             Intent intent = new Intent(getActivity(), ChatActivity.class);
                             intent.putExtra("uId",model.getIdTo());
-                            Log.d("idRoom",model.getIdTo());
+                            Log.d("idRoom",model.getIdTo()+"");
                             startActivity(intent);
                         }
 
                     }
                 });
                 Log.d("postion",positions+"");
-
             }
-
-
         };
 
 //        adapterListChat = new AdapterListChat(getActivity(),R.layout.custom_item_list_chat,listChat);
@@ -170,6 +166,18 @@ public class TinNhan extends Fragment{
 //                startActivity(new Intent(getActivity(), ChatActivity.class));
 //            }
 //        });
+    }
+
+    private void addControll(View view) {
+        txtOnline = (TextView) view.findViewById(R.id.txtOnline);
+        lnChat = (LinearLayout) view.findViewById(R.id.lnChat);
+        lvListChat = (ListView) view.findViewById(R.id.lvListChat);
+        txtLastmess = (TextView) view.findViewById(R.id.txtLastMessage);
+        imgAvatar = (ImageView) view.findViewById(R.id.imgAvatar);
+
+        listChat = new ArrayList<>();
+//        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+
     }
     static String convertTime(Long unixtime) {
         Date dateObject = new Date(unixtime);

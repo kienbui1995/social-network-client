@@ -196,7 +196,7 @@ public class AdapterHome extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
                     @Override
                     public void onClick(View view) {
                         Intent intent = new Intent(context, UserProfileActivity.class);
-                        intent.putExtra("uId",items.get(position).getuId()+"");
+                        intent.putExtra("uId",items.get(position).getuId());
                         context.startActivity(intent);
                     }
                 });
@@ -369,7 +369,7 @@ public class AdapterHome extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
                     @Override
                     public void onClick(View view) {
                         Intent intent = new Intent(context, UserProfileActivity.class);
-                        intent.putExtra("uId",items.get(position).getuId()+"");
+                        intent.putExtra("uId",items.get(position).getuId());
                         context.startActivity(intent);
                     }
                 });

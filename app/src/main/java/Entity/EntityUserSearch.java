@@ -5,17 +5,17 @@ package Entity;
  */
 
 public class EntityUserSearch {
-    private String id;
+    private int id;
     private String username;
     private String avatar;
     private String full_name;
     private boolean is_followed;
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 

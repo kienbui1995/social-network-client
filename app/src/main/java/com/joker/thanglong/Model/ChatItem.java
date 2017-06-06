@@ -11,12 +11,12 @@ import java.util.Map;
 
 public class ChatItem {
 
-    String userName;
+    int id;
     private Object timeStamp;
     String content;
 
-    public String getUserName() {
-        return userName;
+    public int getId() {
+        return id;
     }
 
     public Object getTimeStamp() {
@@ -27,8 +27,8 @@ public class ChatItem {
         this.timeStamp = timeStamp;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getContent() {
@@ -39,8 +39,8 @@ public class ChatItem {
         this.content = content;
     }
 
-    public ChatItem(String uID, String content) {
-        this.userName = uID;
+    public ChatItem(int id, String content) {
+        this.id = id;
         this.timeStamp= ServerValue.TIMESTAMP;
         this.content = content;
     }
@@ -49,7 +49,7 @@ public class ChatItem {
     }
     public Map<String,Object> toMap(){
         HashMap<String,Object> result = new HashMap<>();
-        result.put("userName",userName);
+        result.put("id",id);
         result.put("timeStamp",timeStamp);
         result.put("content",content);
         return result;
@@ -67,7 +67,7 @@ public class ChatItem {
     @Override
     public String toString() {
         return "ChatItem{" +
-                "uID='" + userName + '\'' +
+                "uID='" + id + '\'' +
                 ", timeStamp='" + timeStamp + '\'' +
                 ", content='" + content + '\'' +
                 '}';

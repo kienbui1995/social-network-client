@@ -5,8 +5,8 @@ package Entity;
  */
 
 public class EntityRoomChat {
-    String idFrom;
-    String idTo;
+    int idFrom;
+    int idTo;
     String name;
     Long time;
     int timeRead;
@@ -15,7 +15,7 @@ public class EntityRoomChat {
     public EntityRoomChat() {
     }
 
-    public EntityRoomChat(String idFrom, String idTo, String name, Long time,int timeRead,String lastMessage) {
+    public EntityRoomChat(int idFrom, int idTo, String name, Long time, int timeRead, String lastMessage) {
         this.idFrom = idFrom;
         this.idTo = idTo;
         this.name = name;
@@ -32,19 +32,19 @@ public class EntityRoomChat {
         this.lastMessage = lastMessage;
     }
 
-    public String getIdFrom() {
+    public int getIdFrom() {
         return idFrom;
     }
 
-    public void setIdFrom(String idFrom) {
+    public void setIdFrom(int idFrom) {
         this.idFrom = idFrom;
     }
 
-    public String getIdTo() {
+    public int getIdTo() {
         return idTo;
     }
 
-    public void setIdTo(String idTo) {
+    public void setIdTo(int idTo) {
         this.idTo = idTo;
     }
 

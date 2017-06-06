@@ -242,7 +242,7 @@ public class UserModel {
                         {
                             JSONObject jsonObject = (JSONObject) jsonArray.get(i);
                             EntityUserSearch item = new EntityUserSearch();
-                            item.setId(jsonObject.getString("id"));
+                            item.setId(jsonObject.getInt("id"));
                             item.setUsername(jsonObject.getString("username"));
                             item.setAvatar(jsonObject.getString("avatar"));
                             item.setFull_name(jsonObject.getString("full_name"));

@@ -67,7 +67,7 @@ public class UserPostWallFragment extends Fragment {
     }
 
     private void getData() {
-        postModel = new PostModel(getActivity(), Integer.parseInt(UserProfileActivity.id),"post");
+        postModel = new PostModel(getActivity(), UserProfileActivity.id,"post");
         postModel.getListPost(0,new PostModel.VolleyCallbackListStatus() {
             @Override
             public void onSuccess(ArrayList<EntityStatus> entityStatuses) {

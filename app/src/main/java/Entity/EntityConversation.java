@@ -11,8 +11,8 @@ import java.util.Map;
 
 public class EntityConversation {
     String name;
-    String idFrom;
-    String idTo;
+    int idFrom;
+    int idTo;
     int timeRead;
     Object time;
     String lastMessage;
@@ -25,7 +25,7 @@ public class EntityConversation {
         this.lastMessage = lastMessage;
     }
 
-    public EntityConversation(String name, String idFrom, String idTo, String lastMessage, int timeRead) {
+    public EntityConversation(String name, int idFrom, int idTo, String lastMessage, int timeRead) {
         this.name = name;
         this.idFrom = idFrom;
         this.idTo = idTo;
@@ -49,19 +49,19 @@ public class EntityConversation {
         return name;
     }
 
-    public String getIdFrom() {
+    public int getIdFrom() {
         return idFrom;
     }
 
-    public void setIdFrom(String idFrom) {
+    public void setIdFrom(int idFrom) {
         this.idFrom = idFrom;
     }
 
-    public String getIdTo() {
+    public int getIdTo() {
         return idTo;
     }
 
-    public void setIdTo(String idTo) {
+    public void setIdTo(int idTo) {
         this.idTo = idTo;
     }
 

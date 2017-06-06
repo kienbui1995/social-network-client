@@ -75,7 +75,7 @@ public class UserProfileActivity extends AppCompatActivity {
     private TextView txtNumberOfPost;
     private ImageButton imgChangeAvatar;
 
-    public static String id = null;
+    public static int id;
     private UserModel userModel;
     private Bitmap bmp;
     private FirebaseHelper firebaseHelper;
@@ -115,9 +115,9 @@ public class UserProfileActivity extends AppCompatActivity {
 
     private void getDataProfile() {
         Intent intent = getIntent();
-        id = intent.getStringExtra("uId");
+        id = intent.getIntExtra("uId",1);
 //        Log.d("id",id.toString());
-        if (id.equals(ProfileInstance.getProfileInstance(this).getProfile().getuID())) {
+        if (id == ProfileInstance.getProfileInstance(this).getProfile().getuID()) {
             getProfile(id);
             me = true;
             btnNhanTin.setVisibility(View.GONE);
@@ -131,8 +131,8 @@ public class UserProfileActivity extends AppCompatActivity {
         }
     }
 
-    private void getProfile(final String id) {
-        userModel = new UserModel(this, Integer.parseInt(id));
+    private void getProfile(final int id) {
+        userModel = new UserModel(this, id);
         userModel.getProfile(new PostModel.VolleyCallBackJson() {
             @Override
             public void onSuccess(JSONObject jsonObject) throws JSONException {
