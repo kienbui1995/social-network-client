@@ -25,14 +25,14 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import java.util.List;
 
 import Entity.EntityGroup;
-import adapter.AdapterTenMember;
+import adapter.AdapterMemberShow;
 
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class AboutGroupFragment extends Fragment {
-    private AdapterTenMember adapterTenMember;
+    private AdapterMemberShow adapterMemberSh;
     private List<String> list;
     private TextView txtNameGroup;
     private TextView txtBioGroup;
@@ -63,12 +63,12 @@ public class AboutGroupFragment extends Fragment {
 //            list.add(i+"");
 //        }
 //        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity(),LinearLayoutManager.HORIZONTAL,false);
-//        adapterTenMember = new AdapterTenMember(getActivity(), list);
+//        adapterMemberSh = new AdapterMemberShow(getActivity(), list);
 //
 //        rcvTenMember.setLayoutManager(layoutManager);
-//        rcvTenMember.setAdapter(adapterTenMember);
+//        rcvTenMember.setAdapter(adapterMemberSh);
 //        rcvTenMember.setNestedScrollingEnabled(false);
-//        adapterTenMember.notifyDataSetChanged();
+//        adapterMemberSh.notifyDataSetChanged();
         return view;
     }
 

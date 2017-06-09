@@ -48,6 +48,7 @@ import org.json.JSONObject;
 
 import java.io.File;
 
+import Entity.EntityUserProfile;
 import adapter.UserWallAdapter;
 
 public class UserProfileActivity extends AppCompatActivity {
@@ -158,6 +159,13 @@ public class UserProfileActivity extends AppCompatActivity {
                 });
             }
         });
+        userModel.realmUser(this, id, new UserModel.VolleyCallBackProfileUser() {
+            @Override
+            public void onSuccess(EntityUserProfile profile) {
+
+            }
+        });
+
 
     }
 

@@ -205,13 +205,15 @@ public class AdapterHome extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
                 holderText.txtNumberLike.setText(items.get(position).getNumberLike()+"");
                 if (items.get(position).getNumberComment() == 0)
                 {
-                    holderText.txtNumberComment.setVisibility(View.INVISIBLE);
+                    holderText.txtNumberComment.setVisibility(View.GONE);
+                    holderText.imgTotalCmt.setVisibility(View.GONE);
                 }else {
                     holderText.txtNumberComment.setText(items.get(position).getNumberComment()+"");
                 }
                 if (items.get(position).getNumberLike()==0)
                 {
-                    holderText.txtNumberLike.setVisibility(View.INVISIBLE);
+                    holderText.txtNumberLike.setVisibility(View.GONE);
+                    holderText.imgTotalLike.setVisibility(View.GONE);
                 }else {
                     holderText.txtNumberLike.setText(items.get(position).getNumberLike()+"");
                 }
@@ -402,13 +404,15 @@ public class AdapterHome extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
                 if (items.get(position).getNumberComment() == 0)
                 {
-                    holderPhoto.txtNumberComment.setVisibility(View.INVISIBLE);
+                    holderPhoto.txtNumberComment.setVisibility(View.GONE);
+                    holderPhoto.imgTotalCmt.setVisibility(View.GONE);
                 }else {
                     holderPhoto.txtNumberComment.setText(items.get(position).getNumberComment()+"");
                 }
                 if (items.get(position).getNumberLike()==0)
                 {
-                    holderPhoto.txtNumberLike.setVisibility(View.INVISIBLE);
+                    holderPhoto.txtNumberLike.setVisibility(View.GONE);
+                    holderPhoto.imgTotalLike.setVisibility(View.GONE);
                 }else {
                     holderPhoto.txtNumberLike.setText(items.get(position).getNumberLike()+"");
                 }
@@ -674,6 +678,9 @@ public class AdapterHome extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
         private CircleImageView imgAvatar;
         private TextView txtSymbol;
         private TextView txtNameGroup;
+        private ImageView imgTotalLike;
+        private ImageView imgTotalCmt;
+
         Button btnComment;
         public ViewHolderText(View itemView) {
             super(itemView);
@@ -688,6 +695,8 @@ public class AdapterHome extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
             imgAvatar = (CircleImageView) itemView.findViewById(R.id.imgAvatar);
             txtSymbol = (TextView) itemView.findViewById(R.id.txtSymbol);
             txtNameGroup = (TextView) itemView.findViewById(R.id.txtNameGroup);
+            imgTotalLike = (ImageView) itemView.findViewById(R.id.imgTotalLike);
+            imgTotalCmt = (ImageView) itemView.findViewById(R.id.imgTotalCmt);
 
         }
     }
@@ -705,9 +714,12 @@ public class AdapterHome extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
         private CircleImageView imgAvatar;
         private TextView txtSymbol;
         private TextView txtNameGroup;
+        private ImageView imgTotalCmt;
+        private ImageView imgTotalLike;
 
         public ViewHolderPhoto(View itemView) {
             super(itemView);
+            imgTotalCmt = (ImageView) itemView.findViewById(R.id.imgTotalCmt);
             txtFullNameFeed = (TextView) itemView.findViewById(R.id.txtFullNameFeed);
             txtTimePostStatus = (TextView) itemView.findViewById(R.id.txtTimePostStatus);
             txtContentStatus = (TextView) itemView.findViewById(R.id.txtContentStatus);
@@ -720,6 +732,7 @@ public class AdapterHome extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
             imgAvatar = (CircleImageView) itemView.findViewById(R.id.imgAvatar);
             txtSymbol = (TextView) itemView.findViewById(R.id.txtSymbol);
             txtNameGroup = (TextView) itemView.findViewById(R.id.txtNameGroup);
+            imgTotalLike = (ImageView) itemView.findViewById(R.id.imgTotalLike);
 
         }
     }

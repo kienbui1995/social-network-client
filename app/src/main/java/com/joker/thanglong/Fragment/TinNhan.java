@@ -25,6 +25,8 @@ import com.joker.thanglong.Model.UserModel;
 import com.joker.thanglong.R;
 import com.joker.thanglong.Ultil.VolleyHelper;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -85,47 +87,22 @@ public class TinNhan extends Fragment{
             protected void populateView(final View v, final EntityRoomChat model, int position) {
                 ((TextView)v.findViewById(R.id.txtLastMessage)).setText(model.getLastMessage());
                 ((TextView)v.findViewById(R.id.txtTimeChat)).setText(convertTime(model.getTime()));
-                entityUserProfile = new EntityUserProfile();
+                final CircleImageView avatar = (CircleImageView) v.findViewById(R.id.imgAvatar);
                 if (model.getIdTo() == MainActivity.entityUserProfile.getuID())
                 {
                     UserModel.realmUser(getActivity(), model.getIdFrom(), new UserModel.VolleyCallBackProfileUser() {
                         @Override
                         public void onSuccess(EntityUserProfile profile) {
                             ((TextView)v.findViewById(R.id.txtNameChat)).setText(profile.getFull_name());
-                            Glide.with(getActivity()).load(profile.getAvatar()).centerCrop().
-                                    crossFade().into(((ImageView) v.findViewById(R.id.imgAvatar)));
+                            Glide.with(getActivity()).load(profile.getAvatar()).crossFade().centerCrop().into(avatar);
                         }
                     });
-
-
-//                    UserModel userModel = new UserModel(getActivity(),model.getIdFrom());
-//                    userModel.getProfile(new PostModel.VolleyCallBackJson() {
-//                        @Override
-//                        public void onSuccess(JSONObject jsonObject) throws JSONException {
-//                            try {
-//                                JSONObject infoUser = jsonObject;
-//                                entityUserProfile.setFull_name(infoUser.getString("full_name"));
-//                                entityUserProfile.setuID(infoUser.getString("id"));
-//                                entityUserProfile.setUserName(infoUser.getString("username"));
-//                                ((TextView)v.findViewById(R.id.txtNameChat)).setText(entityUserProfile.getFull_name());
-//                                Handler handler = new Handler();
-//                                handler.postDelayed(new Runnable() {
-//                                    @Override
-//                                    public void run() {
-////                                        ;
-//                                    }
-//                                },2000);
-//                                Log.d("getInfoUser",entityUserProfile.toString());
-//                            } catch (JSONException e) {
-//                                e.printStackTrace();
-//                            }
-//                        }
-//                    });
                 }else {
                     UserModel.realmUser(getActivity(), model.getIdTo(), new UserModel.VolleyCallBackProfileUser() {
                         @Override
                         public void onSuccess(EntityUserProfile profile) {
                             ((TextView)v.findViewById(R.id.txtNameChat)).setText(profile.getFull_name());
+                            Glide.with(getActivity()).load(profile.getAvatar()).crossFade().centerCrop().into(avatar);
                         }
                     });
 
@@ -140,7 +117,6 @@ public class TinNhan extends Fragment{
 //                                    .child(model.getName()).child("timeRead").setValue(1);
                             Intent intent = new Intent(getActivity(), ChatActivity.class);
                             intent.putExtra("uId",model.getIdFrom());
-                            Log.d("idRoom",model.getIdFrom()+ "  "+ entityUserProfile.getuID());
                             startActivity(intent);
                         }else {
 //                            mReference.child("user").child(ProfileInstance.getProfileInstance(getActivity()).getProfile().getuID())

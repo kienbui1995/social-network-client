@@ -21,21 +21,141 @@ public class EntityNotification {
         private String usename;
         private String fullName;
         private String avatar;
+
+        public Actor() {
+        }
+
+        public Actor(int id, String usename, String fullName, String avatar) {
+            this.id = id;
+            this.usename = usename;
+            this.fullName = fullName;
+            this.avatar = avatar;
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public void setId(int id) {
+            this.id = id;
+        }
+
+        public String getUsename() {
+            return usename;
+        }
+
+        public void setUsename(String usename) {
+            this.usename = usename;
+        }
+
+        public String getFullName() {
+            return fullName;
+        }
+
+        public void setFullName(String fullName) {
+            this.fullName = fullName;
+        }
+
+        public String getAvatar() {
+            return avatar;
+        }
+
+        public void setAvatar(String avatar) {
+            this.avatar = avatar;
+        }
     }
 
     public class Post {
         private int id;
         private String message;
         private String photo;
+
+        public Post(int id, String message, String photo) {
+            this.id = id;
+            this.message = message;
+            this.photo = photo;
+        }
+
+        public Post() {
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public void setId(int id) {
+            this.id = id;
+        }
+
+        public String getMessage() {
+            return message;
+        }
+
+        public void setMessage(String message) {
+            this.message = message;
+        }
+
+        public String getPhoto() {
+            return photo;
+        }
+
+        public void setPhoto(String photo) {
+            this.photo = photo;
+        }
     }
 
     public class Comment {
         private int id;
         private String message;
+
+        public Comment(int id, String message) {
+            this.id = id;
+            this.message = message;
+        }
+
+        public Comment() {
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public void setId(int id) {
+            this.id = id;
+        }
+
+        public String getMessage() {
+            return message;
+        }
+
+        public void setMessage(String message) {
+            this.message = message;
+        }
     }
     public class Mention {
         private int id;
         private String message;
+
+        public Mention(int id, String message) {
+            this.id = id;
+            this.message = message;
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public void setId(int id) {
+            this.id = id;
+        }
+
+        public String getMessage() {
+            return message;
+        }
+
+        public void setMessage(String message) {
+            this.message = message;
+        }
     }
 
     public EntityNotification(int id, Actor actor, int actionId, int totalAction

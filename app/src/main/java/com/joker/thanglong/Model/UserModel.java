@@ -79,7 +79,7 @@ public class UserModel {
                         EntityFollow item = new EntityFollow();
                         item.setId(jsonObject.getString("id"));
                         item.setUsername(jsonObject.getString("username"));
-                        item.setAvatar(jsonObject.getString("avatar"));
+                       if (jsonObject.has("avatar")) item.setAvatar(jsonObject.getString("avatar"));
                         item.setFull_name(jsonObject.getString("full_name"));
                         item.setIs_followed(jsonObject.getBoolean("is_followed"));
                         items.add(item);

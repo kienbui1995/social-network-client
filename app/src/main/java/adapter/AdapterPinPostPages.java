@@ -22,6 +22,7 @@ public class AdapterPinPostPages extends RecyclerView.Adapter<AdapterPinPostPage
         this.context = context;
         this.list=list;
     }
+
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);

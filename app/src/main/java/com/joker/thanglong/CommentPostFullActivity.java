@@ -42,9 +42,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import Entity.EntityComment;
+import Entity.EntityListLike;
 import Entity.EntityStatus;
 import Entity.EntityUserProfile;
 import adapter.AdapterComment;
+import adapter.AdapterMemberShow;
 
 public class CommentPostFullActivity extends AppCompatActivity implements QueryListener, SuggestionsListener {
     private TextView txtFullName;
@@ -74,14 +76,17 @@ public class CommentPostFullActivity extends AppCompatActivity implements QueryL
     private UsersAdapter usersAdapter;
     private MentionsLoaderUtils mentionsLoaderUtils;
     private RecyclerView mentionsList;
-    Handler handler;
+    private Handler handler;
     private int type;
+    private RecyclerView rcvlistLike;
+    private AdapterMemberShow adapterMemberShow;
+    private ArrayList<EntityListLike> listMember;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_comment_post_full);
         addControl();
-//        initMention();
+        initMention();
         setupToolbar();
         Intent intent = getIntent();
         idPost = intent.getIntExtra("idPost",1);
@@ -90,7 +95,23 @@ public class CommentPostFullActivity extends AppCompatActivity implements QueryL
         getPostContent();
         initMention();
         setupMentionsList();
+        initListLike();
+    }
 
+    private void initListLike() {
+        listMember = new ArrayList<>();
+        postModel.getListLike(new PostModel.VolleyCallbackListLike() {
+            @Override
+            public void onSuccess(ArrayList<EntityListLike> entityListLikes) {
+                listMember = entityListLikes;
+                RecyclerView.LayoutManager layoutManager1 = new LinearLayoutManager(getApplicationContext(),LinearLayoutManager.HORIZONTAL,false);
+                adapterMemberShow = new AdapterMemberShow(getApplicationContext(),listMember);
+                rcvlistLike.setLayoutManager(layoutManager1);
+                rcvlistLike.setAdapter(adapterComment);
+                rcvlistLike.setHasFixedSize(true);
+                adapterMemberShow.notifyDataSetChanged();
+            }
+        });
     }
 
     private void setupMentionsList() {
@@ -254,6 +275,7 @@ public class CommentPostFullActivity extends AppCompatActivity implements QueryL
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         nsvPost = (NestedScrollView) findViewById(R.id.nsvPost);
         mentionsList = (RecyclerView) findViewById(R.id.mentions_list);
+        rcvlistLike = (RecyclerView) findViewById(R.id.rcvlistLike);
     }
 
     @Override

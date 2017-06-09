@@ -23,9 +23,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
                 <de.hdodenhof.circleimageview.CircleImageView
+                        android:src="@drawable/avatar1"
                         android:layout_width="40dp"
                         android:id="@+id/imgAvatar"
-                        android:layout_height="40dp"/>
+                        android:layout_height="47dp"/>
                 <LinearLayout
                         android:layout_weight="1"
                         android:orientation="vertical"
@@ -42,8 +43,8 @@
                                 android:textStyle="bold"
                                 android:paddingTop="5dp"
                                 android:paddingLeft="10dp"
-                                android:paddingBottom="3dp"
-                                android:text=""
+                                android:layout_marginBottom="5dp"
+                                android:text="Lê Hoài Nam"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"/>
                         <TextView
@@ -65,13 +66,56 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"/>
                     </LinearLayout>
-                    <TextView
-                            android:textSize="12sp"
-                            android:id="@+id/txtTimePostStatus"
+                    <LinearLayout
                             android:paddingLeft="10dp"
-                            android:text=""
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"/>
+                            android:orientation="horizontal"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+                        <ImageView
+                                android:id="@+id/imgTotalLike"
+                                android:layout_gravity="center_vertical"
+                                android:src="@drawable/ic_heart_16"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"/>
+                        <TextView
+                                android:text="96"
+                                android:textSize="12sp"
+                                android:layout_gravity="center_vertical"
+                                android:layout_marginLeft="5dp"
+                                android:layout_marginRight="15dp"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/txtNumberLike"/>
+                        <ImageView
+                                android:id="@+id/imgTotalCmt"
+                                android:layout_gravity="center_vertical"
+                                android:src="@drawable/ic_comment_16"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"/>
+                        <TextView
+                                android:text="20"
+                                android:textSize="12sp"
+                                android:layout_gravity="center_vertical"
+                                android:layout_marginLeft="5dp"
+                                android:layout_marginRight="14dp"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/txtNumberComment"/>
+
+                        <ImageView
+                                android:layout_gravity="center_horizontal|center_vertical"
+                                android:src="@drawable/ic_clock"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"/>
+                        <TextView
+                                android:paddingLeft="4dp"
+                                android:textSize="12sp"
+                                android:id="@+id/txtTimePostStatus"
+                                android:text="Hôm qua"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"/>
+
+                    </LinearLayout>
                 </LinearLayout>
                 <LinearLayout
                         android:layout_width="wrap_content"
@@ -130,31 +174,14 @@
                         android:layout_height="30dp"
                         />
 
-                <TextView
-
-                        android:layout_gravity="center_vertical"
-                        android:textColor="@color/bgToolbar"
-                        android:layout_weight="9"
-                        android:layout_marginLeft="10dp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/txtNumberLike"/>
-                <TextView
-                        android:layout_gravity="center_vertical"
-                        android:textColor="@color/bgToolbar"
-                        android:layout_weight="1"
-                        android:layout_marginLeft="10dp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/txtNumberComment"/>
-
-
-
+                <View
+                    android:layout_weight="0.1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
                 <Button
                         android:layout_marginBottom="3dp"
                         android:textSize="13sp"
                         android:id="@+id/btnComment"
-                        android:layout_weight="0.1"
                         android:background="@android:color/transparent"
                         android:textColor="#e3464e4d"
                         android:text="Bình luận"

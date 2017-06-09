@@ -388,6 +388,7 @@ public class PostModel {
                             EntityListLike entityListLike = new EntityListLike();
                             entityListLike.setFull_name(jsonObject.getString("full_name"));
                             entityListLike.setUsername(jsonObject.getString("username"));
+                           if (jsonObject.has("avatar")) entityListLike.setAvatar(jsonObject.getString("avatar"));
                            if (jsonObject.has("is_followed"))entityListLike.setFollow(jsonObject.getBoolean("is_followed"));
                             entityListLike.setId(jsonObject.getInt("id"));
                             itemsLikeList.add(entityListLike);

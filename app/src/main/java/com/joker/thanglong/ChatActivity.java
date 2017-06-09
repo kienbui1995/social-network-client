@@ -6,9 +6,13 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.UploadTask;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -21,14 +25,20 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.joker.thanglong.Model.ChatItem;
+import com.joker.thanglong.Model.UserModel;
+import com.joker.thanglong.Ultil.DialogUtil;
+import com.joker.thanglong.Ultil.FirebaseHelper;
 import com.joker.thanglong.Ultil.ProfileInstance;
+import com.joker.thanglong.Ultil.SystemHelper;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -40,6 +50,7 @@ import java.util.TimeZone;
 
 import Entity.EntityConversation;
 import Entity.EntityUserProfile;
+import gun0912.tedbottompicker.TedBottomPicker;
 import hani.momanii.supernova_emoji_library.Actions.EmojIconActions;
 import hani.momanii.supernova_emoji_library.Helper.EmojiconEditText;
 import hani.momanii.supernova_emoji_library.Helper.EmojiconTextView;
@@ -48,6 +59,8 @@ import io.realm.Realm;
 public class ChatActivity extends AppCompatActivity {
     public static final int ME = 1;
     public static final int FRIENDS = 2;
+    public static final int PHOTO_FRIENDS = 4;
+    public static final int PHOTO_ME = 3;
     private EmojIconActions emojIcon;
     private ImageView emojiButton;
     private LinearLayout activityChat;
@@ -60,21 +73,35 @@ public class ChatActivity extends AppCompatActivity {
     private LinearLayoutManager linearLayoutManager;
     private ArrayList<String> chatItems;
     public ChatItem chatItem;
+    private ImageView btnPhoto;
+    private String photo;
+    int posMe;
     int myId;
     int uId;
     String idRoom;
     Realm realm;
     EntityUserProfile userProfile;
+    int check =0;
+    FirebaseHelper firebaseHelper;
+    UserModel userModel;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
-
+        realm.init(this);
+        realm = Realm.getDefaultInstance();
         mdatabase = FirebaseDatabase.getInstance().getReference();
+        firebaseHelper = new FirebaseHelper(this);
+        userModel = new UserModel(this);
         Intent intent = getIntent();
         uId = intent.getIntExtra("uId",1) ;
-        realm = Realm.getDefaultInstance();
-        userProfile = realm.where(EntityUserProfile.class).equalTo("uID",uId).findFirst();
+        userModel.realmUser(this, uId, new UserModel.VolleyCallBackProfileUser() {
+            @Override
+            public void onSuccess(EntityUserProfile profile) {
+                userProfile=profile;
+            }
+        });
         myId = ProfileInstance.getProfileInstance(this).getProfile().getuID();
         mdatabase.child("conversation").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -102,15 +129,52 @@ public class ChatActivity extends AppCompatActivity {
 
             }
         });
+        RecieveIntent();
         addControll();
         setupEmoji();
         setupTabs();
-
+        addPhoto();
+        addChat();
 //        addEvent();
+
+    }
+
+    private void RecieveIntent() {
+
+    }
+
+    private void addChat() {
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                submitChat();
+                submitChat("");
+            }
+        });
+    }
+
+    private void addPhoto() {
+        btnPhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                TedBottomPicker bottomPicker = new TedBottomPicker.Builder(getApplicationContext()).setOnImageSelectedListener(new TedBottomPicker.OnImageSelectedListener() {
+                    @Override
+                    public void onImageSelected(Uri uri) {
+                        Log.d("uri",uri.toString());
+                        try {
+                            Bitmap bmp = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
+                            firebaseHelper.UploadFile("/images/chat/"+SystemHelper.getTimeStamp(), bmp, new FirebaseHelper.FirebaseCallback() {
+                                @Override
+                                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                    submitChat(taskSnapshot.getDownloadUrl().toString());
+                                    Toast.makeText(ChatActivity.this, "Tải ảnh lên thành công", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }).create();
+                bottomPicker.show(getSupportFragmentManager());
             }
         });
     }
@@ -133,26 +197,66 @@ public class ChatActivity extends AppCompatActivity {
             @Override
             public int getItemViewType(int position) {
                 ChatItem chatItem = getItem(position);
-                if (chatItem.getId() == myId){
+                if (chatItem.getId() == myId && chatItem.getPhoto().isEmpty()){
                     return ME;
-                }else {
+                }else if (chatItem.getId() == myId && chatItem.getPhoto() != ""){
+                    return PHOTO_ME;
+                }else if (chatItem.getId() != myId && chatItem.getPhoto().isEmpty()){
                     return FRIENDS;
+                }else if (chatItem.getId() != myId && chatItem.getPhoto() != ""){
+                    return PHOTO_FRIENDS;
                 }
+                return 0;
             }
 
             @Override
-            protected void populateViewHolder(RecyclerView.ViewHolder viewHolder, ChatItem model, int position) {
-                if (model.getId() == myId){
-                    ViewHolderMe viewHolderMe = (ViewHolderMe)viewHolder;
-                    viewHolderMe.txtMessageContent.setText(model.getContent());
-                    viewHolderMe.txtDate.setText(convertTime((Long) model.getTimeStamp()));
-
-                }else {
+            protected void populateViewHolder(RecyclerView.ViewHolder viewHolder, final ChatItem model, int position) {
+                Log.d("model",model.toString());
+                if (model.getId() == myId && model.getPhoto().isEmpty()){
+                    Log.d("me","me");
+                        ViewHolderMe viewHolderMe = (ViewHolderMe)viewHolder;
+                        viewHolderMe.txtMessageContent.setText(model.getContent());
+                        viewHolderMe.txtDate.setText(convertTime((Long) model.getTimeStamp()));
+                    return;
+                }else if (model.getId() == myId && model.getPhoto() != "")
+                {
+                    Log.d("me","photo");
+                    ViewHolderPhotoMe viewHolderPhotoMe = (ViewHolderPhotoMe) viewHolder;
+                    viewHolderPhotoMe.txtDate.setText(convertTime((Long) model.getTimeStamp()));
+                    Glide.with(getApplicationContext()).load(model.getPhoto())
+                            .crossFade().centerCrop().into(viewHolderPhotoMe.imgContentChat);
+                    viewHolderPhotoMe.imgContentChat.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            DialogUtil.showImageEnlarge(ChatActivity.this,model.getPhoto());
+                        }
+                    });
+                    return;
+                } else if (model.getId() != myId && model.getPhoto().isEmpty()){
+                    Log.d("fr","fr");
                     ViewHolderFriend viewHolderFriend = (ViewHolderFriend) viewHolder;
                     viewHolderFriend.txtMessageContent.setText(model.getContent());
                     viewHolderFriend.txtDate.setText(convertTime((Long) model.getTimeStamp()));
                     Glide.with(getApplicationContext()).load(userProfile.getAvatar())
-                            .crossFade().centerCrop().into(viewHolderFriend.imgAvartarChat);
+                            .crossFade().centerCrop().into(viewHolderFriend.imgAvatarChat);
+                    return;
+                }else if (model.getId() != myId && model.getPhoto() != "")
+                {
+                    Log.d("fr","photo");
+                    ViewHolderPhotoFriend viewHolderPhotoFriend = (ViewHolderPhotoFriend) viewHolder;
+                    viewHolderPhotoFriend.txtDate.setText(convertTime((Long) model.getTimeStamp()));
+                    Glide.with(getApplicationContext()).load(userProfile.getAvatar())
+                            .crossFade().centerCrop().into(viewHolderPhotoFriend.imgAvartarChat);
+                    Glide.with(getApplicationContext()).load(model.getPhoto())
+                            .crossFade().centerCrop().into(viewHolderPhotoFriend.imgContentChat);
+                    viewHolderPhotoFriend.imgContentChat.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            DialogUtil.showImageEnlarge(ChatActivity.this,model.getPhoto());
+                        }
+                    });
+
+                    return;
                 }
             }
 
@@ -167,6 +271,14 @@ public class ChatActivity extends AppCompatActivity {
                         View userType2 = LayoutInflater.from(parent.getContext())
                                 .inflate(R.layout.item_chat_friend, parent, false);
                         return new ViewHolderFriend(userType2);
+                    case PHOTO_ME:
+                        View userType3 = LayoutInflater.from(parent.getContext())
+                                .inflate(R.layout.item_chat_image_me, parent, false);
+                        return new ViewHolderPhotoMe(userType3);
+                    case PHOTO_FRIENDS:
+                        View userType4 = LayoutInflater.from(parent.getContext())
+                                .inflate(R.layout.item_chat_image_friend, parent, false);
+                        return new ViewHolderPhotoFriend(userType4);
                 }
                 return super.onCreateViewHolder(parent, viewType);
             }
@@ -197,20 +309,16 @@ public class ChatActivity extends AppCompatActivity {
         rcvMessage.setAdapter(mdapter);
     }
 
-//    private void addEvent() {
-//        submitChat();
-//    }
 
-    private void submitChat() {
-
+    private void submitChat(String photo) {
         String content = edtNewMessage.getText().toString().trim();
-        if (TextUtils.isEmpty(content))
+        if (TextUtils.isEmpty(content) && photo == null)
         {
 //            edtNewMessage.setError("Mời bạn điền nội dung chat");
             return;
         }
 
-        ChatItem chatItem = new ChatItem(myId, content);
+        ChatItem chatItem = new ChatItem(myId, content,photo);
         Map<String, Object> chatValues = chatItem.toMap();
         HashMap<String, Object> childUpdate = new HashMap<>();
         EntityConversation entityConversation = new EntityConversation(idRoom,myId,uId,content, 0);
@@ -232,7 +340,7 @@ public class ChatActivity extends AppCompatActivity {
         rcvMessage = (RecyclerView) findViewById(R.id.rcvMessages);
         edtNewMessage = (EmojiconEditText) findViewById(R.id.edtNewMessage);
         submitButton = (ImageView) findViewById(R.id.submit_button);
-
+        btnPhoto = (ImageView) findViewById(R.id.btnPhoto);
     }
     private void setupTabs() {
         toolbarNotification.setTitle(userProfile.getFull_name());
@@ -283,14 +391,40 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private class ViewHolderFriend extends RecyclerView.ViewHolder {
-        private CircleImageView imgAvartarChat;
+        private CircleImageView imgAvatarChat;
         private EmojiconTextView txtMessageContent;
         private TextView txtDate;
 
         public ViewHolderFriend(View itemView) {
             super(itemView);
-            imgAvartarChat = (CircleImageView) itemView.findViewById(R.id.imgAvartarChat);
+            imgAvatarChat = (CircleImageView) itemView.findViewById(R.id.imgAvartarChat);
             txtMessageContent = (EmojiconTextView) itemView.findViewById(R.id.txtMessageContent);
+            txtDate = (TextView) itemView.findViewById(R.id.txtDate);
+
+        }
+    }
+
+    private class ViewHolderPhotoMe extends RecyclerView.ViewHolder {
+        private ImageView imgContentChat;
+        private TextView txtDate;
+
+        public ViewHolderPhotoMe(View itemView) {
+            super(itemView);
+            imgContentChat = (ImageView) itemView.findViewById(R.id.imgContentChat);
+            txtDate = (TextView) itemView.findViewById(R.id.txtDate);
+
+        }
+    }
+
+    private class ViewHolderPhotoFriend extends RecyclerView.ViewHolder {
+        private CircleImageView imgAvartarChat;
+        private ImageView imgContentChat;
+        private TextView txtDate;
+
+        public ViewHolderPhotoFriend(View itemView) {
+            super(itemView);
+            imgAvartarChat = (CircleImageView) itemView.findViewById(R.id.imgAvatar);
+            imgContentChat = (ImageView) itemView.findViewById(R.id.imgContentChat);
             txtDate = (TextView) itemView.findViewById(R.id.txtDate);
 
         }

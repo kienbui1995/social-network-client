@@ -11,8 +11,9 @@
             android:textColor="@android:color/black"
             android:padding="13dp"
             android:background="@drawable/bg_item_chat_round_me"
-            android:text="U, Lau khong gap"
+            android:text=""
             android:layout_width="wrap_content"
+            android:maxWidth="220dp"
             android:layout_height="wrap_content"
             android:id="@+id/txtMessageContent"
             android:layout_marginRight="16dp"
@@ -20,7 +21,7 @@
             android:layout_marginTop="4dp"
             app:layout_constraintTop_toBottomOf="@+id/txtDate"
             app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_marginBottom="5dp"
+            android:layout_marginBottom="1dp"
             app:layout_constraintVertical_bias="0.0"/>
 
     <TextView

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+             android:id="@+id/frRoot"
+              android:layout_height="match_parent">
+    <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/imgAvatar"
+                android:src="@drawable/demo"
+                android:layout_width="40dp"
+                android:layout_height="40dp"/>
+        <TextView
+                android:layout_toRightOf="@id/imgAvatar"
+                android:text="10 Jun 2017 - 1:18 pm"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/txtDate"
+                android:textSize="10sp"
+                android:layout_marginLeft="10dp"
+                android:paddingBottom="5dp"
+                android:layout_marginTop="5dp"/>
+
+        <ImageView
+                android:scaleType="centerCrop"
+                android:layout_marginLeft="40dp"
+                android:layout_below="@+id/imgAvatar"
+                android:layout_alignParentLeft="true"
+                android:id="@+id/imgContentChat"
+                android:src="@drawable/fbshare"
+                android:layout_width="200dp"
+                android:layout_height="200dp"/>
+    </RelativeLayout>
+    <ImageView
+            android:visibility="gone"
+            android:layout_margin="20dp"
+            android:scaleType="centerCrop"
+            android:id="@+id/imgEnlargePhoto"
+            android:src="@drawable/fbshare"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+</FrameLayout>

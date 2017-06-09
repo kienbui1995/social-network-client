@@ -18,7 +18,7 @@
             app:layout_constraintTop_toTopOf="parent"
             android:layout_marginTop="20dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_marginBottom="8dp"
+            android:layout_marginBottom="1dp"
             app:layout_constraintVertical_bias="0.0"/>
 
     <hani.momanii.supernova_emoji_library.Helper.EmojiconTextView
@@ -34,11 +34,12 @@
             android:id="@+id/txtMessageContent"
             app:layout_constraintDimensionRatio="w,1:1"
             app:layout_constraintLeft_toRightOf="@+id/imgAvartarChat"
-            android:layout_marginLeft="8dp"
+            android:layout_marginLeft="10dp"
             android:layout_marginTop="4dp"
             app:layout_constraintTop_toBottomOf="@+id/txtDate"
             app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_marginBottom="8dp"/>
+            android:layout_marginBottom="1dp"
+            app:layout_constraintVertical_bias="0.0"/>
 
     <TextView
             android:text="10 Jun 2017 - 1:18 pm"

@@ -19,9 +19,10 @@ import android.widget.TextView;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.Theme;
 import com.bumptech.glide.Glide;
+import com.joker.thanglong.CustomView.TouchImageView;
 import com.joker.thanglong.GroupActivity;
 import com.joker.thanglong.Model.GroupModel;
-    import com.joker.thanglong.Model.PostModel;
+import com.joker.thanglong.Model.PostModel;
 import com.joker.thanglong.R;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -61,6 +62,18 @@ public class DialogUtil {
             }
         },1000);
     }
+
+    public static void showImageEnlarge(Activity context, String url){
+        final Dialog settingsDialog = new Dialog(context);
+        settingsDialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+        settingsDialog.getWindow().setWindowAnimations(R.style.DialogAnimation);
+        View view = context.getLayoutInflater().inflate(R.layout.dialog_image,null);
+        TouchImageView photo = (TouchImageView) view.findViewById(R.id.imgLarge);
+        Glide.with(context).load(url).crossFade().into(photo);
+        settingsDialog.setContentView(view);
+        settingsDialog.show();
+    }
+
     public static void showInfoGroup(final Activity context, final EntityGroup item){
         final Dialog settingsDialog = new Dialog(context);
         settingsDialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);

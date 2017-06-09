@@ -1,63 +1,58 @@
 package com.joker.thanglong;
 
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ListView;
 
-import com.joker.thanglong.CustomView.CircularCounter;
+import com.joker.thanglong.Model.NotificationModel;
 
 import java.util.ArrayList;
 
-import adapter.AdapterListViewNotification;
+import Entity.EntityNotification;
+import adapter.AdapterNotification;
 
 public class NotificationActivity extends AppCompatActivity {
     Toolbar toolbar;
-    ListView lvNotifi;
-    ArrayList<String> dsNotification;
-    AdapterListViewNotification adapterListViewNotification;
-
-    private CircularCounter meter;
-    private String[] colors;
-    private Handler handler;
-    private Runnable r;
-
+    RecyclerView rcvListNotification;
+    ArrayList<EntityNotification> dsNotification;
+    AdapterNotification adapterNotification;
+    RecyclerView.LayoutManager layoutManager;
+    NotificationModel notificationModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notification);
-        meter = (CircularCounter) findViewById(R.id.counter);
-
-        handler = new Handler();
-        r = new Runnable(){
-            int currV = 0;
-            boolean go = true;
-            public void run(){
-                if(currV == 60 && go)
-                    go = false;
-                else if(currV == -60 && !go)
-                    go = true;
-
-                if(go)
-                    currV++;
-                else
-                    currV--;
-
-                meter.setValues(currV, currV*2, currV*3);
-                handler.postDelayed(this, 50);
-            }
-        };
-
         addControll();
+        addToolbar();
+        initData();
+    }
 
+    private void initData() {
+        notificationModel = new NotificationModel(this);
+        dsNotification = new ArrayList<>();
+        notificationModel.getNotification(new NotificationModel.VolleyCallBackNotification() {
+            @Override
+            public void onSuccess(ArrayList<EntityNotification> notifications) {
+                dsNotification = notifications;
+                adapterNotification = new AdapterNotification(getApplicationContext(),dsNotification);
+                layoutManager = new LinearLayoutManager(getApplicationContext(),LinearLayoutManager.VERTICAL,false);
+                rcvListNotification.setLayoutManager(layoutManager);
+                rcvListNotification.setAdapter(adapterNotification);
+                adapterNotification.notifyDataSetChanged();
+            }
+        });
+
+    }
+
+    private void addToolbar() {
         toolbar.setTitle("Thông báo");
         setSupportActionBar(toolbar);
-
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -68,31 +63,11 @@ public class NotificationActivity extends AppCompatActivity {
                 finish();
             }
         });
-
     }
 
     private void addControll() {
         toolbar = (Toolbar) findViewById(R.id.toolbarNotification);
-        lvNotifi = (ListView) findViewById(R.id.lvThongBao);
-        dsNotification = new ArrayList<>();
-        dsNotification.add("1");
-        dsNotification.add("1");
-        dsNotification.add("1");
-        dsNotification.add("1");
-        dsNotification.add("1");
-        dsNotification.add("1");
-        dsNotification.add("1");
-        dsNotification.add("1");
-        dsNotification.add("1");
-        dsNotification.add("1");
-        dsNotification.add("1");
-        dsNotification.add("1");
-        dsNotification.add("1");
-        dsNotification.add("1");
-        dsNotification.add("1");
-        dsNotification.add("1");
-        adapterListViewNotification = new AdapterListViewNotification(this,R.layout.custom_notification,dsNotification);
-        lvNotifi.setAdapter(adapterListViewNotification);
+        rcvListNotification = (RecyclerView) findViewById(R.id.rcvListNotication);
 
     }
 

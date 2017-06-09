@@ -12,6 +12,7 @@ import android.media.RingtoneManager;
 import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
+import android.util.Log;
 
 import com.joker.thanglong.CommentPostFullActivity;
 import com.joker.thanglong.R;
@@ -35,14 +36,19 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     public static final int LIKE = 1;
     public static final int COMMENT = 2;
     public static final int MENTION = 4;
+    JSONObject comment;
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
         String token = PreferenceManager.getDefaultSharedPreferences(this).getString("token","");
         Map<String, String> notication = remoteMessage.getData();
+        Log.d("notification",notication.toString());
         try {
             JSONObject actor = new JSONObject(notication.get("actor"));
             JSONObject post = new JSONObject(notication.get("last_post"));
+            if(notication.get("last_comment") != null) {
+                comment = new JSONObject(notication.get("last_comment"));
+            }
             switch (Integer.parseInt(notication.get("action"))){
                 case LIKE:
                     showNotification(post.getInt("id"),"Thông báo",actor.getString("full_name"),
@@ -50,6 +56,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                             post.getString("message"), Integer.parseInt(notication.get("total_action")));
                     break;
                 case COMMENT:
+                    showNotification(post.getInt("id"),"Thông báo",actor.getString("full_name"),
+                            actor.getString("avatar"),"bình luận bài viết của bạn",
+                            comment.getString("message"), Integer.parseInt(notication.get("total_action")));
                     break;
                 case MENTION:
                     break;
@@ -94,14 +103,14 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         /*build the notification here this is only supported for API 11. Since we've targeted API 11 there will be no problem on this*/
         NotificationCompat.Builder notify = new NotificationCompat.Builder(this)
                 .setContentTitle("Thang long")
-                .setContentText(Actor + and +" đã " + message + ": "+postContent)
                 .setAutoCancel(true)
                 .setSmallIcon(R.drawable.heart)
                 .setLargeIcon(bitmap)
                 .setVibrate(new long[]{500,500,500})
 //                .setOngoing(true)
+                .setStyle(new NotificationCompat.BigTextStyle().bigText(Actor + and +" đã " + message + ": "+postContent))
                 .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
-                .setTicker("Echo: your file is ready for download")
+                .setTicker(Actor + and +" đã " + message + ": "+postContent)
                 .setContentIntent(pIntent);
 
 

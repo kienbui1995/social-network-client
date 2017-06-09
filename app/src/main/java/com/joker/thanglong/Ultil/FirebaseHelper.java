@@ -75,7 +75,7 @@ public class FirebaseHelper {
 
     public void UploadFile(String fileName,Bitmap bmp,final FirebaseCallback callback){
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bmp.compress(Bitmap.CompressFormat.JPEG, 80, stream);
+        bmp.compress(Bitmap.CompressFormat.JPEG, 70, stream);
         byte[] data = stream.toByteArray();
         StorageReference filepath = mStorageReference.child(fileName);
         UploadTask uploadTask = filepath.putBytes(data);

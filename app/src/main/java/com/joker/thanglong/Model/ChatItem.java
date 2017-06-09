@@ -14,6 +14,8 @@ public class ChatItem {
     int id;
     private Object timeStamp;
     String content;
+    String photo;
+
 
     public int getId() {
         return id;
@@ -39,10 +41,11 @@ public class ChatItem {
         this.content = content;
     }
 
-    public ChatItem(int id, String content) {
+    public ChatItem(int id, String content,String photo) {
         this.id = id;
         this.timeStamp= ServerValue.TIMESTAMP;
         this.content = content;
+        this.photo = photo;
     }
 
     public ChatItem() {
@@ -50,8 +53,9 @@ public class ChatItem {
     public Map<String,Object> toMap(){
         HashMap<String,Object> result = new HashMap<>();
         result.put("id",id);
-        result.put("timeStamp",timeStamp);
         result.put("content",content);
+        result.put("photo",photo);
+        result.put("timeStamp",timeStamp);
         return result;
     }
 
@@ -64,11 +68,20 @@ public class ChatItem {
 //        }
 //    }
 
+
+    public String getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(String photo) {
+        this.photo = photo;
+    }
+
     @Override
     public String toString() {
         return "ChatItem{" +
                 "uID='" + id + '\'' +
-                ", timeStamp='" + timeStamp + '\'' +
+                ", timeStamp='" + photo + '\'' +
                 ", content='" + content + '\'' +
                 '}';
     }
