@@ -1,4 +1,4 @@
-package com.joker.thanglong.Fragment;
+package com.joker.thanglong;
 
 
 import android.os.Bundle;
@@ -7,15 +7,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.joker.thanglong.R;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class AboutPagesFragment extends Fragment {
+public class ManageUserFragment extends Fragment {
 
 
-    public AboutPagesFragment() {
+    public ManageUserFragment() {
         // Required empty public constructor
     }
 
@@ -24,7 +23,7 @@ public class AboutPagesFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_about, container, false);
+        return inflater.inflate(R.layout.fragment_manage_user, container, false);
     }
 
 }

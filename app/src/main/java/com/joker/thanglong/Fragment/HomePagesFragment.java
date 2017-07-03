@@ -1,7 +1,9 @@
 package com.joker.thanglong.Fragment;
 
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -10,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.joker.thanglong.CreateNotificationChannelActivity;
 import com.joker.thanglong.R;
 
 import java.util.ArrayList;
@@ -26,6 +29,8 @@ public class HomePagesFragment extends Fragment {
     private Button btnGhimTop;
     private RecyclerView rcvPostPage;
     List<String> listPinPost;
+    private FloatingActionButton fabCreateNotification;
+
     AdapterPinPostPages adapterPinPostPages;
 
 
@@ -39,7 +44,13 @@ public class HomePagesFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_home_pages, container, false);
-        rcvPinTopPage = (RecyclerView) view.findViewById(R.id.rcvPinTopPage);
+        addView(view);
+        fabCreateNotification.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getActivity(), CreateNotificationChannelActivity.class));
+            }
+        });
         listPinPost = new ArrayList<String>();
         for (int i = 0; i < 10; i++) {
             String ten = "Bai viet" + i;
@@ -54,6 +65,11 @@ public class HomePagesFragment extends Fragment {
         rcvPinTopPage.setNestedScrollingEnabled(false);
         adapterPinPostPages.notifyDataSetChanged();
         return view;
+    }
+
+    private void addView(View view) {
+        rcvPinTopPage = (RecyclerView) view.findViewById(R.id.rcvPinTopPage);
+        fabCreateNotification = (FloatingActionButton) view.findViewById(R.id.fabCreateNotification);
     }
 
 }

@@ -7,6 +7,7 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
+
     <uses-feature android:name="android.hardware.camera"/>
     <uses-feature android:name="android.hardware.camera.autofocus"/>
 
@@ -46,7 +47,7 @@
         <activity android:name=".SettingActivity"/>
         <activity android:name=".TrangChuDiemDanhActivity"/>
         <activity android:name=".GroupActivity"/>
-        <activity android:name=".PagesActivity">
+        <activity android:name=".ChannelActivity">
         </activity>
         <activity android:name=".ImagePostActivity">
         </activity>
@@ -73,13 +74,34 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT"/>
             </intent-filter>
         </service>
+
         <activity
                 android:name=".CommentPostFullActivity"
                 android:launchMode="singleTask">
         </activity>
         <activity android:name=".ManagerMemberGroupActivity">
         </activity>
-        <receiver android:process=":remote" android:name=".Alarm"></receiver>
+
+        <receiver
+                android:name=".Alarm"
+                android:process=":remote"/>
+
+        <activity android:name=".TimeTableActivity">
+        </activity>
+        <activity android:name=".TrackerActivity">
+        </activity>
+        <activity android:name=".TeacherActivity">
+        </activity>
+        <activity android:name=".LinkAccountActivity">
+        </activity>
+        <activity android:name=".StudentActivity">
+        </activity>
+        <activity android:name=".CreateGroupActivity">
+        </activity>
+        <activity android:name=".AdminActivity">
+        </activity>
+        <activity android:name=".CreateNotificationChannelActivity">
+        </activity>
     </application>
 
 </manifest>

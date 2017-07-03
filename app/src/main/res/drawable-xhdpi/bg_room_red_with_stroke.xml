@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@drawable/bg_item"  />
+    <item android:left="-1px" android:right="4dp" android:top="8dp" >
+        <shape xmlns:android="http://schemas.android.com/apk/res/android">
+            <solid android:color="#FFEBE8" />
+            <stroke
+                android:width="1px"
+                android:color="#E7E7E7" />
+        </shape>
+    </item>
+
+</layer-list>

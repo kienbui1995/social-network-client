@@ -78,13 +78,14 @@ public class ChatActivity extends AppCompatActivity {
     int posMe;
     int myId;
     int uId;
+
     String idRoom;
     Realm realm;
     EntityUserProfile userProfile;
     int check =0;
     FirebaseHelper firebaseHelper;
     UserModel userModel;
-
+    long time;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -110,15 +111,18 @@ public class ChatActivity extends AppCompatActivity {
                         && dataSnapshot.child(MainActivity.entityUserProfile.getuID()+"_"+uId).exists() == false)
                 {
                     idRoom = uId+"_"+MainActivity.entityUserProfile.getuID();
+//                    firebaseHelper.setOnline(1,myId,idRoom);
                     setupChat();
                     Log.d("idRoom",idRoom.toString());
                 }else if (dataSnapshot.child(uId+"_"+MainActivity.entityUserProfile.getuID()).exists() == false
                         && dataSnapshot.child(MainActivity.entityUserProfile.getuID()+"_"+uId).exists() ==false){
                     idRoom = uId+"_"+MainActivity.entityUserProfile.getuID();
+//                    firebaseHelper.setOnline(1,myId,idRoom);
                     setupChat();
                     Log.d("idRoom",idRoom.toString());
                 }else {
                     idRoom = MainActivity.entityUserProfile.getuID()+"_"+uId;
+//                    firebaseHelper.setOnline(1,myId,idRoom);
                     setupChat();
                     Log.d("idRoom",idRoom.toString());
                 }
@@ -429,4 +433,34 @@ public class ChatActivity extends AppCompatActivity {
 
         }
     }
+
+//    @Override
+//    protected void onResume() {
+//        super.onResume();
+//        Timer timer = new Timer();
+//        timer.schedule(new TimerTask() {
+//            @Override
+//            public void run() {
+//                firebaseHelper.setOnline(1,myId,idRoom);
+//            }
+//        },2000);
+//    }
+//
+//    @Override
+//    protected void onPause() {
+//        super.onPause();
+//        firebaseHelper.setOnline(0,myId,idRoom);
+//    }
+//
+//    @Override
+//    protected void onStop() {
+//        super.onStop();
+//        firebaseHelper.setOnline(0,myId,idRoom);
+//    }
+//
+//    @Override
+//    protected void onDestroy() {
+//        super.onDestroy();
+//        firebaseHelper.setOnline(0,myId,idRoom);
+//    }
 }

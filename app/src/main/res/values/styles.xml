@@ -9,6 +9,7 @@
         <!--<item name="android:textAppearanceSmallPopupMenu">@android:color/black</item>-->
         <item name="android:textAppearanceLargePopupMenu">@android:color/black</item>
         <item name="android:textSize">15sp</item>
+        <item name="android:textAppearanceListItemSmall">@style/mySpinnerItemStyle</item>
         <item name="android:textColorPrimary">@color/colorWhite</item>
     </style>
 
@@ -72,6 +73,11 @@
     <style name="DialogAnimation">
         <item name="android:windowEnterAnimation">@anim/dialog_enter</item>
         <item name="android:windowExitAnimation">@anim/dialog_exit</item>
+    </style>
+
+    <style name="mySpinnerItemStyle" parent="TextAppearance.AppCompat.Subhead">
+        <item name="android:textColor">@android:color/holo_red_dark</item>
+
     </style>
 
 </resources>

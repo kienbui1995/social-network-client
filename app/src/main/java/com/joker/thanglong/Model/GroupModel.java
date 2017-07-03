@@ -184,6 +184,8 @@ public class GroupModel {
         },context);
     }
 
+
+
     public void requestAction(int id,int type,int role,final PostModel.VolleyCallBackCheck callback){
         EntityMembership entityMembership = new EntityMembership();
         entityMembership.setStatus(type);

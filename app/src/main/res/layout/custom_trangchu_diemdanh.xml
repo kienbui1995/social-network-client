@@ -15,7 +15,7 @@
     <TextView
             android:background="@drawable/bg_sinhvien"
             android:gravity="center"
-            android:text="Tuần 4 - Lớp TTC1.1 (40)"
+            android:text="Điểm danh ngày 22/6/2017"
             android:layout_width="0dp"
             android:layout_height="55dp"
             android:id="@+id/txtInfoDiemDanh"
@@ -34,7 +34,7 @@
             app:layout_constraintTop_toBottomOf="@+id/toolbarA"/>
 
     <TextView
-            android:text="Bạn đã điểm danh: "
+            android:text="Đã chọn "
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
         android:id="@+id/textView"

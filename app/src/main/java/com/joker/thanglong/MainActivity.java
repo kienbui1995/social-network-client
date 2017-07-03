@@ -1,5 +1,6 @@
 package com.joker.thanglong;
 
+import com.google.firebase.auth.PhoneAuthProvider;
 import com.google.firebase.database.DatabaseReference;
 
 import android.app.Activity;
@@ -37,6 +38,7 @@ import android.widget.TextView;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.joker.thanglong.Fragment.ChannelFragment;
 import com.joker.thanglong.Fragment.Group.GroupFragment;
 import com.joker.thanglong.Model.UserModel;
 import com.joker.thanglong.Ultil.DeviceUltil;
@@ -89,6 +91,7 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
     File destination;
     Activity activity;
     UserModel userModel;
+    private PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -128,14 +131,12 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
 //        tabHost.setupWithViewPager(viewPager);
 
 
-
-
         int[] mSelectors = new int[] { R.drawable.tab1, R.drawable.tab2, R.drawable.tab3, R.drawable.tab4 };
         setupStrip(tabButtom.getTabStyleDelegate(), STYLE_ROUND);
         viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(),mSelectors);
         viewPager.setAdapter(viewPagerAdapter);
         tabButtom.bindViewPager(viewPager);
-        tabButtom.setPromptNum(1,23);
+        tabButtom.setPromptNum(1,5);
         tabButtom.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -182,6 +183,8 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
                 int id = item.getItemId();
                 switch (id){
                     case R.id.itHome:
+                        startActivity(new Intent(getApplicationContext(),TeacherActivity.class));
+                        break;
 //                        manager = getSupportFragmentManager();
 //                        List<Fragment> fragments = manager.getFragments();
 //                        if (fragments != null) {
@@ -192,10 +195,13 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
 //                            Toast.makeText(MainActivity.this, "Khong co fragment", Toast.LENGTH_SHORT).show();
 //                        }
                     case R.id.itProfile:
-//                                                startActivity(new Intent(getApplicationContext(),UserProfileActivity.class));
+                        startActivity(new Intent(getApplicationContext(),LinkAccountActivity.class));
+                        break;
                     case R.id.itFollow:
-                        startActivity(new Intent(getApplicationContext(),FollowActivity.class));
+                        startActivity(new Intent(getApplicationContext(),StudentActivity.class));
+                        break;
                     case R.id.itLearing:
+                        startActivity(new Intent(getApplicationContext(),TimeTableActivity.class));
                         break;
                     case R.id.itGroup:
                         //Framgment
@@ -207,16 +213,22 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
                         transaction.commit();
                         drawerLayout.closeDrawers();
 //                        startActivity(new Intent(getApplicationContext(),GroupActivity.class));
-
                         break;
                     case R.id.itPage:
-                        startActivity(new Intent(getApplicationContext(),PagesActivity.class));
+                        manager = getSupportFragmentManager();
+                        transaction = manager.beginTransaction();
+                        ChannelFragment channelFragment = new ChannelFragment();
+                        transaction.add(R.id.frContentHome,channelFragment,"CHANNEL");
+                        transaction.addToBackStack(null);
+                        transaction.commit();
+                        drawerLayout.closeDrawers();
+//                        startActivity(new Intent(getApplicationContext(),GroupActivity.class));
                         break;
                     case R.id.itDiemDanh:
                         startActivity(new Intent(getApplicationContext(),TrangChuDiemDanhActivity.class));
                         break;
                     case R.id.itSetting:
-                        startActivity(new Intent(getApplicationContext(),SettingActivity.class));
+                        startActivity(new Intent(getApplicationContext(),AdminActivity.class));
                         break;
 
                 }
@@ -252,7 +264,6 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
     }
 
     private void getInfoUser() {
-
         profile = realm.where(EntityUserProfile.class).findFirst();
         VolleyHelper volleyHelper = new VolleyHelper(this,getResources().getString(R.string.url));
         volleyHelper.get("users/" + profile.getuID(), null, new Response.Listener<JSONObject>() {
@@ -330,10 +341,12 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
     public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
         if (collapsingToolbarLayout.getHeight()+ verticalOffset<= 1.1 *ViewCompat.getMinimumHeight(collapsingToolbarLayout)){
             LinearLayout linearLayout = (LinearLayout) appBarLayout.findViewById(R.id.idLnSearch);
-            linearLayout.setAlpha(0);
+            linearLayout.setVisibility(View.INVISIBLE);
+            linearLayout.setEnabled(false);
         }else {
             LinearLayout linearLayout = (LinearLayout) appBarLayout.findViewById(R.id.idLnSearch);
-            linearLayout.setAlpha(1);
+            linearLayout.setVisibility(View.VISIBLE);
+            linearLayout.setEnabled(true);
         }
     }
     public void logOut(){

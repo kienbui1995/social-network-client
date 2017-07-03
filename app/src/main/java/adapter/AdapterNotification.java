@@ -18,6 +18,8 @@ import com.bumptech.glide.Glide;
 import com.joker.thanglong.R;
 import com.joker.thanglong.Ultil.SystemHelper;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 import java.util.ArrayList;
 
 import Entity.EntityNotification;
@@ -78,13 +80,15 @@ public class AdapterNotification extends RecyclerView.Adapter<RecyclerView.ViewH
                     Glide.with(context).load(items.get(position).getLast_post().getPhoto()).centerCrop().crossFade()
                             .into(viewHolderLike.imgPost);
                 }
+                Glide.with(context).load(items.get(position).getActor().getAvatar()).centerCrop().placeholder(R.drawable.ic_user_default).crossFade()
+                        .into(viewHolderLike.imgAvatar);
                 updateText(viewHolderLike.txtMessage,items.get(position).getActor().getFullName(),
                         " đã thích bài viết của bạn: \"" + items.get(position).getLast_post().getMessage()+ "\"");
                 break;
             case COMMENT:
                 ViewHolder viewHolderComment = (ViewHolder) holder;
                 viewHolderComment.txtDateTime.setText(SystemHelper.getTimeAgo(items.get(position).getUpdatedAt()));
-                viewHolderComment.imgSticker.setImageResource(R.drawable.ic_comment_32);
+                viewHolderComment.imgSticker.setImageResource(R.drawable.ic_cmt_16);
                 if (items.get(position).getLast_post().getPhoto() == null)
                 {
                     viewHolderComment.lnPhoto.setVisibility(View.GONE);
@@ -92,13 +96,15 @@ public class AdapterNotification extends RecyclerView.Adapter<RecyclerView.ViewH
                     Glide.with(context).load(items.get(position).getLast_post().getPhoto()).centerCrop().crossFade()
                             .into(viewHolderComment.imgPost);
                 }
+                Glide.with(context).load(items.get(position).getActor().getAvatar()).centerCrop().placeholder(R.drawable.ic_user_default).crossFade()
+                        .into(viewHolderComment.imgAvatar);
                 updateText(viewHolderComment.txtMessage,items.get(position).getActor().getFullName(),
                         " đã bình luận bài viết của bạn: \"" + items.get(position).getLast_comment().getMessage()+ "\"");
                 break;
             case FOLLOW:
                 ViewHolder viewHolderFollow = (ViewHolder) holder;
                 viewHolderFollow.txtDateTime.setText(SystemHelper.getTimeAgo(items.get(position).getUpdatedAt()));
-                viewHolderFollow.imgSticker.setImageResource(R.drawable.ic_folowing_32);
+                viewHolderFollow.imgSticker.setImageResource(R.drawable.ic_following_16);
                 if (items.get(position).getLast_user().getAvatar() == null)
                 {
                     viewHolderFollow.lnPhoto.setVisibility(View.GONE);
@@ -108,6 +114,8 @@ public class AdapterNotification extends RecyclerView.Adapter<RecyclerView.ViewH
                 }
                 updateText(viewHolderFollow.txtMessage,items.get(position).getActor().getFullName(),
                         " đã theo dõi: "+ items.get(position).getLast_user().getFullName());
+                Glide.with(context).load(items.get(position).getActor().getAvatar()).centerCrop().placeholder(R.drawable.ic_user_default).crossFade()
+                        .into(viewHolderFollow.imgAvatar);
                 break;
             case NULL:
                 break;
@@ -145,6 +153,7 @@ public class AdapterNotification extends RecyclerView.Adapter<RecyclerView.ViewH
         private TextView txtDateTime;
         private ImageView imgPost;
         private LinearLayout lnPhoto;
+        private CircleImageView imgAvatar;
 
 
         public ViewHolder(View itemView) {
@@ -155,6 +164,7 @@ public class AdapterNotification extends RecyclerView.Adapter<RecyclerView.ViewH
             txtDateTime = (TextView) itemView.findViewById(R.id.txtDateTime);
             imgPost = (ImageView) itemView.findViewById(R.id.imgPost);
             lnPhoto = (LinearLayout) itemView.findViewById(R.id.lnPhoto);
+            imgAvatar = (CircleImageView) itemView.findViewById(R.id.imgAvatar);
         }
     }
 

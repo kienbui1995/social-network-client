@@ -5,6 +5,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -16,7 +17,6 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 
 import java.io.ByteArrayOutputStream;
-import java.util.HashMap;
 
 import Entity.EntityUserProfile;
 
@@ -32,7 +32,7 @@ public class FirebaseHelper {
     StorageReference mStorageReference;
     public FirebaseHelper(Context context) {
         this.context = context;
-//        databaseReference = FirebaseDatabase.getInstance().getReference();
+        databaseReference = FirebaseDatabase.getInstance().getReference();
         mStorageReference = FirebaseStorage.getInstance().getReference();
         entityUserProfile = ProfileInstance.getProfileInstance(context).getProfile();
     }
@@ -49,10 +49,11 @@ public class FirebaseHelper {
 //    }
 
 
-    public void setOnline(int code){
-        HashMap<String,Integer> status = new HashMap<>();
-        status.put("code",code);
-        databaseReference.child("user").child(entityUserProfile.getuID()+"").child("status").setValue(status);
+    public void setOnline(int code,int uID,String idRoom){
+//        HashMap<String,Integer> status = new HashMap<>();
+//        status.put("timeRead",code);
+        databaseReference.child("user").child(uID+"").child("conversation").child(idRoom+"").child("timeRead")
+        .setValue(code);
     }
 
     public void checkOnline(int uId,final callbackStatus callback){

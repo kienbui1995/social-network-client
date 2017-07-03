@@ -1,13 +1,22 @@
 package com.joker.thanglong.Fragment;
 
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
+import android.media.RingtoneManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +29,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.firebase.ui.database.FirebaseListAdapter;
 import com.joker.thanglong.ChatActivity;
+import com.joker.thanglong.CommentPostFullActivity;
 import com.joker.thanglong.MainActivity;
 import com.joker.thanglong.Model.UserModel;
 import com.joker.thanglong.R;
@@ -36,6 +46,8 @@ import Entity.EntityUserProfile;
 import adapter.AdapterListChat;
 import io.github.asvid.notti.Notti;
 import io.github.asvid.notti.config.NottiConf;
+
+import static android.content.Context.NOTIFICATION_SERVICE;
 
 /**
  * Created by joker on 2/9/17.
@@ -83,6 +95,7 @@ public class TinNhan extends Fragment{
                 return super.getCount();
             }
 
+
             @Override
             protected void populateView(final View v, final EntityRoomChat model, int position) {
                 ((TextView)v.findViewById(R.id.txtLastMessage)).setText(model.getLastMessage());
@@ -95,6 +108,7 @@ public class TinNhan extends Fragment{
                         public void onSuccess(EntityUserProfile profile) {
                             ((TextView)v.findViewById(R.id.txtNameChat)).setText(profile.getFull_name());
                             Glide.with(getActivity()).load(profile.getAvatar()).crossFade().centerCrop().into(avatar);
+//                            showNotification(getActivity(),model.getIdFrom(),model.getLastMessage());
                         }
                     });
                 }else {
@@ -105,7 +119,7 @@ public class TinNhan extends Fragment{
                             Glide.with(getActivity()).load(profile.getAvatar()).crossFade().centerCrop().into(avatar);
                         }
                     });
-
+//                    showNotification(getActivity(),model.getIdTo(),model.getLastMessage());
                 }
                 v.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -133,7 +147,38 @@ public class TinNhan extends Fragment{
                 Log.d("postion",positions+"");
             }
         };
+            query.addChildEventListener(new ChildEventListener() {
+                @Override
+                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
 
+                }
+
+                @Override
+                public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                    EntityRoomChat roomChat = dataSnapshot.getValue(EntityRoomChat.class);
+                    if (roomChat.getIdFrom()!= MainActivity.entityUserProfile.getuID()){
+                        showNotification(getActivity(),11,dataSnapshot.child("lastMessage").getValue().toString());
+                    }else if (roomChat.getIdTo() != MainActivity.entityUserProfile.getuID())
+                    {
+                        showNotification(getActivity(),11,dataSnapshot.child("lastMessage").getValue().toString());
+                    }
+                }
+
+                @Override
+                public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+                }
+
+                @Override
+                public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
 //        adapterListChat = new AdapterListChat(getActivity(),R.layout.custom_item_list_chat,listChat);
         lvListChat.setAdapter(mAdapter);
 //        lvListChat.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -159,5 +204,32 @@ public class TinNhan extends Fragment{
         Date dateObject = new Date(unixtime);
         SimpleDateFormat dateFormatter = new SimpleDateFormat("dd-MM hh:mmaa");
         return dateFormatter.format(dateObject);
+    }
+    public void showNotification(Context context,int id,String messgage){
+
+        Intent intent = new Intent(context, CommentPostFullActivity.class);
+        PendingIntent pIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        /*build the notification here this is only supported for API 11. Since we've targeted API 11 there will be no problem on this*/
+        NotificationCompat.Builder notify = new NotificationCompat.Builder(context)
+                .setContentTitle("Thang long")
+                .setAutoCancel(true)
+                .setSmallIcon(R.drawable.heart)
+                .setVibrate(new long[]{500,500,500})
+//                .setOngoing(true)
+//                .setStyle(new NotificationCompat.BigTextStyle().bigText(messgage))
+                .setContentText(messgage)
+                .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
+                .setContentIntent(pIntent);
+
+
+        NotificationManager notificationManager = (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);
+
+        if(Build.VERSION.SDK_INT<16){
+            /*build notification for HoneyComb to ICS*/
+            notificationManager.notify(id, notify.getNotification());
+        }if(Build.VERSION.SDK_INT>15){
+            /*Notification for Jellybean and above*/
+            notificationManager.notify(id, notify.build());
+        }
     }
 }

@@ -7,6 +7,8 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.design.widget.Snackbar;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +16,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -27,10 +30,13 @@ import com.joker.thanglong.R;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
+import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import Entity.EntityClass;
 import Entity.EntityGroup;
+import adapter.AdapterDetailStudent;
 
 /**
  * Created by joker on 5/11/17.
@@ -62,7 +68,29 @@ public class DialogUtil {
             }
         },1000);
     }
+    public static void showInfoClass(Activity context, EntityClass item){
+        final Dialog settingsDialog = new Dialog(context);
+        settingsDialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+        settingsDialog.getWindow().setWindowAnimations(R.style.DialogAnimation);
+        View view = context.getLayoutInflater().inflate(R.layout.item_dialog_class,null);
+        LinearLayout lnRoot = (LinearLayout) view.findViewById(R.id.ln_root);
+        ImageView imgCancel = (ImageView) view.findViewById(R.id.imgCancel);
+        TextView  txtNameSubject = (TextView) view.findViewById(R.id.txtNameSubject);
+        TextView  txtNameTeacher = (TextView) view.findViewById(R.id.txtNameTeacher);
+        TextView  txtNameRoom = (TextView) view.findViewById(R.id.txtNameRoom);
 
+        imgCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                settingsDialog.dismiss();
+            }
+        });
+        txtNameSubject.setText(item.getSubject().getName());
+        txtNameTeacher.setText(item.getTeacher().getName());
+        txtNameRoom.setText(item.getRoom().getCode());
+        settingsDialog.setContentView(view);
+        settingsDialog.show();
+    }
     public static void showImageEnlarge(Activity context, String url){
         final Dialog settingsDialog = new Dialog(context);
         settingsDialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
@@ -235,5 +263,29 @@ public class DialogUtil {
                 .show();
     }
 
+    public static void showInfoStudent(Activity context){
+        final Dialog settingsDialog = new Dialog(context);
+        settingsDialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+        settingsDialog.getWindow().setWindowAnimations(R.style.DialogAnimation);
+        View view = context.getLayoutInflater().inflate(R.layout.item_detail_student,null);
+//        TouchImageView photo = (TouchImageView) view.findViewById(R.id.imgLarge);
+//        Glide.with(context).load(url).crossFade().into(photo);
+        ArrayList<String> arrayList = new ArrayList<>();
+        for (int i = 0; i < 2; i++) {
+            arrayList.add("1");
+        }
+        ImageView imgStudentImage = (ImageView) view.findViewById(R.id.imgStudentImage);
+        TextView txtStudentName = (TextView) view.findViewById(R.id.txtStudentName);
+        TextView txtStudentCode = (TextView) view.findViewById(R.id.txtStudentCode);
+        RecyclerView rcvListViPham = (RecyclerView) view.findViewById(R.id.rcvListViPham);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(context,LinearLayoutManager.VERTICAL,false);
+        AdapterDetailStudent adapterDetailStudent = new AdapterDetailStudent(context,arrayList);
+        rcvListViPham.setLayoutManager(layoutManager);
+        rcvListViPham.setAdapter(adapterDetailStudent);
+        adapterDetailStudent.notifyDataSetChanged();
+        settingsDialog.setContentView(view);
+        settingsDialog.show();
+
+    }
 
 }

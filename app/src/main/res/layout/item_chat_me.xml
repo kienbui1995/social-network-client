@@ -9,9 +9,8 @@
     <TextView
             android:textSize="17sp"
             android:textColor="@android:color/black"
-            android:padding="13dp"
+            android:padding="7dp"
             android:background="@drawable/bg_item_chat_round_me"
-            android:text=""
             android:layout_width="wrap_content"
             android:maxWidth="220dp"
             android:layout_height="wrap_content"

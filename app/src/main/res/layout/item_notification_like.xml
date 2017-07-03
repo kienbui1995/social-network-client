@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
               android:orientation="vertical"
               android:id="@+id/lnRoot"
               android:background="@android:color/transparent"
@@ -10,19 +11,34 @@
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-        <LinearLayout
+        <FrameLayout
                 android:orientation="vertical"
                 android:layout_weight="1"
                 android:layout_width="0dp"
                 android:layout_height="match_parent">
-            <ImageView
-                    android:id="@+id/imgSticker"
-                    android:src="@drawable/ic_heart_32"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-        </LinearLayout>
+            <FrameLayout
+                    android:layout_gravity="top"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                <de.hdodenhof.circleimageview.CircleImageView
+                        android:src="@drawable/demo"
+                        app:civ_border_width="1dp"
+                        app:civ_fill_color="@color/colorGrey"
+                        android:id="@+id/imgAvatar"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"/>
+                <ImageView
+                        android:layout_gravity="right|bottom"
+                        android:id="@+id/imgSticker"
+                        android:src="@drawable/ic_heart_16"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+            </FrameLayout>
+        </FrameLayout>
         <LinearLayout
-                android:layout_weight="7"
+                android:paddingLeft="10dp"
+                android:layout_weight="6.5"
                 android:orientation="vertical"
                 android:layout_width="0dp"
                 android:layout_height="match_parent">

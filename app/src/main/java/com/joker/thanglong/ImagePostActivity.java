@@ -136,7 +136,7 @@ public class ImagePostActivity extends AppCompatActivity {
         line = (TextView) findViewById(R.id.line);
         btnLove = (Button) findViewById(R.id.btnLove);
         btnComment = (Button) findViewById(R.id.btnComment);
-        btnSave = (Button) findViewById(R.id.btnSave);
+//        btnSave = (Button) findViewById(R.id.btnSave);
         txtNumberComment = (TextView) findViewById(R.id.txtNumberComment);
         linearLayout = (LinearLayout) findViewById(R.id.linearLayout);
     }
