@@ -4,33 +4,33 @@
                 xmlns:tools="http://schemas.android.com/tools"
                 android:id="@+id/root_view"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="45dp"
                 android:background="@drawable/bg_sinhvien">
     <ImageView
             android:id="@+id/emoji_btn"
-            android:layout_width="40dp"
+            android:layout_width="30dp"
             android:layout_height="40dp"
             android:layout_alignParentBottom="true"
             android:layout_alignParentLeft="true"
-            android:padding="4dp"
-            android:src="@mipmap/smiley"
+            android:layout_margin="4dp"
+            android:src="@drawable/ic_smile_32"
             />
 
     <ImageView
             android:id="@+id/btnPhoto"
-            android:layout_width="40dp"
+            android:layout_width="30dp"
             android:layout_height="40dp"
             android:layout_toRightOf="@+id/emoji_btn"
             android:layout_alignParentBottom="true"
-            android:padding="4dp"
+            android:layout_margin="3dp"
             android:src="@drawable/ic_photo_32"
             />
 
     <ImageView
             android:id="@+id/submit_button"
             android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_alignParentBottom="true"
+            android:layout_height="match_parent"
+            android:layout_centerHorizontal="true"
             android:layout_alignParentRight="true"
             android:padding="4dp"
             android:src="@android:drawable/ic_menu_send"
@@ -38,15 +38,19 @@
 
     <hani.momanii.supernova_emoji_library.Helper.EmojiconEditText
             android:id="@+id/edtNewMessage"
+            android:background="#49cfd8dc"
             android:textColor="@android:color/black"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
+            android:layout_height="40dp"
+            android:hint="Nhập tin nhắn"
+            android:paddingLeft="5dp"
+            android:layout_centerHorizontal="true"
             android:layout_toLeftOf="@id/submit_button"
             android:layout_toRightOf="@id/btnPhoto"
-            android:textSize="25sp"
+            android:textSize="15sp"
             android:imeOptions="actionSend"
             android:inputType="text"
-            emojicon:emojiconSize="28sp"
+            android:layout_margin="3dp"
+            emojicon:emojiconSize="15sp"
             android:layout_width="match_parent"/>
 
 

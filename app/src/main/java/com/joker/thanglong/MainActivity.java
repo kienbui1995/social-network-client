@@ -195,7 +195,7 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
 //                            Toast.makeText(MainActivity.this, "Khong co fragment", Toast.LENGTH_SHORT).show();
 //                        }
                     case R.id.itProfile:
-                        startActivity(new Intent(getApplicationContext(),LinkAccountActivity.class));
+                        startActivity(new Intent(getApplicationContext(),TrackerActivity.class));
                         break;
                     case R.id.itFollow:
                         startActivity(new Intent(getApplicationContext(),StudentActivity.class));

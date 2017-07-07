@@ -9,22 +9,26 @@ import java.util.Map;
  */
 
 public class EntityNotificationChannel {
+    private int id;
     private EntityChannel channel;
     private String tittle;
     private String message;
     private String time;
     private String place;
+    private String photo;
     private long created_at;
 
     public EntityNotificationChannel() {
     }
 
-    public EntityNotificationChannel(EntityChannel channel, String tittle, String message, String time, String place, long created_at) {
+    public EntityNotificationChannel(int id, EntityChannel channel, String tittle, String message, String time, String place, String photo, long created_at) {
+        this.id = id;
         this.channel = channel;
         this.tittle = tittle;
         this.message = message;
         this.time = time;
         this.place = place;
+        this.photo = photo;
         this.created_at = created_at;
     }
 
@@ -72,6 +76,22 @@ public class EntityNotificationChannel {
         return created_at;
     }
 
+    public String getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(String photo) {
+        this.photo = photo;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
     public void setCreated_at(long created_at) {
         this.created_at = created_at;
     }
@@ -81,7 +101,7 @@ public class EntityNotificationChannel {
         result.put("message",entityNotificationChannel.getMessage());
         result.put("time",entityNotificationChannel.getTime());
         result.put("place",entityNotificationChannel.getPlace());
-//        result.put("description",entityChannel.getDescription());
+        result.put("photo",entityNotificationChannel.getPhoto());
         result.values().removeAll(Collections.singleton(null));
         return result;
     }

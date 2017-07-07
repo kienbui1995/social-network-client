@@ -9,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.joker.thanglong.ChannelActivity;
 import com.joker.thanglong.Model.ChannelModel;
 import com.joker.thanglong.R;
 
@@ -21,15 +20,14 @@ import adapter.AdapterListNotificationChannel;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class HomePagesFragment extends Fragment {
-
+public class NotificationChannelFragment extends Fragment {
     private RecyclerView rcvListNotiChannel;
-    private RecyclerView rcvPostPage;
-    ArrayList<EntityNotificationChannel> items;
-    AdapterListNotificationChannel adapterListNotificationChannel;
-    ChannelModel channelModel;
+    private AdapterListNotificationChannel adapterListNotificationChannel;
+    private RecyclerView.LayoutManager layoutManager;
+    private ChannelModel channelModel;
 
-    public HomePagesFragment() {
+
+    public NotificationChannelFragment() {
         // Required empty public constructor
     }
 
@@ -38,29 +36,24 @@ public class HomePagesFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_home_pages, container, false);
+        View view = inflater.inflate(R.layout.fragment_notification_channel, container, false);
         addView(view);
-        addEvent();
-
-
+        addData();
         return view;
     }
 
-    private void addEvent() {
-
+    private void addData() {
         channelModel = new ChannelModel(getActivity());
-        channelModel.getNotificationOfChannel(ChannelActivity.channelInfo.getId(), new ChannelModel.VolleyCallbackListNotificationChannel() {
+        channelModel.getListNoticationChannel(new ChannelModel.VolleyCallbackListNotificationChannel() {
             @Override
             public void onSuccess(ArrayList<EntityNotificationChannel> list) {
-                RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false);
                 adapterListNotificationChannel = new AdapterListNotificationChannel(list,getActivity());
+                layoutManager = new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false);
                 rcvListNotiChannel.setLayoutManager(layoutManager);
                 rcvListNotiChannel.setAdapter(adapterListNotificationChannel);
-                rcvListNotiChannel.setNestedScrollingEnabled(false);
                 adapterListNotificationChannel.notifyDataSetChanged();
             }
         });
-
     }
 
     private void addView(View view) {

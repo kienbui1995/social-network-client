@@ -24,13 +24,14 @@ public class TrackerActivity extends AppCompatActivity {
     }
 
     private void addEvent() {
-        lnStudent.setOnClickListener(new View.OnClickListener() {
+        lnRoom.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 getSupportFragmentManager().beginTransaction().replace(R.id.fr_root,new TrackStudentFragment()).addToBackStack(null)
                 .commit();
             }
         });
+        
     }
 
     private void addControl() {

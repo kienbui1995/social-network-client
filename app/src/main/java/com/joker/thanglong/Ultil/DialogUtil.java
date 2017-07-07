@@ -1,42 +1,59 @@
 package com.joker.thanglong.Ultil;
 
+import com.google.firebase.storage.UploadTask;
+
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
+import android.provider.MediaStore;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.method.ScrollingMovementMethod;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.Theme;
 import com.bumptech.glide.Glide;
+import com.joker.thanglong.CustomView.DeleteEditText;
 import com.joker.thanglong.CustomView.TouchImageView;
 import com.joker.thanglong.GroupActivity;
 import com.joker.thanglong.Model.GroupModel;
 import com.joker.thanglong.Model.PostModel;
+import com.joker.thanglong.Model.TrackerModel;
 import com.joker.thanglong.R;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import Entity.EntityClass;
 import Entity.EntityGroup;
+import Entity.EntityStudent;
+import Entity.EntityViolation;
 import adapter.AdapterDetailStudent;
+import gun0912.tedbottompicker.TedBottomPicker;
+
+import static com.facebook.FacebookSdk.getApplicationContext;
 
 /**
  * Created by joker on 5/11/17.
@@ -263,29 +280,109 @@ public class DialogUtil {
                 .show();
     }
 
-    public static void showInfoStudent(Activity context){
+    public static void showInfoStudent(final Activity context, EntityStudent entityStudent){
         final Dialog settingsDialog = new Dialog(context);
         settingsDialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         settingsDialog.getWindow().setWindowAnimations(R.style.DialogAnimation);
-        View view = context.getLayoutInflater().inflate(R.layout.item_detail_student,null);
+        final View view = context.getLayoutInflater().inflate(R.layout.item_detail_student,null);
 //        TouchImageView photo = (TouchImageView) view.findViewById(R.id.imgLarge);
 //        Glide.with(context).load(url).crossFade().into(photo);
-        ArrayList<String> arrayList = new ArrayList<>();
+        final ArrayList<String> arrayList = new ArrayList<>();
         for (int i = 0; i < 2; i++) {
             arrayList.add("1");
         }
         ImageView imgStudentImage = (ImageView) view.findViewById(R.id.imgStudentImage);
         TextView txtStudentName = (TextView) view.findViewById(R.id.txtStudentName);
         TextView txtStudentCode = (TextView) view.findViewById(R.id.txtStudentCode);
-        RecyclerView rcvListViPham = (RecyclerView) view.findViewById(R.id.rcvListViPham);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(context,LinearLayoutManager.VERTICAL,false);
-        AdapterDetailStudent adapterDetailStudent = new AdapterDetailStudent(context,arrayList);
-        rcvListViPham.setLayoutManager(layoutManager);
-        rcvListViPham.setAdapter(adapterDetailStudent);
-        adapterDetailStudent.notifyDataSetChanged();
+        TextView txtBirthDay = (TextView) view.findViewById(R.id.txtBirthDay);
+        txtBirthDay.setText(entityStudent.getBirth_day());
+        txtStudentCode.setText(entityStudent.getCode());
+        txtStudentName.setText(entityStudent.getLast_name() + " " + entityStudent.getFirst_name());
+        TrackerModel trackerModel = new TrackerModel(context);
+        trackerModel.GetDetailStudent(entityStudent.getCode(), new TrackerModel.VolleyCallBackStudentViolation() {
+            @Override
+            public void onSuccess(ArrayList<EntityViolation> list) {
+                RecyclerView rcvListViPham = (RecyclerView) view.findViewById(R.id.rcvListViPham);
+                RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(context,LinearLayoutManager.VERTICAL,false);
+                AdapterDetailStudent adapterDetailStudent = new AdapterDetailStudent(context,list);
+                rcvListViPham.setLayoutManager(layoutManager);
+                rcvListViPham.setAdapter(adapterDetailStudent);
+                adapterDetailStudent.notifyDataSetChanged();
+            }
+        });
+
         settingsDialog.setContentView(view);
         settingsDialog.show();
-
     }
+
+    public static void formAddViolation(final Activity context, final EntityStudent entityStudent){
+        final FragmentActivity myContext;
+        myContext=(FragmentActivity) context;
+        final EntityViolation entityViolation = new EntityViolation();
+        final Dialog settingDialog = new Dialog(context);
+        settingDialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+        settingDialog.getWindow().setWindowAnimations(R.style.DialogAnimation);
+        View view = context.getLayoutInflater().inflate(R.layout.dialog_add_violation,null);
+        TextView txtStudentName = (TextView) view.findViewById(R.id.txtStudentName);
+        final DeleteEditText edtInputStudent = (DeleteEditText) view.findViewById(R.id.edtInputStudent);
+        final EditText edtPlace = (EditText) view.findViewById(R.id.edtPlace);
+        Button btnChooseImage = (Button) view.findViewById(R.id.btnChooseImage);
+        Button btnCaptureImage = (Button) view.findViewById(R.id.btnCaptureImage);
+        final ImageView imgPhoto = (ImageView) view.findViewById(R.id.imgPhoto);
+        Button btnAddViolation = (Button) view.findViewById(R.id.btnAddViolation);
+        txtStudentName.setText(entityStudent.getLast_name()+ " "+ entityStudent.getFirst_name());
+        btnChooseImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                TedBottomPicker bottomPicker = new TedBottomPicker.Builder(getApplicationContext()).setOnImageSelectedListener(new TedBottomPicker.OnImageSelectedListener() {
+                    @Override
+                    public void onImageSelected(Uri uri) {
+                        Log.d("uri",uri.toString());
+                        try {
+                            imgPhoto.setVisibility(View.VISIBLE);
+                            Glide.with(context).load(uri).into(imgPhoto);
+                            Bitmap bmp = MediaStore.Images.Media.getBitmap(context.getContentResolver(), uri);
+                            FirebaseHelper firebaseHelper = new FirebaseHelper(context);
+                            firebaseHelper.UploadFile("/images/chat/"+SystemHelper.getTimeStamp(), bmp, new FirebaseHelper.FirebaseCallback() {
+                                @Override
+                                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                    Toast.makeText(context, "Tải ảnh lên thành công", Toast.LENGTH_SHORT).show();
+                                    entityViolation.setPhoto(taskSnapshot.getDownloadUrl().toString());
+                                }
+                            });
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }).create();
+                bottomPicker.show(myContext.getSupportFragmentManager());
+
+            }
+        });
+        btnAddViolation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (edtInputStudent.getText() != null){
+                    entityViolation.setMessage(edtInputStudent.getText().toString());
+                    entityViolation.setPlace(edtPlace.getText().toString());
+                    entityViolation.setTime_at(SystemHelper.getTimeStamp());
+                    TrackerModel trackerModel = new TrackerModel(context);
+                    trackerModel.createViolation(entityStudent.getCode(), entityViolation, new PostModel.VolleyCallBackCheck() {
+                        @Override
+                        public void onSuccess(boolean status) {
+                            Toast.makeText(context,"Thêm vi phạm thành công",Toast.LENGTH_LONG).show();
+                            settingDialog.dismiss();
+                        }
+                    });
+                }else {
+                    edtInputStudent.setError("Mời nhập nội dung");
+                }
+            }
+        });
+        settingDialog.setContentView(view);
+        settingDialog.show();
+    }
+
+
 
 }

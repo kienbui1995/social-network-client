@@ -102,6 +102,8 @@
         </activity>
         <activity android:name=".CreateNotificationChannelActivity">
         </activity>
+        <activity android:name=".DetailNotificationChannelActivity">
+        </activity>
     </application>
 
 </manifest>

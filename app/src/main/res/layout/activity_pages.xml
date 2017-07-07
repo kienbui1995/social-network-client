@@ -156,7 +156,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
-            >
+            android:id="@+id/nestedScrollView">
         <FrameLayout
                 android:id="@+id/frContent"
                 android:layout_width="match_parent"
@@ -173,4 +173,17 @@
 
 
     </android.support.v4.widget.NestedScrollView>
+
+    <android.support.design.widget.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            app:fabSize="normal"
+            android:layout_margin="10dp"
+            app:srcCompat="@drawable/ic_add"
+            android:id="@+id/fabCreateNotification"
+            app:layout_anchor="@+id/nestedScrollView"
+            app:layout_anchorGravity="bottom|right"
+            android:layout_gravity="top|left"
+            app:backgroundTint="#4db6ac"/>
 </android.support.design.widget.CoordinatorLayout>

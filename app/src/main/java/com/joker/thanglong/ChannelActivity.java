@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -46,6 +47,7 @@ public class ChannelActivity extends AppCompatActivity {
     private TextView txtNameChannel;
     private TextView txtShortNamePage;
     private Button btnFollowChannel;
+    private FloatingActionButton fabCreateNotification;
     private Button btnMessagePage;
     private TabLayout tabHost;
     private FrameLayout frContent;
@@ -65,7 +67,6 @@ public class ChannelActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pages);
         addControll();
-
         addData();
     }
 
@@ -131,6 +132,7 @@ public class ChannelActivity extends AppCompatActivity {
         btnMessagePage = (Button) findViewById(R.id.btnMessagePage);
         tabHost = (TabLayout) findViewById(R.id.tabHost);
         frContent = (FrameLayout) findViewById(R.id.frContent);
+        fabCreateNotification = (FloatingActionButton) findViewById(R.id.fabCreateNotification);
         viewPager = (ViewPager) findViewById(R.id.viewPager);
     }
     private void addEvent(String name) {
@@ -179,8 +181,13 @@ public class ChannelActivity extends AppCompatActivity {
                             .show();
                 }
             });
-
         }
+        fabCreateNotification.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getApplicationContext(), CreateNotificationChannelActivity.class));
+            }
+        });
 
     }
 

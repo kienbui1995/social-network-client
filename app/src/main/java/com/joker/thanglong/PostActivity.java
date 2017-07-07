@@ -53,8 +53,8 @@ public class PostActivity extends AppCompatActivity {
     private int privacy;
     String selectedImagePath ="";
     Bitmap bmp;
-    Uri downloadUri;
     File file;
+    Uri downloadUri;
     int fileSize;
     ProgressDialog progressDialog;
     Activity activity;

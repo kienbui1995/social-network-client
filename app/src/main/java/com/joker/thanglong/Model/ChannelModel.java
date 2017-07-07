@@ -168,11 +168,104 @@ public class ChannelModel {
             }
         });
     }
+    public void getListNoticationChannel(final VolleyCallbackListNotificationChannel callback){
+        final ArrayList<EntityNotificationChannel> items = new ArrayList<>();
+        VolleySingleton.getInstance(context).get("channel_notifications", null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                JSONArray jsonArray = null;
+                try {
+                    jsonArray = response.getJSONArray("data");
+                    for (int i = 0; i < jsonArray.length(); i++){
+                        JSONObject jsonObject = (JSONObject) jsonArray.get(i);
+                        JSONObject jsonChannel = jsonObject.getJSONObject("owner");
+                        EntityNotificationChannel notificationChannel = new EntityNotificationChannel();
+                        EntityChannel entityChannel = new EntityChannel();
+                        entityChannel.setId(jsonChannel.getInt("id"));
+                        entityChannel.setName(jsonChannel.getString("name"));
+                        notificationChannel.setChannel(entityChannel);
+                        if (jsonObject.has("title")) notificationChannel.setTittle(jsonObject.getString("title"));
+                        if (jsonObject.has("created_at")) notificationChannel.setCreated_at(jsonObject.getLong("created_at"));
+                        if (jsonObject.has("photo")) notificationChannel.setPhoto(jsonObject.getString("photo"));
+                        notificationChannel.setId(jsonObject.getInt("id"));
+                        notificationChannel.setMessage(jsonObject.getString("message"));
+                        items.add(notificationChannel);
+                    }
+                callback.onSuccess(items);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        },context);
+    }
+
+    public void getNotificationOfChannel(int id, final VolleyCallbackListNotificationChannel callback){
+        final ArrayList<EntityNotificationChannel> items = new ArrayList<>();
+        VolleySingleton.getInstance(context).get("channels/"+id+"/channel_notifications", null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                JSONArray jsonArray = null;
+                try {
+                    jsonArray = response.getJSONArray("data");
+                    for (int i = 0; i < jsonArray.length(); i++){
+                        JSONObject jsonObject = (JSONObject) jsonArray.get(i);
+                        JSONObject jsonChannel = jsonObject.getJSONObject("owner");
+                        EntityNotificationChannel notificationChannel = new EntityNotificationChannel();
+                        EntityChannel entityChannel = new EntityChannel();
+                        entityChannel.setId(jsonChannel.getInt("id"));
+                        entityChannel.setName(jsonChannel.getString("name"));
+                        notificationChannel.setChannel(entityChannel);
+                        if (jsonObject.has("title")) notificationChannel.setTittle(jsonObject.getString("title"));
+                        if (jsonObject.has("created_at")) notificationChannel.setCreated_at(jsonObject.getLong("created_at"));
+                        if (jsonObject.has("photo")) notificationChannel.setPhoto(jsonObject.getString("photo"));
+                        notificationChannel.setId(jsonObject.getInt("id"));
+                        notificationChannel.setMessage(jsonObject.getString("message"));
+                        items.add(notificationChannel);
+                    }
+                    callback.onSuccess(items);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        },context);
+    }
+
+    public void getDetailNotiChannel(int id, final VolleyCallbackDetailNotificationChannel callback){
+        VolleySingleton.getInstance(context).get("channel_notifications/" + id, null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+                    JSONObject jsonObject = (JSONObject) response.getJSONObject("data");
+                    JSONObject jsonChannel = jsonObject.getJSONObject("owner");
+                    EntityNotificationChannel notificationChannel = new EntityNotificationChannel();
+                    EntityChannel entityChannel = new EntityChannel();
+                    entityChannel.setId(jsonChannel.getInt("id"));
+                    entityChannel.setName(jsonChannel.getString("name"));
+                    entityChannel.setAvatar(jsonChannel.getString("avatar"));
+                    notificationChannel.setChannel(entityChannel);
+                    if (jsonObject.has("title")) notificationChannel.setTittle(jsonObject.getString("title"));
+                    if (jsonObject.has("created_at")) notificationChannel.setCreated_at(jsonObject.getLong("created_at"));
+                    if (jsonObject.has("photo")) notificationChannel.setPhoto(jsonObject.getString("photo"));
+                    notificationChannel.setId(jsonObject.getInt("id"));
+                    notificationChannel.setMessage(jsonObject.getString("message"));
+                    callback.onSuccess(notificationChannel);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        },context);
+    }
 
     public interface VolleyCallbackListChannel{
         void onSuccess(ArrayList<EntityChannel> listChannel);
     }
     public interface VolleyCallbackChannel{
         void onSuccess(EntityChannel entityChannel);
+    }
+    public interface VolleyCallbackListNotificationChannel{
+        void onSuccess(ArrayList<EntityNotificationChannel> list);
+    }
+    public interface VolleyCallbackDetailNotificationChannel{
+        void onSuccess(EntityNotificationChannel entityNotificationChannel);
     }
 }

@@ -8,11 +8,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.joker.thanglong.R;
 import com.joker.thanglong.Ultil.DialogUtil;
 
 import java.util.ArrayList;
+
+import Entity.EntityStudent;
 
 /**
  * Created by joker on 6/24/17.
@@ -20,9 +23,9 @@ import java.util.ArrayList;
 
 public class AdapterTrackStudent extends RecyclerView.Adapter<AdapterTrackStudent.ViewHolder>{
     Activity context;
-    ArrayList<String> items;
+    ArrayList<EntityStudent> items;
 
-    public AdapterTrackStudent(Activity context, ArrayList<String> list)
+    public AdapterTrackStudent(Activity context, ArrayList<EntityStudent> list)
     {
         this.context = context;
         this.items=list;
@@ -37,14 +40,24 @@ public class AdapterTrackStudent extends RecyclerView.Adapter<AdapterTrackStuden
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(ViewHolder holder, final int position) {
 //        Glide.with(context).load(items.get(position).getAvatar()).into(holder.imgAvavarMember);
+        holder.txtStudenttCode.setText(items.get(position).getCode());
+        holder.txtNameStudent.setText(items.get(position).getLast_name()+" "+ items.get(position).getFirst_name());
         holder.imgInfoStudent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DialogUtil.showInfoStudent(context);
+                DialogUtil.showInfoStudent(context,items.get(position));
             }
         });
+        holder.imgAddAction.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(context, "Done", Toast.LENGTH_SHORT).show();
+                DialogUtil.formAddViolation(context,items.get(position));
+            }
+        });
+
     }
 
     @Override

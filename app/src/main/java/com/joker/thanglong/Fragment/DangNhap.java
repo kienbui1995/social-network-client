@@ -485,8 +485,6 @@ public class DangNhap extends Fragment implements View.OnClickListener,Validator
             public void onResponse(JSONObject response) {
                 try {
                     final String json = response.getJSONObject("data").getString("token");
-
-
                     Log.d("dataToken1",json.toString());
                     realm.executeTransaction(new Realm.Transaction() {
                         @Override

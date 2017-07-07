@@ -4,6 +4,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
+import com.joker.thanglong.Fragment.NotificationChannelFragment;
 import com.joker.thanglong.Fragment.TinNhan;
 import com.joker.thanglong.Fragment.TrangChu;
 
@@ -24,9 +25,11 @@ public class ViewPagerAdapter  extends FragmentPagerAdapter implements ISlidingT
         super(fm);
         listFragment.add(new TrangChu());
         listFragment.add(new TinNhan());
+        listFragment.add(new NotificationChannelFragment());
 
         listName.add("Trang chủ");
         listName.add("Tin nhắn");
+        listName.add("Thông báo");
         this.mSelectors = mSelectors;
     }
 

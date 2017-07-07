@@ -1,11 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
+              android:orientation="horizontal"
               android:layout_width="match_parent"
+              android:background="@color/white"
+              android:layout_marginTop="5dp"
               android:layout_height="wrap_content">
-<TextView
-        android:text=""
-        android:id="@+id/txtNoiDungViPham"
+<LinearLayout
+        android:padding="5dp"
+        android:layout_weight="1"
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content">
+    <LinearLayout
+            android:padding="5dp"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        <TextView
+                android:text="Vi phạm: "
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        <TextView
+                android:id="@+id/txtMessage"
+                android:textColor="#000"
+                android:text="Quên đeo thẻ"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+    </LinearLayout>
+    <LinearLayout
+            android:padding="5dp"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        <TextView
+                android:text="Địa điểm: "
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        <TextView
+                android:id="@+id/txtPlace"
+                android:textColor="#000"
+                android:text="Sảnh tầng 1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+    </LinearLayout>
+
+    <LinearLayout
+            android:padding="5dp"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        <TextView
+                android:text="Thời gian: "
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        <TextView
+                android:id="@+id/txtDateTime"
+                android:textColor="#000"
+                android:text="24/6/2017 - 17:15"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+    </LinearLayout>
+
+
+</LinearLayout>
+    <ImageView
+            android:visibility="gone"
+            android:layout_marginBottom="5dp"
+            android:id="@+id/imgPhoto"
+            android:layout_weight="2"
+            android:src="@drawable/demo"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
 </LinearLayout>

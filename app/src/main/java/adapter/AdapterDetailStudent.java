@@ -7,15 +7,19 @@ import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.RelativeSizeSpan;
 import android.text.style.StyleSpan;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.joker.thanglong.R;
+import com.joker.thanglong.Ultil.SystemHelper;
 
 import java.util.ArrayList;
+
+import Entity.EntityViolation;
 
 /**
  * Created by joker on 6/24/17.
@@ -23,9 +27,9 @@ import java.util.ArrayList;
 
 public class AdapterDetailStudent extends RecyclerView.Adapter<AdapterDetailStudent.ViewHolder>{
     Context context;
-    ArrayList<String> items;
+    ArrayList<EntityViolation> items;
 
-    public AdapterDetailStudent(Context context, ArrayList<String> list)
+    public AdapterDetailStudent(Context context, ArrayList<EntityViolation> list)
     {
         this.context = context;
         this.items=list;
@@ -41,22 +45,33 @@ public class AdapterDetailStudent extends RecyclerView.Adapter<AdapterDetailStud
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-//        Glide.with(context).load(items.get(position).getAvatar()).into(holder.imgAvavarMember);
-        updateText(holder.txtNoiDungViPham,"22/6/2017 14:16",": Không đeo thẻ sinh viên");
-        Log.d("aaaaaa",items.size()+"");
+        if (items.get(position).getPhoto() != null){
+            holder.imgPhoto.setVisibility(View.VISIBLE);
+            Glide.with(context).load(items.get(position).getPhoto()).into(holder.imgPhoto);
+        }
+        holder.txtMessage.setText(items.get(position).getMessage());
+        holder.txtPlace.setText(items.get(position).getPlace());
+        holder.txtDateTime.setText(SystemHelper.getTimeAgo(items.get(position).getTime_at()));
     }
 
     @Override
     public int getItemCount() {
-        return 2;
+        return items.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        private TextView txtNoiDungViPham;
+        private TextView txtMessage;
+        private TextView txtPlace;
+        private TextView txtDateTime;
+        private ImageView imgPhoto;
+
 
         public ViewHolder(View itemView) {
             super(itemView);
-            txtNoiDungViPham = (TextView) itemView.findViewById(R.id.txtNoiDungViPham);
+            txtMessage = (TextView) itemView.findViewById(R.id.txtMessage);
+            txtPlace = (TextView) itemView.findViewById(R.id.txtPlace);
+            txtDateTime = (TextView) itemView.findViewById(R.id.txtDateTime);
+            imgPhoto = (ImageView) itemView.findViewById(R.id.imgPhoto);
         }
     }
     private void updateText(TextView textView, String actor, String message) {
