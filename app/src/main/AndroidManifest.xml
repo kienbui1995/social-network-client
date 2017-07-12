@@ -53,6 +53,8 @@
         </activity>
         <activity android:name=".HomeListGroupActivity">
         </activity>
+        <activity android:name=".GroupChatActivity">
+        </activity>
         <activity android:name=".LoadingActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>

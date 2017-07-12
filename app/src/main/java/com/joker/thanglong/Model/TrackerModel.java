@@ -1,6 +1,7 @@
 package com.joker.thanglong.Model;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.android.volley.Response;
 import com.joker.thanglong.Ultil.VolleySingleton;
@@ -9,6 +10,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -27,8 +30,14 @@ public class TrackerModel {
     }
 
     public void findStudent(String query, final VolleyCallBackListStudent callback){
+        URI uri = null;
+        try {
+            uri = new URI(query.replace(" ", "%20"));
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
         final ArrayList<EntityStudent> items = new ArrayList<>();
-        VolleySingleton.getInstance(context).get("students?name=" + query.toString(), null, new Response.Listener<JSONObject>() {
+        VolleySingleton.getInstance(context).get("students?name=" + uri.toString(), null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 try {
@@ -51,7 +60,7 @@ public class TrackerModel {
         },context);
     }
 
-    public  void GetDetailStudent(String msv,VolleyCallBackStudentViolation callback){
+    public  void GetDetailStudent(String msv, final VolleyCallBackStudentViolation callback){
         final ArrayList<EntityViolation> items = new ArrayList<>();
         VolleySingleton.getInstance(context).get("students/" + msv + "/violations", null, new Response.Listener<JSONObject>() {
             @Override
@@ -62,12 +71,14 @@ public class TrackerModel {
                         JSONObject jsonObject = (JSONObject) jsonArray.get(i);
                         EntityViolation entityViolation = new EntityViolation();
                         entityViolation.setId(jsonObject.getInt("id"));
-                        entityViolation.setMessage(jsonObject.getString("message"));
-                        entityViolation.setPhoto(jsonObject.getString("photo"));
+                        if (jsonObject.has("message")) entityViolation.setMessage(jsonObject.getString("message"));
+                        if (jsonObject.has("photo")) entityViolation.setPhoto(jsonObject.getString("photo"));
                         entityViolation.setTime_at(jsonObject.getLong("time_at"));
-                        entityViolation.setPlace(jsonObject.getString("place"));
+                        if (jsonObject.has("place")) entityViolation.setPlace(jsonObject.getString("place"));
                         items.add(entityViolation);
+                        Log.d("itemss",items.size()+"");
                     }
+                    callback.onSuccess(items);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

@@ -239,7 +239,7 @@ public class CommentPostActivity extends AppCompatActivity implements QueryListe
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                VolleySingleton.getInstance(getApplicationContext()).get("find_user?name=" + s, null, new Response.Listener<JSONObject>() {
+                VolleySingleton.getInstance(getApplicationContext()).get("posts/"+ idPost+"/users?filter=" + s, null, new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
                         try {

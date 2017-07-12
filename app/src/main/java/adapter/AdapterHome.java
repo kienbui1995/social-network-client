@@ -59,7 +59,7 @@ public class AdapterHome extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
     private PopupWindow popWindow;
     ArrayList<EntityStatus> items;
     String picRandom;
-        private RecyclerView rcvComment;
+    private RecyclerView rcvComment;
     private EditText btnCommentInput;
     private ImageButton btnSubmmitComment;
     VolleyHelper volleyHelper;

@@ -32,7 +32,7 @@ import me.dlkanth.stethovolley.StethoVolleyStack;
  */
 
 public class VolleySingleton {
-    private static VolleySingleton mInstance;
+    public static VolleySingleton mInstance;
     private RequestQueue mRequestQueue;
     private static Context mCtx;
     private String mBaseUrl;

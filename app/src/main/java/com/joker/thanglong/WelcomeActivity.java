@@ -1,6 +1,7 @@
 package com.joker.thanglong;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -118,6 +119,12 @@ public class WelcomeActivity extends AppCompatActivity {
             if (position == layouts.length - 1) {
                 // last page. make button text to GOT IT
                 btnNext.setText(getString(R.string.start));
+                btnNext.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        startActivity(new Intent(WelcomeActivity.this,MainActivity.class));
+                    }
+                });
                 btnSkip.setVisibility(View.GONE);
             } else {
                 // still pages are left
@@ -185,4 +192,9 @@ public class WelcomeActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        return;
+    }
 }

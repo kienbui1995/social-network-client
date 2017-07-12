@@ -36,11 +36,13 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     public static final int LIKE = 1;
     public static final int COMMENT = 2;
     public static final int MENTION = 4;
+    public static final int ACCEPTGROUP = 12;
     JSONObject comment;
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
         String token = PreferenceManager.getDefaultSharedPreferences(this).getString("token","");
+
         Map<String, String> notication = remoteMessage.getData();
         Log.d("notification",notication.toString());
         try {
@@ -61,6 +63,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                             comment.getString("message"), Integer.parseInt(notication.get("total_action")));
                     break;
                 case MENTION:
+                    break;
+                case ACCEPTGROUP:
+
                     break;
             }
         } catch (JSONException e) {

@@ -18,15 +18,21 @@ import android.widget.Toast;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.Theme;
 import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.github.piasy.biv.BigImageViewer;
 import com.github.piasy.biv.loader.glide.GlideImageLoader;
 import com.github.piasy.biv.view.BigImageView;
 import com.github.piasy.biv.view.ImageSaveCallback;
+import com.joker.thanglong.Model.PostModel;
 import com.joker.thanglong.Ultil.ImageUlti;
 import com.joker.thanglong.Ultil.VolleySingleton;
+import com.like.LikeButton;
+import com.like.OnLikeListener;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import Entity.EntityStatus;
 
 public class ImagePostActivity extends AppCompatActivity {
     private BigImageView mBigImage;
@@ -36,7 +42,7 @@ public class ImagePostActivity extends AppCompatActivity {
     private TextView txtNumberLove;
     private ImageView imgHeart;
     private TextView line;
-    private Button btnLove;
+    private LikeButton btnLove;
     private Button btnComment;
     private LinearLayout linearLayout;
     private ImageUlti imageUlti;
@@ -44,10 +50,8 @@ public class ImagePostActivity extends AppCompatActivity {
     //    private Disposable mPermissionRequest;
     private TextView txtNumberComment;
     private Boolean touch = false;
-
-
-    Integer idStatus;
-
+    PostModel postModel;
+    int idStatus;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,31 +72,98 @@ public class ImagePostActivity extends AppCompatActivity {
     }
 
     private void getDataPhoto() {
-        VolleySingleton.getInstance(getApplicationContext()).get("posts/" + idStatus, null, new Response.Listener<JSONObject>() {
+        postModel= new PostModel(this,idStatus);
+        postModel.getSinglePost(new PostModel.VolleyCallbackStatus() {
             @Override
-            public void onResponse(JSONObject response) {
-
-                try {
-                    JSONObject jsonObject = response.getJSONObject("data");
-                    Log.d("json",jsonObject.toString());
-                    loadImage(jsonObject.getString("photo"));
-                    txtShortContent.setText(jsonObject.getString("message"));
-                    txtNumberLove.setText(jsonObject.getString("likes"));
-                    txtNumberComment.setText(jsonObject.getString("comments"));
-//                    txtNumberComment.setText(jsonObject.getString(""));
-                    toolbar.setTitle("Ảnh của " + jsonObject.getString("full_name"));
-                    btnComment.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-
-                        }
-                    });
-                } catch (JSONException e) {
-                    e.printStackTrace();
+            public void onSuccess(final EntityStatus entityStatus) {
+                if (entityStatus.isLike()){
+                    btnLove.setLiked(true);
+                }else {
+                    btnLove.setLiked(false);
                 }
+                btnLove.setOnLikeListener(new OnLikeListener() {
+                    @Override
+                    public void liked(LikeButton likeButton) {
+                        VolleySingleton.getInstance(getApplicationContext()).post(getApplicationContext(),"posts/" + idStatus + "/likes", null, new Response.Listener<JSONObject>() {
+                            @Override
+                            public void onResponse(JSONObject response) {
+                                JSONObject jsonObject = null;
+                                try {
+                                    jsonObject = response.getJSONObject("data");
+                                    txtNumberLove.setText(jsonObject.getString("likes"));
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
 
+                            }
+                        });
+                    }
+                    @Override
+                    public void unLiked(LikeButton likeButton) {
+                        VolleySingleton.getInstance(getApplicationContext()).delete(getApplicationContext(),
+                                "posts/" + idStatus + "/likes", null, new Response.Listener<JSONObject>() {
+                            @Override
+                            public void onResponse(JSONObject response) {
+                                JSONObject jsonObject = null;
+                                try {
+                                    jsonObject = response.getJSONObject("data");
+                                    txtNumberLove.setText(jsonObject.getString("likes"));
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+
+                            }
+                        }, new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+
+                            }
+                        });
+                    }
+
+                });
+                loadImage(entityStatus.getImage());
+                txtShortContent.setText(entityStatus.getContent());
+                txtNumberLove.setText(entityStatus.getNumberLike()+"");
+                txtNumberComment.setText(entityStatus.getNumberComment()+"");
+//                  txtNumberComment.setText(jsonObject.getString(""));
+                toolbar.setTitle("Ảnh của " + entityStatus.getNameId());
+                btnComment.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent(getApplicationContext(), CommentPostActivity.class);
+                        intent.putExtra("idPost",idStatus);
+                        intent.putExtra("likes",entityStatus.getNumberLike());
+                        startActivity(intent);
+                        overridePendingTransition(R.anim.bottom_up,R.anim.bottom_down);
+                    }
+                });
             }
-        },getApplicationContext());
+        });
+
+//        VolleySingleton.getInstance(getApplicationContext()).get("posts/" + idStatus, null, new Response.Listener<JSONObject>() {
+//            @Override
+//            public void onResponse(JSONObject response) {
+//                try {
+//                    JSONObject jsonObject = response.getJSONObject("data");
+//                    loadImage(jsonObject.getString("photo"));
+//                    txtShortContent.setText(jsonObject.getString("message"));
+//                    txtNumberLove.setText(jsonObject.getString("likes"));
+//                    txtNumberComment.setText(jsonObject.getString("comments"));
+////                  txtNumberComment.setText(jsonObject.getString(""));
+//                    toolbar.setTitle("Ảnh của " + jsonObject.getString("full_name"));
+//                    btnComment.setOnClickListener(new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View view) {
+//
+//                        }
+//                    });
+//                } catch (JSONException e) {
+//                    e.printStackTrace();
+//                }
+//
+//            }
+//        },getApplicationContext());
     }
 
     private void addEvent() {
@@ -105,7 +176,7 @@ public class ImagePostActivity extends AppCompatActivity {
                     txtShortContent.setVisibility(View.INVISIBLE);
                     btnComment.setVisibility(View.INVISIBLE);
                     btnLove.setVisibility(View.INVISIBLE);
-                    btnSave.setVisibility(View.INVISIBLE);
+//                    btnSave.setVisibility(View.INVISIBLE);
                     imgHeart.setVisibility(View.INVISIBLE);
                     line.setVisibility(View.INVISIBLE);
                     linearLayout.setVisibility(View.INVISIBLE);
@@ -117,7 +188,7 @@ public class ImagePostActivity extends AppCompatActivity {
                     txtShortContent.setVisibility(View.VISIBLE);
                     btnComment.setVisibility(View.VISIBLE);
                     btnLove.setVisibility(View.VISIBLE);
-                    btnSave.setVisibility(View.VISIBLE);
+//                    btnSave.setVisibility(View.VISIBLE);
                     imgHeart.setVisibility(View.VISIBLE);
                     line.setVisibility(View.VISIBLE);
                     linearLayout.setVisibility(View.VISIBLE);
@@ -134,7 +205,7 @@ public class ImagePostActivity extends AppCompatActivity {
         txtNumberLove = (TextView) findViewById(R.id.txtNumberLove);
         imgHeart = (ImageView) findViewById(R.id.imgHeart);
         line = (TextView) findViewById(R.id.line);
-        btnLove = (Button) findViewById(R.id.btnLove);
+        btnLove = (LikeButton) findViewById(R.id.btnLove);
         btnComment = (Button) findViewById(R.id.btnComment);
 //        btnSave = (Button) findViewById(R.id.btnSave);
         txtNumberComment = (TextView) findViewById(R.id.txtNumberComment);

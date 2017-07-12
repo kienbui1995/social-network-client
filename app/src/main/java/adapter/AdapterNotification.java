@@ -1,6 +1,7 @@
 package adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
@@ -15,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.joker.thanglong.CommentPostFullActivity;
 import com.joker.thanglong.R;
 import com.joker.thanglong.Ultil.SystemHelper;
 
@@ -67,11 +69,22 @@ public class AdapterNotification extends RecyclerView.Adapter<RecyclerView.ViewH
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
         holder.setIsRecyclable(false);
         switch (holder.getItemViewType()){
             case LIKE:
                 ViewHolder viewHolderLike = (ViewHolder) holder;
+                viewHolderLike.lnRoot.setVisibility(View.VISIBLE);
+                viewHolderLike.lnRoot.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent(context, CommentPostFullActivity.class);
+                        intent.putExtra("idPost", items.get(position).getLast_post().getId());
+                        intent.putExtra("type", 2);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        context.startActivity(intent);
+                    }
+                });
                 viewHolderLike.txtDateTime.setText(SystemHelper.getTimeAgo(items.get(position).getUpdatedAt()));
                 if (items.get(position).getLast_post().getPhoto() == null)
                 {
@@ -87,6 +100,17 @@ public class AdapterNotification extends RecyclerView.Adapter<RecyclerView.ViewH
                 break;
             case COMMENT:
                 ViewHolder viewHolderComment = (ViewHolder) holder;
+                viewHolderComment.lnRoot.setVisibility(View.VISIBLE);
+                viewHolderComment.lnRoot.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent(context, CommentPostFullActivity.class);
+                        intent.putExtra("idPost", items.get(position).getLast_post().getId());
+                        intent.putExtra("type", 2);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        context.startActivity(intent);
+                    }
+                });
                 viewHolderComment.txtDateTime.setText(SystemHelper.getTimeAgo(items.get(position).getUpdatedAt()));
                 viewHolderComment.imgSticker.setImageResource(R.drawable.ic_cmt_16);
                 if (items.get(position).getLast_post().getPhoto() == null)
@@ -102,20 +126,20 @@ public class AdapterNotification extends RecyclerView.Adapter<RecyclerView.ViewH
                         " đã bình luận bài viết của bạn: \"" + items.get(position).getLast_comment().getMessage()+ "\"");
                 break;
             case FOLLOW:
-                ViewHolder viewHolderFollow = (ViewHolder) holder;
-                viewHolderFollow.txtDateTime.setText(SystemHelper.getTimeAgo(items.get(position).getUpdatedAt()));
-                viewHolderFollow.imgSticker.setImageResource(R.drawable.ic_following_16);
-                if (items.get(position).getLast_user().getAvatar() == null)
-                {
-                    viewHolderFollow.lnPhoto.setVisibility(View.GONE);
-                }else {
-                    Glide.with(context).load(items.get(position).getLast_user().getAvatar()).centerCrop().crossFade()
-                            .into(viewHolderFollow.imgPost);
-                }
-                updateText(viewHolderFollow.txtMessage,items.get(position).getActor().getFullName(),
-                        " đã theo dõi: "+ items.get(position).getLast_user().getFullName());
-                Glide.with(context).load(items.get(position).getActor().getAvatar()).centerCrop().placeholder(R.drawable.ic_user_default).crossFade()
-                        .into(viewHolderFollow.imgAvatar);
+//                ViewHolder viewHolderFollow = (ViewHolder) holder;
+//                viewHolderFollow.txtDateTime.setText(SystemHelper.getTimeAgo(items.get(position).getUpdatedAt()));
+//                viewHolderFollow.imgSticker.setImageResource(R.drawable.ic_following_16);
+//                if (items.get(position).getLast_user().getAvatar() == null)
+//                {
+//                    viewHolderFollow.lnPhoto.setVisibility(View.GONE);
+//                }else {
+//                    Glide.with(context).load(items.get(position).getLast_user().getAvatar()).centerCrop().crossFade()
+//                            .into(viewHolderFollow.imgPost);
+//                }
+//                updateText(viewHolderFollow.txtMessage,items.get(position).getActor().getFullName(),
+//                        " đã theo dõi: "+ items.get(position).getLast_user().getFullName());
+//                Glide.with(context).load(items.get(position).getActor().getAvatar()).centerCrop().placeholder(R.drawable.ic_user_default).crossFade()
+//                        .into(viewHolderFollow.imgAvatar);
                 break;
             case NULL:
                 break;

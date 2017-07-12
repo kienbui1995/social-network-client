@@ -58,7 +58,6 @@ public class TimeTableActivity extends AppCompatActivity {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
     }
     private void setupSpinner() {
-//        String arrPrivacy[] = {"Công khai","Chỉ cho người theo dõi bạn","Riêng tư"};
         timeTableModel.getTerm(new TimeTableModel.VolleyCallbackGetTerm() {
             @Override
             public void onSuccess(final ArrayList<EntityTerm> itemsTerm) {
@@ -77,7 +76,6 @@ public class TimeTableActivity extends AppCompatActivity {
                     @Override
                     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                         term=itemsTerm.get(i).getCode();
-//                        addData(itemsTerm.get(i).getCode());
                         Handler handler = new Handler();
                         handler.postDelayed(new Runnable() {
                             @Override

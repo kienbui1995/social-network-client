@@ -21,8 +21,9 @@ public class EntityUserProfile extends RealmObject {
     String avatar;
     String gender;
     Long timeUpdate;
+    String role;
 
-    public EntityUserProfile(int uID, String userName, String fbID, String last_name, String first_name,String full_name, String tokenFB, String token, String email, String gender, String avatar) {
+    public EntityUserProfile(int uID, String userName, String fbID, String last_name, String first_name, String full_name, String tokenFB, String token, String email, String avatar, String gender, Long timeUpdate, String role) {
         this.uID = uID;
         this.userName = userName;
         this.fbID = fbID;
@@ -32,8 +33,10 @@ public class EntityUserProfile extends RealmObject {
         this.tokenFB = tokenFB;
         this.token = token;
         this.email = email;
-        this.gender = gender;
         this.avatar = avatar;
+        this.gender = gender;
+        this.timeUpdate = timeUpdate;
+        this.role = role;
     }
 
     public EntityUserProfile() {
@@ -133,6 +136,14 @@ public class EntityUserProfile extends RealmObject {
 
     public void setTimeUpdate(Long timeUpdate) {
         this.timeUpdate = timeUpdate;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 
     @Override

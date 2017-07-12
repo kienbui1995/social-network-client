@@ -1,10 +1,14 @@
 package Entity;
 
+import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
+
 /**
  * Created by joker on 3/16/17.
  */
 
-public class EntityStatus {
+public class EntityStatus extends RealmObject{
+    @PrimaryKey
     private int idStatus;
     private int uId;
     private String nameId;
@@ -162,42 +166,35 @@ public class EntityStatus {
         this.avatar = avatar;
     }
 
-    public class Place {
-        int id;
-        String name;
-        String avatar;
 
-        public Place(int id, String name, String avatar) {
-            this.id = id;
-            this.name = name;
-            this.avatar = avatar;
-        }
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof EntityStatus)) return false;
 
-        public Place() {
-        }
+        EntityStatus that = (EntityStatus) o;
 
-        public int getId() {
-            return id;
-        }
+        if (getIdStatus() != that.getIdStatus()) return false;
+        if (getuId() != that.getuId()) return false;
+        if (getCreatedTime() != that.getCreatedTime()) return false;
+        if (isLike() != that.isLike()) return false;
+        if (getStatus() != that.getStatus()) return false;
+        if (getNumberLike() != that.getNumberLike()) return false;
+        if (getNumberComment() != that.getNumberComment()) return false;
+        if (getPrivacy() != that.getPrivacy()) return false;
+        if (isCanEdit() != that.isCanEdit()) return false;
+        if (isCanDelete() != that.isCanDelete()) return false;
+        if (!getNameId().equals(that.getNameId())) return false;
+        if (!getContent().equals(that.getContent())) return false;
+        if (!getImage().equals(that.getImage())) return false;
+        if (!getAvatar().equals(that.getAvatar())) return false;
+        return getPlace().equals(that.getPlace());
 
-        public void setId(int id) {
-            this.id = id;
-        }
+    }
 
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-
-        public String getAvatar() {
-            return avatar;
-        }
-
-        public void setAvatar(String avatar) {
-            this.avatar = avatar;
-        }
+    @Override
+    public int hashCode() {
+        int result = getIdStatus();
+        return result;
     }
 }

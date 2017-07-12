@@ -69,13 +69,13 @@ public class AdapterListNotificationChannel extends RecyclerView.Adapter<Recycle
                         }
                     });
             }
-                holderText.txtDateTime.setText(SystemHelper.getTimeAgo(items.get(position).getCreated_at()));
+                holderText.txtDateTime.setText(SystemHelper.convertDate(items.get(position).getCreated_at()));
                 break;
             case PHOTO:
                 ViewHolderPhoto holderPhoto = (ViewHolderPhoto) holder;
                 holderPhoto.txtTitle.setText(items.get(position).getTittle());
                 holderPhoto.txtChannelName.setText(items.get(position).getChannel().getName());
-                holderPhoto.txtDateTime.setText(SystemHelper.getTimeAgo(items.get(position).getCreated_at()));
+                holderPhoto.txtDateTime.setText(SystemHelper.convertDate(items.get(position).getCreated_at()));
                 holderPhoto.txtMessage.setText(items.get(position).getMessage());
                 if ((SystemHelper.getTimeStamp()-items.get(position).getCreated_at())<23200){
                     holderPhoto.imgNew.setVisibility(View.VISIBLE);

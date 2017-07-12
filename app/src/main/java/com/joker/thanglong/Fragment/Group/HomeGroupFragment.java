@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -24,6 +25,8 @@ import java.util.ArrayList;
 import Entity.EntityStatus;
 import adapter.AdapterHome;
 
+import static com.joker.thanglong.R.id.swrNewFeed;
+
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -37,6 +40,8 @@ public class HomeGroupFragment extends Fragment {
     private EndlessScrollListener endlessScrollListener;
     private PostModel postModel;
     private RecyclerView.LayoutManager layoutManager;
+    private SwipeRefreshLayout swpHomeGroup;
+
     public HomeGroupFragment() {
         // Required empty public constructor
     }
@@ -49,6 +54,7 @@ public class HomeGroupFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_home_group, container, false);
         addView(view);
         initEvent();
+        addEvent();
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
@@ -57,6 +63,18 @@ public class HomeGroupFragment extends Fragment {
             }
         },1000);
         return view;
+    }
+
+    private void addEvent() {
+        swpHomeGroup.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                initData();
+                if (swpHomeGroup.isRefreshing()) {
+                    swpHomeGroup.setRefreshing(false);
+                }
+            }
+        });
     }
 
     private void initData() {
@@ -76,6 +94,7 @@ public class HomeGroupFragment extends Fragment {
         adapterHome = new AdapterHome(getActivity(), itemsAdapter,getActivity());
         rcvListPostGroup.setLayoutManager(layoutManager);
         rcvListPostGroup.setAdapter(adapterHome);
+        rcvListPostGroup.setNestedScrollingEnabled(false);
         adapterHome.notifyDataSetChanged();
         endlessScrollListener =  new EndlessScrollListener((LinearLayoutManager) layoutManager) {
             @Override
@@ -107,7 +126,7 @@ public class HomeGroupFragment extends Fragment {
         lnPost = (LinearLayout) view.findViewById(R.id.lnPost);
         btnPost = (Button) view.findViewById(R.id.btnPost);
         rcvListPostGroup = (RecyclerView) view.findViewById(R.id.rcvListPostGroup);
-
+        swpHomeGroup = (SwipeRefreshLayout) view.findViewById(R.id.swpHomeGroup);
     }
 
 }

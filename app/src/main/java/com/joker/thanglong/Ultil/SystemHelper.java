@@ -2,6 +2,9 @@ package com.joker.thanglong.Ultil;
 
 import android.app.Application;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import Entity.EntityUserProfile;
 import io.realm.Realm;
 
@@ -44,7 +47,7 @@ public class SystemHelper extends Application{
         } else if (diff < 48 * HOUR_MILLIS) {
             return "Hôm qua";
         } else {
-            return diff / DAY_MILLIS + " ngày trước";
+            return convertTime(time);
         }
     }
     public static long getTimeStamp(){
@@ -74,6 +77,17 @@ public class SystemHelper extends Application{
         }else {
             return true;
         }
+    }
+    static String convertTime(Long unixtime) {
+        Date dateObject = new Date(unixtime);
+        SimpleDateFormat dateFormatter = new SimpleDateFormat("dd-MM-yy hh:mmaa");
+        return dateFormatter.format(dateObject);
+    }
+
+    public static String convertDate(Long unixtime) {
+        Date dateObject = new Date(unixtime);
+        SimpleDateFormat dateFormatter = new SimpleDateFormat("dd-MM-yy");
+        return dateFormatter.format(dateObject);
     }
 
 }

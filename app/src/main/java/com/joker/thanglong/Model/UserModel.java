@@ -2,18 +2,23 @@ package com.joker.thanglong.Model;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.joker.thanglong.Ultil.SettingUtil;
 import com.joker.thanglong.Ultil.SystemHelper;
+import com.joker.thanglong.Ultil.VolleyHelper;
 import com.joker.thanglong.Ultil.VolleySingleton;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -21,6 +26,7 @@ import Entity.EntityFollow;
 import Entity.EntityStatus;
 import Entity.EntityUserProfile;
 import Entity.EntityUserSearch;
+import Entity.Place;
 import io.realm.Realm;
 
 /**
@@ -117,7 +123,7 @@ public class UserModel {
                         JSONObject jsonObject = (JSONObject) jsonArray.get(i);
                         EntityStatus entityStatus = new EntityStatus();
                         if (jsonObject.has("place")){
-                            EntityStatus.Place place = entityStatus.new Place();
+                            Place place = new Place();
                             JSONObject jsonPlace = jsonObject.getJSONObject("place");
                             place.setId(jsonPlace.getInt("id"));
                             place.setName(jsonPlace.getString("name"));
@@ -152,13 +158,23 @@ public class UserModel {
                             entityStatus.setNumberLike(jsonObject.getInt("likes"));
                         }
                         items.add(entityStatus);
+                        callback.onSuccess(items);
                     }
-                    callback.onSuccess(items);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
             }
         },activity);
+    }
+
+    public void cacheFeed(final EntityStatus entityStatus){
+        Realm realm = Realm.getDefaultInstance();
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                realm.copyToRealmOrUpdate(entityStatus);
+            }
+        });
     }
 
     public static void realmUser(final Context context, final int id,final VolleyCallBackProfileUser callback) {
@@ -231,33 +247,40 @@ public class UserModel {
 
     public void search(CharSequence sequence,final VolleyCallBackSearch callback){
         final ArrayList<EntityUserSearch> listUser = new ArrayList<>();
-        VolleySingleton.getInstance(activity).get("find_user?name="+ sequence, null, new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                try {
-                    JSONArray jsonArray = response.getJSONArray("data");
-                    if(!response.getJSONArray("data").equals("null")) {
-                        //Value is not null
-                        for (int i =0; i< jsonArray.length();i++)
-                        {
-                            JSONObject jsonObject = (JSONObject) jsonArray.get(i);
-                            EntityUserSearch item = new EntityUserSearch();
-                            item.setId(jsonObject.getInt("id"));
-                            item.setUsername(jsonObject.getString("username"));
-                            if(jsonObject.has("avatar")) item.setAvatar(jsonObject.getString("avatar"));
-                            item.setFull_name(jsonObject.getString("full_name"));
-                            item.setIs_followed(jsonObject.getBoolean("is_followed"));
-                            listUser.add(item);
+        String str = sequence.toString();
+        try {
+            URI uri = new URI(str.replace(" ", "%20"));
+            VolleySingleton.getInstance(activity).get("find_user?name="+ uri.toString(), null, new Response.Listener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject response) {
+                    try {
+                        JSONArray jsonArray = response.getJSONArray("data");
+                        if(!response.getJSONArray("data").equals("null")) {
+                            //Value is not null
+                            for (int i =0; i< jsonArray.length();i++)
+                            {
+                                JSONObject jsonObject = (JSONObject) jsonArray.get(i);
+                                EntityUserSearch item = new EntityUserSearch();
+                                item.setId(jsonObject.getInt("id"));
+                                item.setUsername(jsonObject.getString("username"));
+                                if(jsonObject.has("avatar")) item.setAvatar(jsonObject.getString("avatar"));
+                                item.setFull_name(jsonObject.getString("full_name"));
+                                item.setIs_followed(jsonObject.getBoolean("is_followed"));
+                                listUser.add(item);
+                            }
+                        }else {
+                            System.exit(0);
                         }
-                    }else {
-                        System.exit(0);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                    callback.onSuccess(listUser);
                 }
-                callback.onSuccess(listUser);
-            }
-        },activity);
+            },activity);
+
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
     }
 
     public void updateAvatar(String large, String small, final PostModel.VolleyCallBackCheck callback){
@@ -284,6 +307,38 @@ public class UserModel {
         });
     }
 
+    public void login(VolleyHelper volleyHelper,JSONObject jsonObject, final PostModel.VolleyCallBackJson callback) {
+        volleyHelper.post("login", jsonObject, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                JSONObject json = null;
+                try {
+                    json = response.getJSONObject("data");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(activity);
+                SharedPreferences.Editor editor = prefs.edit();
+                try {
+                    editor.putString("token",json.getString("token") );
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                editor.apply();
+                try {
+                    callback.onSuccess(response);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        });
+    }
     public interface VolleyCallBackFollow {
         void onSuccess(ArrayList<EntityFollow> listFollow);
     }

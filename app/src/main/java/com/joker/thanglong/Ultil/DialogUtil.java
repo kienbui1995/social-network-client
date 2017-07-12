@@ -359,6 +359,7 @@ public class DialogUtil {
 
             }
         });
+        
         btnAddViolation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

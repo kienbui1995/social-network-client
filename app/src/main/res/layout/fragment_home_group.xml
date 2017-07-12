@@ -1,46 +1,101 @@
-<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-
-    tools:context="com.joker.thanglong.Fragment.Group.HomeGroupFragment">
-
-    <!-- TODO: Update blank fragment layout -->
-    <LinearLayout
-        android:orientation="vertical"
+<android.support.v4.widget.SwipeRefreshLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent"
+        android:id="@+id/swpHomeGroup"
+        >
+    <android.support.v4.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:context="com.joker.thanglong.Fragment.Group.HomeGroupFragment">
+
+        <!-- TODO: Update blank fragment layout -->
         <LinearLayout
-                android:layout_width="match_parent"
                 android:orientation="vertical"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content">
-            <Button
-                    android:visibility="gone"
-                    android:textAllCaps="false"
-                    android:gravity="left|center_vertical"
-                    android:textColor="#000"
-                    android:text="2 yêu cầu xin tham gia vào nhóm"
-                    android:paddingLeft="10dp"
-                    android:layout_marginBottom="1dp"
-                    android:drawableLeft="@drawable/ic_people_grey_700_18dp"
-                    android:background="@color/white"
-                    android:drawablePadding="10dp"
-                    android:textSize="13sp"
+            <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="45dp"/>
-            <Button
-                    android:visibility="gone"
-                    android:textAllCaps="false"
-                    android:gravity="left|center_vertical"
-                    android:textColor="#000"
-                    android:text="1 bài viết bị báo cáo vi phạm"
-                    android:paddingLeft="10dp"
-                    android:drawableLeft="@drawable/ic_report_problem_grey_500_18dp"
-                    android:background="@color/white"
-                    android:drawablePadding="10dp"
-                    android:textSize="13sp"
+                    android:orientation="vertical"
+                    android:layout_height="wrap_content">
+                <Button
+                        android:visibility="gone"
+                        android:textAllCaps="false"
+                        android:gravity="left|center_vertical"
+                        android:textColor="#000"
+                        android:text="2 yêu cầu xin tham gia vào nhóm"
+                        android:paddingLeft="10dp"
+                        android:layout_marginBottom="1dp"
+                        android:drawableLeft="@drawable/ic_people_grey_700_18dp"
+                        android:background="@color/white"
+                        android:drawablePadding="10dp"
+                        android:textSize="13sp"
+                        android:layout_width="match_parent"
+                        android:layout_height="45dp"/>
+                <Button
+                        android:visibility="gone"
+                        android:textAllCaps="false"
+                        android:gravity="left|center_vertical"
+                        android:textColor="#000"
+                        android:text="1 bài viết bị báo cáo vi phạm"
+                        android:paddingLeft="10dp"
+                        android:drawableLeft="@drawable/ic_report_problem_grey_500_18dp"
+                        android:background="@color/white"
+                        android:drawablePadding="10dp"
+                        android:textSize="13sp"
+                        android:layout_width="match_parent"
+                        android:layout_height="45dp"/>
+
+                <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginTop="10dp"
+                        android:alpha="0.1"
+                        android:background="@color/bgToolbar" />
+
+            </LinearLayout>
+            <LinearLayout
+                    android:id="@+id/lnPost"
                     android:layout_width="match_parent"
-                    android:layout_height="45dp"/>
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:background="@drawable/bg_search"
+                    android:orientation="horizontal"
+                    android:paddingLeft="10dp">
+
+                <Button
+                        android:id="@+id/btnPost"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="left"
+                        android:layout_weight="1"
+                        android:background="@color/colorWhite"
+                        android:drawableLeft="@drawable/avatar1"
+                        android:gravity="center"
+                        android:hint="Heloo"
+                        android:text="    Bạn đang nghĩ gì?"
+                        android:textAlignment="viewStart"
+                        android:textAllCaps="false"
+                        android:textColor="@color/colorGrey" />
+
+                <View
+                        android:layout_width="1dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginTop="10dp"
+                        android:background="@color/bgToolbar" />
+
+                <ImageButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:background="@drawable/bg_search"
+                        android:padding="10dp"
+                        android:src="@drawable/ic_camera_alt_black_24dp" />
+            </LinearLayout>
 
             <View
                     android:layout_width="match_parent"
@@ -50,63 +105,15 @@
                     android:alpha="0.1"
                     android:background="@color/bgToolbar" />
 
-        </LinearLayout>
-        <LinearLayout
-            android:id="@+id/lnPost"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:background="@drawable/bg_search"
-            android:orientation="horizontal"
-            android:paddingLeft="10dp">
+            <android.support.v7.widget.RecyclerView
+                    android:id="@+id/rcvListPostGroup"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
 
-            <Button
-                android:id="@+id/btnPost"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="left"
-                android:layout_weight="1"
-                android:background="@color/colorWhite"
-                android:drawableLeft="@drawable/avatar1"
-                android:gravity="center"
-                android:hint="Heloo"
-                android:text="    Bạn đang nghĩ gì?"
-                android:textAlignment="viewStart"
-                android:textAllCaps="false"
-                android:textColor="@color/colorGrey" />
-
-            <View
-                android:layout_width="1dp"
-                android:layout_height="match_parent"
-                android:layout_marginBottom="10dp"
-                android:layout_marginTop="10dp"
-                android:background="@color/bgToolbar" />
-
-            <ImageButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:background="@drawable/bg_search"
-                android:padding="10dp"
-                android:src="@drawable/ic_camera_alt_black_24dp" />
+            </android.support.v7.widget.RecyclerView>
         </LinearLayout>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginBottom="10dp"
-            android:layout_marginTop="10dp"
-            android:alpha="0.1"
-            android:background="@color/bgToolbar" />
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/rcvListPostGroup"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+    </android.support.v4.widget.NestedScrollView>
 
-        </android.support.v7.widget.RecyclerView>
-    </LinearLayout>
-
-
-</android.support.v4.widget.NestedScrollView>
+</android.support.v4.widget.SwipeRefreshLayout>

@@ -1,6 +1,7 @@
 package adapter;
 
 import android.app.Activity;
+import android.graphics.Color;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -12,6 +13,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.joker.thanglong.R;
 
 import java.util.ArrayList;
@@ -53,13 +55,14 @@ public class AdapterLisLike extends ArrayAdapter {
     private void addEvent(int position) {
         txtFullNameSearchItem.setText(items.get(position).getFull_name());
         txtUserNameSearchItem.setText("@"+ items.get(position).getUsername());
-//        if (items.get(position).isFollow()){
-//            btnFollowUser.setBackgroundResource(R.drawable.btn_unfollow);
-//            btnFollowUser.setTextColor(Color.parseColor("#FFFFFF"));
-//            btnFollowUser.setText("Đã theo dõi");
-//        }else {
-//            btnFollowUser.setText("Theo dõi");
-//        }
+        Glide.with(context).load(items.get(position).getAvatar()).crossFade().into(imgAvatarSearchItem);
+        if (items.get(position).isFollow()){
+            btnFollowUser.setBackgroundResource(R.drawable.btn_unfollow);
+            btnFollowUser.setTextColor(Color.parseColor("#FFFFFF"));
+            btnFollowUser.setText("Đã theo dõi");
+        }else {
+            btnFollowUser.setText("Theo dõi");
+        }
 
     }
 

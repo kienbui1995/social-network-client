@@ -13,6 +13,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 import Entity.EntityClass;
+import Entity.EntityExamSchedule;
 import Entity.EntityTerm;
 
 /**
@@ -99,9 +100,50 @@ public class TimeTableModel {
             }
         },context);
     }
+
+    public void getLichThi(int term, final VolleyCallbackGetLichThi callback){
+        final ArrayList<EntityExamSchedule> items = new ArrayList<>();
+        VolleySingleton.getInstance(context).get("exam_schedules?student_code=A24848&semester_code=" + term, null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+                    JSONArray jsonArray = response.getJSONArray("data");
+                    for (int i =0; i< jsonArray.length();i++)
+                    {
+                        JSONObject jsonObject = (JSONObject) jsonArray.get(i);
+                        JSONObject jsonRoom = jsonObject.getJSONObject("room");
+                        JSONObject jsonSubject = jsonObject.getJSONObject("subject");
+                        EntityExamSchedule entityExamSchedule = new EntityExamSchedule();
+                        EntityExamSchedule.room room = entityExamSchedule.new room();
+                        EntityExamSchedule.Subject subject = entityExamSchedule.new Subject();
+                        room.setId(jsonRoom.getInt("id"));
+                        room.setCode(jsonRoom.getString("code"));
+                        entityExamSchedule.setRoom(room);
+                        subject.setId(jsonSubject.getInt("id"));
+                        subject.setCode(jsonSubject.getString("code"));
+                        subject.setName(jsonSubject.getString("name"));
+                        entityExamSchedule.setSubject(subject);
+                        entityExamSchedule.setId(jsonObject.getInt("id"));
+                        entityExamSchedule.setDay(jsonObject.getString("day"));
+                        entityExamSchedule.setTime(jsonObject.getString("exam_time"));
+                        items.add(entityExamSchedule);
+                    }
+                    callback.onSuccess(items);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        },context);
+    }
+
     public interface VolleyCallbackGetDataTimeTable {
         void onSuccess(ArrayList<EntityClass> itemsClass);
     }
+
+    public interface VolleyCallbackGetLichThi {
+        void onSuccess(ArrayList<EntityExamSchedule> items);
+    }
+
     public interface VolleyCallbackGetTerm {
         void onSuccess(ArrayList<EntityTerm> itemsTerm);
     }

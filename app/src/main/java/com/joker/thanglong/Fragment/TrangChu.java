@@ -1,8 +1,6 @@
 package com.joker.thanglong.Fragment;
 
-import android.app.ProgressDialog;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -24,6 +22,7 @@ import java.util.ArrayList;
 
 import Entity.EntityStatus;
 import adapter.AdapterHome;
+import io.realm.Realm;
 
 /**
  * Created by joker on 2/9/17.
@@ -42,12 +41,14 @@ public class TrangChu extends Fragment{
     RecyclerView.LayoutManager layoutManager;
     private EndlessScrollListener endlessScrollListener;
     UserModel userModel;
+    Realm realm;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.trangchu, container, false);
         itemsAdapter = new ArrayList<>();
         userModel = new UserModel(getActivity(), ProfileInstance.getProfileInstance(getActivity()).getProfile().getuID());
+        realm = Realm.getDefaultInstance();
         addControl(view);
         addEvent();
         getData();
@@ -70,30 +71,36 @@ public class TrangChu extends Fragment{
     }
 
     public void getData() {
-        final ProgressDialog progressDialog = new ProgressDialog(getActivity());
-        progressDialog.setMessage("Đang tải dữ liệu");
-        progressDialog.show();
+//        final ProgressDialog progressDialog = new ProgressDialog(getActivity());
+//        progressDialog.setMessage("Đang tải dữ liệu");
+//        progressDialog.show();
 
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
+//        Handler handler = new Handler();
+//        handler.postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
                 items = new ArrayList<>();
                 userModel.getNewfeed(new PostModel.VolleyCallbackListStatus() {
                     @Override
                     public void onSuccess(ArrayList<EntityStatus> entityStatuses) {
-                        itemsAdapter=entityStatuses;
-                        progressDialog.dismiss();
+//                        RealmResults<EntityStatus> items = realm.where(EntityStatus.class).findAll();
+//                        Log.d("size",items.size()+"");
+//                        for (int i = 0; i < items.size(); i++) {
+//                            itemsAdapter.add(items.get(i));
+//                        }
+//                        progressDialog.dismiss();
+                        itemsAdapter = entityStatuses;
                         initData();
                     }
                 },"");
-            }
-        },1000);
+//            }
+//        },100
+// u0);
 
     }
 
     private void initData() {
-//        itemsAdd = new ArrayList<>();
+        itemsAdd = new ArrayList<>();
         layoutManager = new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false);
         adapterHome = new AdapterHome(getActivity(), itemsAdapter,getActivity());
         rcvNewFeed.setLayoutManager(layoutManager);

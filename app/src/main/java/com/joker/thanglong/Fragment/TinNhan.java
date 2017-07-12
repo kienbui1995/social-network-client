@@ -33,6 +33,7 @@ import com.joker.thanglong.CommentPostFullActivity;
 import com.joker.thanglong.MainActivity;
 import com.joker.thanglong.Model.UserModel;
 import com.joker.thanglong.R;
+import com.joker.thanglong.Ultil.ProfileInstance;
 import com.joker.thanglong.Ultil.VolleyHelper;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -82,7 +83,7 @@ public class TinNhan extends Fragment{
 
     private void addEvent() {
         mReference = FirebaseDatabase.getInstance().getReference();
-        Query query = mReference.child("user").child(MainActivity.entityUserProfile.getuID()+"").child("conversation");
+        Query query = mReference.child("user").child(ProfileInstance.getProfileInstance(getActivity()).getProfile().getuID()+"").child("conversation");
         mAdapter = new FirebaseListAdapter<EntityRoomChat>(getActivity(),EntityRoomChat.class,R.layout.custom_item_list_chat,query){
 
 //            @Override

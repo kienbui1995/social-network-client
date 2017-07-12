@@ -413,6 +413,7 @@ public class DangNhap extends Fragment implements View.OnClickListener,Validator
                         JSONObject json = response.getJSONObject("data");
                         entityUserProfile.setToken(json.getString("token"));
                         entityUserProfile.setuID(json.getInt("id"));
+                        entityUserProfile.setRole(json.getString("role"));
                         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
                         SharedPreferences.Editor editor = prefs.edit();
                         editor.putString("token",json.getString("token") );
@@ -432,7 +433,7 @@ public class DangNhap extends Fragment implements View.OnClickListener,Validator
                                         progressDialog.dismiss();
                                         startActivity(new Intent(getActivity(),MainActivity.class));
                                     }
-                                },1000);
+                                },500);
                             }
                         });
                         initSetting();

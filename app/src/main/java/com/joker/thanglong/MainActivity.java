@@ -1,6 +1,5 @@
 package com.joker.thanglong;
 
-import com.google.firebase.auth.PhoneAuthProvider;
 import com.google.firebase.database.DatabaseReference;
 
 import android.app.Activity;
@@ -10,6 +9,7 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
@@ -33,13 +33,16 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.bumptech.glide.Glide;
 import com.joker.thanglong.Fragment.ChannelFragment;
 import com.joker.thanglong.Fragment.Group.GroupFragment;
+import com.joker.thanglong.Fragment.TestScheduleFragment;
 import com.joker.thanglong.Model.UserModel;
 import com.joker.thanglong.Ultil.DeviceUltil;
 import com.joker.thanglong.Ultil.ProfileInstance;
@@ -91,120 +94,40 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
     File destination;
     Activity activity;
     UserModel userModel;
-    private PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        boolean check = ProfileInstance.getProfileInstance(this).checkLogin();
         setContentView(R.layout.activity_main);
         //Khoi tao realm
-        Realm.init(this);
+//        Realm.init(this);
         //Khoi tao doi tuong Realm
-        realm = Realm.getDefaultInstance();
         getInfoUser();
-        entityUserProfile = realm.where(EntityUserProfile.class).findFirst();
-        token= entityUserProfile.getToken();
-        Log.d("respone1",entityUserProfile.toString());
-        activity=this;
-//        tabHost = (TabLayout) findViewById(R.id.tabHost);
-        userModel = new UserModel(this,ProfileInstance.getProfileInstance(this).getProfile().getuID());
-        btnTakePicture = (ImageButton) findViewById(R.id.btnTakePicture);
-        viewPager = (ViewPager) findViewById(R.id.viewPager);
-        tabButtom = (JPagerSlidingTabStrip2) findViewById(R.id.tab_buttom);
-        toolbar = (Toolbar) findViewById(R.id.toolbarA);
-        drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
-//        content = (FrameLayout) findViewById(R.id.content);
-//        epMenu = (ExpandableListView) findViewById(R.id.epMenu);
-        appBarLayout = (AppBarLayout) findViewById(R.id.appBar);
-        btnPostStatus = (Button) findViewById(R.id.btnPost);
-//        lvMenu = (ListView) findViewById(R.id.lvMenu);
-        collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapToolbar);
-        frContent = (LinearLayout) findViewById(R.id.frContent);
-        nvMenu = (NavigationView) findViewById(R.id.nvMenu);
-        View header = nvMenu.getHeaderView(0);
-        TextView full_name = (TextView) header.findViewById(R.id.txtFullNameNavibar);
-        full_name.setText(entityUserProfile.getFull_name());
-        //Toolbar
-        toolbar.setTitle("");
-        setSupportActionBar(toolbar);
-        //Tabhost
-//        tabHost.setupWithViewPager(viewPager);
-
-
-        int[] mSelectors = new int[] { R.drawable.tab1, R.drawable.tab2, R.drawable.tab3, R.drawable.tab4 };
-        setupStrip(tabButtom.getTabStyleDelegate(), STYLE_ROUND);
-        viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(),mSelectors);
-        viewPager.setAdapter(viewPagerAdapter);
-        tabButtom.bindViewPager(viewPager);
-        tabButtom.setPromptNum(1,5);
-        tabButtom.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-                tabButtom.setPromptNum(1,0);
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
-        });
-        //DrawerLayout
-        actionBarDrawerToggle = new ActionBarDrawerToggle(this,drawerLayout,R.string.open,R.string.close);
-        drawerLayout.addDrawerListener(actionBarDrawerToggle);
-
-        getSupportActionBar().setHomeButtonEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        actionBarDrawerToggle.syncState();
-        //Set su kien click cho Appbar layout
-        appBarLayout.addOnOffsetChangedListener(this);
-        btnPostStatus.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(),PostActivity.class);
-                intent.putExtra("postAt",1);
-                startActivity(intent);
-            }
-        });
-
-        //
-//        Bundle params = new Bundle();
-//        params.putString("fields","name");
-//        putParamFacebook = new PutParamFacebook(accessToken,params,"name");
+        addControl();
+        initViewpager();
+        initToolBar();
+        addEvent();
 
         nvMenu.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 int id = item.getItemId();
+//                if (entityUserProfile.getRole().equals("student") && item.getItemId() == R.id.itProfile){
+//                    item.setVisible(false);
+//                }
                 switch (id){
                     case R.id.itHome:
                         startActivity(new Intent(getApplicationContext(),TeacherActivity.class));
                         break;
-//                        manager = getSupportFragmentManager();
-//                        List<Fragment> fragments = manager.getFragments();
-//                        if (fragments != null) {
-//                            for (Fragment fragment : fragments) {
-//                                getSupportFragmentManager().beginTransaction().remove(fragment).commit();
-//                            }
-//                        }else {
-//                            Toast.makeText(MainActivity.this, "Khong co fragment", Toast.LENGTH_SHORT).show();
-//                        }
-                    case R.id.itProfile:
-                        startActivity(new Intent(getApplicationContext(),TrackerActivity.class));
-                        break;
+//                    case R.id.itProfile:
+//                        startActivity(new Intent(getApplicationContext(),TrackerActivity.class));
+//                        break;
                     case R.id.itFollow:
-                        startActivity(new Intent(getApplicationContext(),StudentActivity.class));
+                        startActivity(new Intent(getApplicationContext(),FollowActivity.class));
                         break;
-                    case R.id.itLearing:
+                    case R.id.itTimeTable:
                         startActivity(new Intent(getApplicationContext(),TimeTableActivity.class));
                         break;
                     case R.id.itGroup:
-                        //Framgment
                         manager = getSupportFragmentManager();
                         transaction = manager.beginTransaction();
                         GroupFragment groupFragment = new GroupFragment();
@@ -224,18 +147,26 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
                         drawerLayout.closeDrawers();
 //                        startActivity(new Intent(getApplicationContext(),GroupActivity.class));
                         break;
-                    case R.id.itDiemDanh:
-                        startActivity(new Intent(getApplicationContext(),TrangChuDiemDanhActivity.class));
+                    case R.id.itLichThi:
+                        getSupportFragmentManager().beginTransaction().add(R.id.frContentHome,new TestScheduleFragment())
+                                .addToBackStack(null).commit();
+                        drawerLayout.closeDrawers();
+                        break;
+                    case R.id.itLink:
+                        startActivity(new Intent(getApplicationContext(),LinkAccountActivity.class));
+                        break;
+                    case R.id.itThanhTra:
+                        startActivity(new Intent(getApplicationContext(),TrackerActivity.class));
                         break;
                     case R.id.itSetting:
-                        startActivity(new Intent(getApplicationContext(),AdminActivity.class));
+                        startActivity(new Intent(getApplicationContext(),SettingActivity.class));
                         break;
-
                 }
 
                 return false;
             }
         });
+
         destination = new File(Environment.getExternalStorageDirectory(), name + ".jpg");
         btnTakePicture.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -251,6 +182,81 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
 
     }
 
+    private void addEvent() {
+        btnPostStatus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(),PostActivity.class);
+                intent.putExtra("postAt",1);
+                startActivity(intent);
+            }
+        });
+
+    }
+
+    private void initToolBar() {
+        //Toolbar
+        toolbar.setTitle("");
+        setSupportActionBar(toolbar);
+        //Tabhost
+//        tabHost.setupWithViewPager(viewPager);
+
+        //DrawerLayout
+        actionBarDrawerToggle = new ActionBarDrawerToggle(this,drawerLayout,R.string.open,R.string.close);
+        drawerLayout.addDrawerListener(actionBarDrawerToggle);
+
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        actionBarDrawerToggle.syncState();
+        //Set su kien click cho Appbar layout
+        appBarLayout.addOnOffsetChangedListener(this);
+    }
+
+    private void addControl() {
+        //        tabHost = (TabLayout) findViewById(R.id.tabHost);
+        userModel = new UserModel(this,ProfileInstance.getProfileInstance(this).getProfile().getuID());
+        btnTakePicture = (ImageButton) findViewById(R.id.btnTakePicture);
+        viewPager = (ViewPager) findViewById(R.id.viewPager);
+        tabButtom = (JPagerSlidingTabStrip2) findViewById(R.id.tab_buttom);
+        toolbar = (Toolbar) findViewById(R.id.toolbarA);
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
+//        content = (FrameLayout) findViewById(R.id.content);
+//        epMenu = (ExpandableListView) findViewById(R.id.epMenu);
+        appBarLayout = (AppBarLayout) findViewById(R.id.appBar);
+        btnPostStatus = (Button) findViewById(R.id.btnPost);
+//        lvMenu = (ListView) findViewById(R.id.lvMenu);
+        collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapToolbar);
+        frContent = (LinearLayout) findViewById(R.id.frContent);
+        nvMenu = (NavigationView) findViewById(R.id.nvMenu);
+
+    }
+
+    private void initViewpager() {
+        int[] mSelectors = new int[] { R.drawable.tab1, R.drawable.tab2, R.drawable.tab3, R.drawable.tab4 };
+        setupStrip(tabButtom.getTabStyleDelegate(), STYLE_ROUND);
+        viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(),mSelectors);
+        viewPager.setAdapter(viewPagerAdapter);
+        tabButtom.bindViewPager(viewPager);
+//        tabButtom.setPromptNum(1,5);
+        tabButtom.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+//                tabButtom.setPromptNum(1,0);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+    }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -264,6 +270,7 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
     }
 
     private void getInfoUser() {
+        realm = Realm.getDefaultInstance();
         profile = realm.where(EntityUserProfile.class).findFirst();
         VolleyHelper volleyHelper = new VolleyHelper(this,getResources().getString(R.string.url));
         volleyHelper.get("users/" + profile.getuID(), null, new Response.Listener<JSONObject>() {
@@ -273,9 +280,49 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
                     JSONObject jsonObject = response.getJSONObject("data");
                     realm.beginTransaction();
                     profile.setFull_name(jsonObject.getString("full_name"));
+                    profile.setAvatar(jsonObject.getString("avatar"));
                     realm.commitTransaction();
-//                    full_name.setText(profile.getFull_name().toString());
-                    Log.d("respone",profile.toString());
+                    View header = nvMenu.getHeaderView(0);
+                    final TextView full_name = (TextView) header.findViewById(R.id.txtFullNameNavibar);
+                    TextView txtMyHome = (TextView) header.findViewById(R.id.txtMyHome);
+                    final ImageView imgAvatar = (ImageView) header.findViewById(R.id.imgAvatar);
+                    txtMyHome.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Intent intent = new Intent(getApplicationContext(),UserProfileActivity.class);
+                            intent.putExtra("uId",ProfileInstance.getProfileInstance(getApplicationContext()).getProfile().getuID());
+                            startActivity(intent);
+                        }
+                    });
+                    entityUserProfile = ProfileInstance.getProfileInstance(getApplicationContext()).getProfile();
+                    token= entityUserProfile.getToken();
+                    Handler handler = new Handler();
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            Glide.with(getApplicationContext()).load(entityUserProfile.getAvatar()).crossFade().into(imgAvatar);
+                            full_name.setText(entityUserProfile.getFull_name());
+                            if (entityUserProfile.getRole().equals("student")){
+                                Menu menu2 = nvMenu.getMenu();
+                                menu2.findItem(R.id.itLink).setVisible(false);
+                                menu2.findItem(R.id.itThanhTra).setVisible(false);
+                                menu2.findItem(R.id.itAdmin).setVisible(false);
+                            }else if (entityUserProfile.getRole().equals("supervisior")){
+                                Menu menu2 = nvMenu.getMenu();
+                                menu2.findItem(R.id.itLink).setVisible(false);
+                                menu2.findItem(R.id.itAdmin).setVisible(false);
+                                menu2.findItem(R.id.itTimeTable).setVisible(false);
+                                menu2.findItem(R.id.itLichThi).setVisible(false);
+                            }else if (entityUserProfile.getRole().equals("user"))
+                            {
+                                Menu menu2 = nvMenu.getMenu();
+                                menu2.findItem(R.id.itAdmin).setVisible(false);
+                                menu2.findItem(R.id.itTimeTable).setVisible(false);
+                                menu2.findItem(R.id.itThanhTra).setVisible(false);
+                                menu2.findItem(R.id.itLichThi).setVisible(false);
+                            }
+                        }
+                    },1000);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -325,14 +372,6 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
 //            LoginManager.getInstance().logOut();
 //            finish();
 //            startActivity(new Intent(this,SignUpIn.class));
-        }else if (vitri == R.id.itTrangCaNhan){
-            Intent intent = new Intent(this,UserProfileActivity.class);
-            intent.putExtra("uId",ProfileInstance.getProfileInstance(this).getProfile().getuID());
-            startActivity(intent);
-        }else if (vitri==R.id.thongBao){
-            startActivity(new Intent(this, ManagerMemberGroupActivity.class));
-        }else if (vitri == R.id.it_search){
-            startActivity(new Intent(this,SearchActivity.class));
         }
         return true;
     }
@@ -366,7 +405,7 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
                     public void execute(Realm realm) {
                         getSharedPreferences("token", 0).edit().clear().apply();
                         realm.deleteAll();
-                        finish();
+                        VolleySingleton.mInstance = null;
                         startActivity(new Intent(getApplicationContext(),SignUpIn.class));
                     }
                 });
