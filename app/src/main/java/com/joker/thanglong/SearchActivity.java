@@ -97,16 +97,21 @@ public class SearchActivity extends AppCompatActivity {
     }
 
     private void searchAction(CharSequence query) {
-        userModel.search(query, new UserModel.VolleyCallBackSearch() {
-            @Override
-            public void onSuccess(ArrayList<EntityUserSearch> listUser) {
-                result = listUser;
-                adapterSearch = new AdapterSearch(SearchActivity.this,R.layout.custom_search_result,result);
-                lvSearch.setAdapter(adapterSearch);
-                adapterSearch.notifyDataSetChanged();
-            }
-        });
+        if (query.toString().length()>0){
+            userModel.search(query, new UserModel.VolleyCallBackSearch() {
+                @Override
+                public void onSuccess(ArrayList<EntityUserSearch> listUser) {
+                    result = listUser;
+                    if (listUser!= null){
+                        adapterSearch = new AdapterSearch(SearchActivity.this,R.layout.custom_search_result,result);
+                        lvSearch.setAdapter(adapterSearch);
+                        adapterSearch.notifyDataSetChanged();
+                    }else {
 
+                    }
+                }
+            });
+        }
     }
 
     private void addControll() {

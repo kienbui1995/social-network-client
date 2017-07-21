@@ -414,13 +414,15 @@ public class DangNhap extends Fragment implements View.OnClickListener,Validator
                         entityUserProfile.setToken(json.getString("token"));
                         entityUserProfile.setuID(json.getInt("id"));
                         entityUserProfile.setRole(json.getString("role"));
+                        entityUserProfile.setCode(json.getString("code"));
                         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
                         SharedPreferences.Editor editor = prefs.edit();
                         editor.putString("token",json.getString("token") );
+                        editor.putInt("uId",json.getInt("id") );
                         editor.apply();
                         realm.executeTransaction(new Realm.Transaction() {
                             @Override
-                            public void execute(Realm realm) {
+                            public void execute(final Realm realm) {
                                 realm.copyToRealmOrUpdate(entityUserProfile);
                                 Log.d("EntityObj",entityUserProfile.getuID()+"");
                                 final ProgressDialog progressDialog = new ProgressDialog(getActivity());
@@ -431,9 +433,10 @@ public class DangNhap extends Fragment implements View.OnClickListener,Validator
                                     @Override
                                     public void run() {
                                         progressDialog.dismiss();
+                                        realm.close();
                                         startActivity(new Intent(getActivity(),MainActivity.class));
                                     }
-                                },500);
+                                },1000);
                             }
                         });
                         initSetting();

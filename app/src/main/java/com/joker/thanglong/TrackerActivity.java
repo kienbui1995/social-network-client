@@ -6,12 +6,15 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.LinearLayout;
 
+import com.joker.thanglong.Fragment.ListViolationFragment;
+import com.joker.thanglong.Fragment.TrackRoomFragment;
 import com.joker.thanglong.Fragment.TrackStudentFragment;
 
 public class TrackerActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private LinearLayout lnStudent;
     private LinearLayout lnRoom;
+    private LinearLayout lnListViolation;
 
 
     @Override
@@ -31,13 +34,28 @@ public class TrackerActivity extends AppCompatActivity {
                 .commit();
             }
         });
-        
+        lnListViolation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getSupportFragmentManager().beginTransaction().replace(R.id.fr_root,new ListViolationFragment()).addToBackStack(null)
+                        .commit();
+            }
+        });
+
+        lnStudent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getSupportFragmentManager().beginTransaction().replace(R.id.fr_root,new TrackRoomFragment()).addToBackStack(null)
+                        .commit();
+            }
+        });
     }
 
     private void addControl() {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         lnStudent = (LinearLayout) findViewById(R.id.lnStudent);
         lnRoom = (LinearLayout) findViewById(R.id.lnEducation);
+        lnListViolation = (LinearLayout) findViewById(R.id.lnListViolation);
     }
     private void addToolbar() {
         toolbar.setTitle("Chức năng của giám thị");

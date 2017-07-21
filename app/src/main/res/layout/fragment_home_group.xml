@@ -56,7 +56,134 @@
                         android:background="@color/bgToolbar" />
 
             </LinearLayout>
+            <TextView
+                    android:layout_marginLeft="10dp"
+                    android:text="Tin nhắn gần đây"
+                    android:textSize="12sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
             <LinearLayout
+                    android:id="@+id/lnGroupChat"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:background="@drawable/bg_search"
+                    android:orientation="horizontal"
+                    android:paddingLeft="10dp">
+                <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                    <LinearLayout
+                            android:id="@+id/lnChat"
+                            android:paddingTop="3dp"
+                            android:paddingBottom="10dp"
+                            android:orientation="horizontal"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+                        <FrameLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content">
+                            <TextView
+                                    android:visibility="invisible"
+                                    android:id="@+id/txtOnline"
+                                    android:layout_gravity="right|bottom"
+                                    android:background="@drawable/circle"
+                                    android:layout_width="10dp"
+                                    android:layout_height="10dp"/>
+                            <de.hdodenhof.circleimageview.CircleImageView
+                                    android:id="@+id/imgAvatar"
+                                    android:layout_width="50dp"
+                                    android:layout_height="50dp"/>
+                        </FrameLayout>
+                        <LinearLayout
+                                android:paddingLeft="15dp"
+                                android:orientation="vertical"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content">
+                            <RelativeLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent">
+                                <TextView
+                                        android:id="@+id/txtNameChat"
+                                        android:paddingTop="6dp"
+                                        android:textStyle="bold"
+                                        android:text=""
+                                        android:textSize="15sp"
+                                        android:textColor="#000"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"/>
+
+                                <TextView
+                                        android:textSize="10sp"
+                                        android:layout_alignParentRight="true"
+                                        android:layout_alignBottom="@+id/txtNameChat"
+                                        android:id="@+id/txtTimeChat"
+                                        android:text=""
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        />
+
+                            </RelativeLayout>
+
+                            <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content">
+                                <TextView
+                                        android:id="@+id/txtLastMessage"
+                                        android:textColor="#000"
+                                        android:text=""
+                                        android:textStyle="normal"
+                                        android:paddingTop="4dp"
+                                        android:maxLength="40"
+                                        android:layout_weight="1"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"/>
+                                <TextView
+                                        android:layout_weight="0.1"
+                                        android:layout_gravity="center"
+                                        android:textColor="@color/colorWhite"
+                                        android:background="@drawable/circle"
+                                        android:text="3"
+                                        android:gravity="center"
+                                        android:visibility="invisible"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"/>
+                            </LinearLayout>
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+                <TextView
+                        android:visibility="gone"
+                        android:id="@+id/txtNhanTin"
+                        android:padding="5dp"
+                        android:textAllCaps="false"
+                        android:gravity="center_horizontal|center_vertical"
+                        android:background="@drawable/bg_sinhvien"
+                        android:text="Chưa có tin nhắn"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"/>
+                </FrameLayout>
+
+            </LinearLayout>
+            <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginTop="10dp"
+                    android:alpha="0.1"
+                    android:background="@color/bgToolbar" />
+            <TextView
+                    android:layout_marginLeft="10dp"
+                    android:text="Bài viết"
+                    android:textSize="12sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+            <LinearLayout
+                    android:layout_marginTop="6dp"
                     android:id="@+id/lnPost"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

@@ -1,4 +1,4 @@
-package com.joker.thanglong.Fragment;
+package com.joker.thanglong.Fragment.Group;
 
 
 import android.os.Bundle;
@@ -25,7 +25,7 @@ import adapter.AdapterRoom;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class TrackRoomFragment extends Fragment {
+public class DetailRoomFragment extends Fragment {
     private Spinner spnShift;
     private DeleteEditText edtStudentCode;
     private RecyclerView rcvListStudent;
@@ -34,7 +34,7 @@ public class TrackRoomFragment extends Fragment {
     AdapterRoom adapterRoom;
     TrackerModel trackerModel;
     RecyclerView.LayoutManager layoutManager;
-    public TrackRoomFragment() {
+    public DetailRoomFragment() {
         // Required empty public constructor
     }
 

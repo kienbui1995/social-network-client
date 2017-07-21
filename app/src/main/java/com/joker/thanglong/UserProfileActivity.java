@@ -48,7 +48,6 @@ import org.json.JSONObject;
 
 import java.io.File;
 
-import Entity.EntityUserProfile;
 import adapter.UserWallAdapter;
 
 public class UserProfileActivity extends AppCompatActivity {
@@ -89,6 +88,7 @@ public class UserProfileActivity extends AppCompatActivity {
     public UserProfileActivity() {
     firebaseHelper = new FirebaseHelper(this);
     }
+
 
 
 
@@ -159,13 +159,6 @@ public class UserProfileActivity extends AppCompatActivity {
                 });
             }
         });
-        userModel.realmUser(this, id, new UserModel.VolleyCallBackProfileUser() {
-            @Override
-            public void onSuccess(EntityUserProfile profile) {
-
-            }
-        });
-
 
     }
 
@@ -182,8 +175,6 @@ public class UserProfileActivity extends AppCompatActivity {
                                 switch (which){
                                     case 0:
                                         chooseImage();
-                                    case 1:
-                                        Toast.makeText(UserProfileActivity.this, which+"", Toast.LENGTH_SHORT).show();
                                 }
                             }
                         })
@@ -229,6 +220,7 @@ public class UserProfileActivity extends AppCompatActivity {
         vUserDetails = (LinearLayout) findViewById(R.id.vUserDetails);
         idVerifi = (ImageView) findViewById(R.id.idVerifi);
         btnFollow = (Button) findViewById(R.id.btnFollow);
+//        txtRole = (TextView) findViewById(R.id.txtRole);
         vUserStats = (LinearLayout) findViewById(R.id.vUserStats);
         toolbarProfile = (Toolbar) findViewById(R.id.toolbarProfile);
         tlUserProfileTabs = (TabLayout) findViewById(R.id.tlUserProfileTabs);

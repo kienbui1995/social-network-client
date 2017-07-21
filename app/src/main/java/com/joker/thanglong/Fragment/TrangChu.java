@@ -59,9 +59,6 @@ public class TrangChu extends Fragment{
         swrNewFeed.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-//                rcvNewFeed.getRecycledViewPool().clear();
-//                items.clear();
-//                itemsAdapter.clear();
                 getData();
                 if (swrNewFeed.isRefreshing()) {
                     swrNewFeed.setRefreshing(false);
@@ -71,36 +68,18 @@ public class TrangChu extends Fragment{
     }
 
     public void getData() {
-//        final ProgressDialog progressDialog = new ProgressDialog(getActivity());
-//        progressDialog.setMessage("Đang tải dữ liệu");
-//        progressDialog.show();
-
-//        Handler handler = new Handler();
-//        handler.postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-                items = new ArrayList<>();
+//                items = new ArrayList<>();
                 userModel.getNewfeed(new PostModel.VolleyCallbackListStatus() {
                     @Override
                     public void onSuccess(ArrayList<EntityStatus> entityStatuses) {
-//                        RealmResults<EntityStatus> items = realm.where(EntityStatus.class).findAll();
-//                        Log.d("size",items.size()+"");
-//                        for (int i = 0; i < items.size(); i++) {
-//                            itemsAdapter.add(items.get(i));
-//                        }
-//                        progressDialog.dismiss();
                         itemsAdapter = entityStatuses;
                         initData();
                     }
                 },"");
-//            }
-//        },100
-// u0);
-
     }
 
     private void initData() {
-        itemsAdd = new ArrayList<>();
+//        itemsAdd = new ArrayList<>();
         layoutManager = new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false);
         adapterHome = new AdapterHome(getActivity(), itemsAdapter,getActivity());
         rcvNewFeed.setLayoutManager(layoutManager);

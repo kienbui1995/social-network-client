@@ -167,12 +167,16 @@ public class CommentPostActivity extends AppCompatActivity implements QueryListe
         postModel.getComment(0,2, new PostModel.VolleyCallbackComment() {
             @Override
             public void onSuccess(ArrayList<EntityComment> entityComments) {
-                dsComment = entityComments;
-                Collections.reverse(dsComment);
-                if (dsComment.size()<5){
+                if (entityComments.size()!=0){
+                    dsComment = entityComments;
+                    Collections.reverse(dsComment);
+                    if (dsComment.size()<5){
+                        btnLoadPrevious.setVisibility(View.GONE);
+                    }
+                    loadMore();
+                }else {
                     btnLoadPrevious.setVisibility(View.GONE);
                 }
-                loadMore();
             }
         });
     }

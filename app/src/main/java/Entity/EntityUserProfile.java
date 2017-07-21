@@ -20,10 +20,11 @@ public class EntityUserProfile extends RealmObject {
     String email;
     String avatar;
     String gender;
-    Long timeUpdate;
-    String role;
+    private Long timeUpdate;
+    private String role;
+    private String code;
 
-    public EntityUserProfile(int uID, String userName, String fbID, String last_name, String first_name, String full_name, String tokenFB, String token, String email, String avatar, String gender, Long timeUpdate, String role) {
+    public EntityUserProfile(int uID, String userName, String fbID, String last_name, String first_name, String full_name, String tokenFB, String token, String email, String avatar, String gender, Long timeUpdate, String role, String code) {
         this.uID = uID;
         this.userName = userName;
         this.fbID = fbID;
@@ -37,6 +38,7 @@ public class EntityUserProfile extends RealmObject {
         this.gender = gender;
         this.timeUpdate = timeUpdate;
         this.role = role;
+        this.code = code;
     }
 
     public EntityUserProfile() {
@@ -149,5 +151,13 @@ public class EntityUserProfile extends RealmObject {
     @Override
     public String toString() {
         return getFull_name()+ " " + getToken()+ " " +getUserName() + " "+getEmail() + " " + getuID() ;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
     }
 }

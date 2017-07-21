@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
+        android:layout_marginTop="7dp"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:background="#25d9d8d8"
+        android:id="@+id/rl_root"
+    android:layout_height="wrap_content"
     android:padding="10dp">
 
     <TextView
@@ -26,17 +29,5 @@
         android:hint="Ca học"
         android:layout_below="@+id/tvSemester"
         android:layout_marginTop="10dp"/>
-
-    <Button
-        android:id="@+id/btnDetailRoom"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Xem chi tiết"
-        android:textColor="#ffffff"
-        android:textAllCaps="false"
-        android:layout_below="@+id/tvShift"
-        android:drawableLeft="@drawable/ic_details_white_24dp"
-        android:layout_marginTop="10dp"
-        android:drawablePadding="5dp"/>
 
 </RelativeLayout>

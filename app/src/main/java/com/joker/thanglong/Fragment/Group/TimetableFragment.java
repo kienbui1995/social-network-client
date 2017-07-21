@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import com.joker.thanglong.Model.TimeTableModel;
 import com.joker.thanglong.R;
 import com.joker.thanglong.TimeTableActivity;
+import com.joker.thanglong.Ultil.ProfileInstance;
 import com.kelin.scrollablepanel.library.ScrollablePanel;
 
 import java.util.ArrayList;
@@ -36,22 +37,34 @@ public class TimetableFragment extends Fragment {
         View view = inflater.inflate(R.layout.detail_time_table, container, false);
         timeTableModel = new TimeTableModel(getActivity());
         addView(view);
-        addData(TimeTableActivity.term);
+        addData(ProfileInstance.getProfileInstance(getActivity()).getProfile().getCode(),TimeTableActivity.term);
         return view;
     }
 
     private void addView(View view) {
         spTimeTable = (ScrollablePanel) view.findViewById(R.id.spTimeTable);
     }
-    private void addData(int code) {
-        timeTableModel.getDataTimeTable(code, new TimeTableModel.VolleyCallbackGetDataTimeTable() {
-            @Override
-            public void onSuccess(ArrayList<EntityClass> itemsClass) {
-                adapterTimeTable = new AdapterTimeTable(itemsClass,getActivity());
-                spTimeTable.setPanelAdapter(adapterTimeTable);
-                spTimeTable.notifyDataSetChanged();
-            }
-        });
+    private void addData(String Scode,int code) {
+        if (TimeTableActivity.check==1){
+            timeTableModel.getDataTimeTable(code,Scode, new TimeTableModel.VolleyCallbackGetDataTimeTable() {
+                @Override
+                public void onSuccess(ArrayList<EntityClass> itemsClass) {
+                    adapterTimeTable = new AdapterTimeTable(itemsClass,getActivity());
+                    spTimeTable.setPanelAdapter(adapterTimeTable);
+                    spTimeTable.notifyDataSetChanged();
+                }
+            });
+        }else if (TimeTableActivity.check==2){
+            timeTableModel.getTeacherTimeTable(code,Scode, new TimeTableModel.VolleyCallbackGetDataTimeTable() {
+                @Override
+                public void onSuccess(ArrayList<EntityClass> itemsClass) {
+                    adapterTimeTable = new AdapterTimeTable(itemsClass,getActivity());
+                    spTimeTable.setPanelAdapter(adapterTimeTable);
+                    spTimeTable.notifyDataSetChanged();
+                }
+            });
+
+        }
     }
 
 }

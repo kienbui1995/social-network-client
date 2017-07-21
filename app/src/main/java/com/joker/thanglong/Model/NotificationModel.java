@@ -12,6 +12,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 import Entity.EntityNotification;
+import Entity.EntityUserProfile;
 
 /**
  * Created by joker on 6/7/17.
@@ -61,6 +62,13 @@ public class NotificationModel {
                             last_post.setId(jsonObjectPost.getInt("id"));
                             last_post.setMessage(jsonObjectPost.getString("message"));
                             if (jsonObjectPost.has("photo")) last_post.setPhoto(jsonObjectPost.getString("photo"));
+                            if (jsonObjectPost.has("owner")){
+                                JSONObject jsonOwner = jsonObjectPost.getJSONObject("owner");
+                                EntityUserProfile profile = new EntityUserProfile();
+                                profile.setFull_name(jsonOwner.getString("full_name"));
+                                profile.setuID(jsonOwner.getInt("id"));
+                                entityNotification.setUser(profile);
+                            }
                             entityNotification.setLast_post(last_post);
                         }
                         if (jsonObject.has("last_comment")){

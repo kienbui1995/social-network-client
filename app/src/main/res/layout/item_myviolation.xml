@@ -1,7 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="vertical"
+              android:layout_marginTop="5dp"
               android:layout_width="match_parent"
-              android:layout_height="match_parent">
-
+              android:layout_height="wrap_content">
+    <LinearLayout
+            android:background="@drawable/vienthanglong"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        <TextView
+                android:padding="5dp"
+                android:gravity="center"
+                android:layout_gravity="center_vertical"
+                android:id="@+id/txtDate"
+                android:textSize="14sp"
+                android:layout_weight="3"
+                android:text="25/5/2017"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"/>
+        <LinearLayout
+                android:padding="5dp"
+                android:background="@drawable/vienfacebook"
+                android:orientation="vertical"
+                android:layout_weight="7"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content">
+            <TextView
+                    android:textColor="#000"
+                    android:id="@+id/txtName"
+                    android:visibility="gone"
+                    android:text=""
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            <TextView
+                    android:id="@+id/txtMessage"
+                    android:text="Đi học muộn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            <TextView
+                    android:id="@+id/txtPlace"
+                    android:text="A703"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            <TextView
+                    android:id="@+id/txtDateTime"
+                    android:text="25/5/2017 12:13"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+        </LinearLayout>
+        <ImageView
+                android:id="@+id/imgPhoto"
+                android:layout_weight="3"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"/>
+    </LinearLayout>
 </LinearLayout>

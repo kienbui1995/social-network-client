@@ -6,20 +6,22 @@
     android:padding="10dp">
 
     <TextView
+            android:textColor="#000"
         android:id="@+id/tvSubjectName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Tên môn"/>
 
     <TextView
+            android:textColor="#000"
         android:id="@+id/tvSemester"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Học kỳ"
         android:layout_below="@+id/tvSubjectName"
         android:layout_marginTop="10dp"/>
 
     <TextView
+            android:textColor="#000"
         android:id="@+id/tvShift"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -28,23 +30,26 @@
         android:layout_marginTop="10dp"/>
 
     <TextView
+            android:textColor="#000"
         android:id="@+id/tvTeacherName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Giảng viên"
         android:layout_below="@+id/tvShift"
         android:layout_marginTop="10dp"/>
+    <TextView
+            android:layout_marginTop="10dp"
+            android:id="@+id/tvDanhSachSV"
+            android:text="Danh sách sinh viên"
+            android:layout_below="@+id/tvTeacherName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    <android.support.v7.widget.RecyclerView
+            android:id="@+id/rcvListStudent"
+            android:layout_marginTop="10dp"
+            android:layout_below="@+id/tvDanhSachSV"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-    <Button
-        android:id="@+id/btnListStudent"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Danh sách sinh viên"
-        android:textColor="#ffffff"
-        android:textAllCaps="false"
-        android:layout_below="@+id/tvTeacherName"
-        android:drawableLeft="@drawable/ic_format_list_bulleted_white_24dp"
-        android:layout_marginTop="10dp"
-        android:drawablePadding="5dp"/>
-
+    </android.support.v7.widget.RecyclerView>
 </RelativeLayout>

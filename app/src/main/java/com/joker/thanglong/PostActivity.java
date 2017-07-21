@@ -27,6 +27,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.joker.thanglong.Model.PostModel;
 import com.joker.thanglong.Ultil.DeviceUltil;
 import com.joker.thanglong.Ultil.FilePath;
@@ -35,6 +36,8 @@ import com.joker.thanglong.Ultil.ImagePicker;
 import com.joker.thanglong.Ultil.ProfileInstance;
 import com.joker.thanglong.Ultil.SystemHelper;
 import com.squareup.picasso.Picasso;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 import java.io.File;
 import java.util.HashMap;
@@ -48,6 +51,7 @@ public class PostActivity extends AppCompatActivity {
     private Intent mIntent;
     private StorageReference mStorageReference;
     private EditText edtStatusInput;
+    private CircleImageView imgAvatar;
     private Spinner spnPrivacy;
     private TextView txtFullNamePost;
     private int privacy;
@@ -140,6 +144,7 @@ public class PostActivity extends AppCompatActivity {
 //    }
 
     private void addEvent() {
+        Glide.with(this).load(MainActivity.entityUserProfile.getAvatar()).into(imgAvatar);
         txtFullNamePost.setText(MainActivity.entityUserProfile.getFull_name());
         btnSelectImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -182,6 +187,7 @@ public class PostActivity extends AppCompatActivity {
         spnPrivacy = (Spinner) findViewById(R.id.spnPrivacy);
         txtFullNamePost = (TextView) findViewById(R.id.txtFullNamePost);
         mStorageReference = FirebaseStorage.getInstance().getReference();
+        imgAvatar = (CircleImageView) findViewById(R.id.imgAvatar);
     }
 
 //    private void UploadFile(String fileName,Bitmap bmp){

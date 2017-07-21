@@ -74,7 +74,8 @@ public class TrackStudentFragment extends Fragment {
                             @Override
                             public void onSuccess(ArrayList<EntityStudent> list) {
                                 items=list;
-                                adapterTrackStudent = new AdapterTrackStudent(getActivity(),items);
+                                int check = 1;
+                                adapterTrackStudent = new AdapterTrackStudent(getActivity(),items, check);
                                 layoutManager = new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false);
                                 rcvListStudent.setLayoutManager(layoutManager);
                                 rcvListStudent.setAdapter(adapterTrackStudent);

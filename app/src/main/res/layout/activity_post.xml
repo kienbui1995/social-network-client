@@ -24,8 +24,8 @@
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-        <ImageView
-                android:src="@drawable/avatar1"
+        <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/imgAvatar"
                 android:layout_width="66dp"
                 android:layout_height="66dp"/>
         <LinearLayout
@@ -44,7 +44,7 @@
                     android:layout_height="wrap_content"/>
             <Spinner
                     android:id="@+id/spnPrivacy"
-                    android:layout_width="100dp"
+                    android:layout_width="150dp"
                     android:layout_height="20dp">
 
             </Spinner>
@@ -81,17 +81,4 @@
             android:background="@drawable/btn_rectangle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
-    <Button
-            android:paddingLeft="10dp"
-            android:drawableLeft="@drawable/ic_location_on_light_blue_600_24dp"
-            android:background="@drawable/btn_rectangle"
-            android:textSize="17sp"
-            android:text="Check In"
-            android:gravity="left|center_vertical"
-            android:drawablePadding="20dp"
-            android:textAllCaps="false"
-            android:textColor="#000"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-
 </LinearLayout>

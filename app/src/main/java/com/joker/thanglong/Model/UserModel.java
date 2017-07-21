@@ -113,7 +113,7 @@ public class UserModel {
 
     public void getNewfeed(final PostModel.VolleyCallbackListStatus callback, String type){
         final ArrayList<EntityStatus> items = new ArrayList<>();
-        VolleySingleton.getInstance(activity).get("news_feed" + "?limit=10"+type+ SettingUtil.getSettingUtil(activity).getNewsfeed(), null, new Response.Listener<JSONObject>() {
+        VolleySingleton.getInstance(activity).get("news_feed" + "?limit=20"+type+ SettingUtil.getSettingUtil(activity).getNewsfeed(), null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 try {
@@ -339,6 +339,33 @@ public class UserModel {
             }
         });
     }
+
+    public void requestLink(String email, int uId, final VolleyCallBackCode callback){
+        HashMap<String,String> parrams = new HashMap<>();
+        parrams.put("email",email+"@thanglong.edu.vn");
+        VolleySingleton.getInstance(activity).post(activity, "users/" + uId + "/requests_link_code", new JSONObject(parrams)
+                , new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+                    JSONObject jsonObject = response.getJSONObject("data");
+                    callback.onSuccess(jsonObject.getString("id"));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        });
+    }
+
+    public void authenLink(String id, String code, final PostModel.VolleyCallBackCheck callBackCheck){
+        VolleySingleton.getInstance(activity).put(activity, "requests_link_code/" + id + "?code=" + code, null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                callBackCheck.onSuccess(true);
+            }
+        });
+    }
     public interface VolleyCallBackFollow {
         void onSuccess(ArrayList<EntityFollow> listFollow);
     }
@@ -350,5 +377,9 @@ public class UserModel {
     }
     public interface VolleyCallUser {
         void onSuccess(EntityUserProfile userProfile);
+    }
+
+    public interface VolleyCallBackCode {
+        void onSuccess(String code);
     }
 }

@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.joker.thanglong.R;
 import com.joker.thanglong.Ultil.DialogUtil;
@@ -24,11 +23,12 @@ import Entity.EntityStudent;
 public class AdapterTrackStudent extends RecyclerView.Adapter<AdapterTrackStudent.ViewHolder>{
     Activity context;
     ArrayList<EntityStudent> items;
-
-    public AdapterTrackStudent(Activity context, ArrayList<EntityStudent> list)
+    int check;
+    public AdapterTrackStudent(Activity context, ArrayList<EntityStudent> list, int check)
     {
         this.context = context;
         this.items=list;
+        this.check = check;
     }
 
     @Override
@@ -44,19 +44,29 @@ public class AdapterTrackStudent extends RecyclerView.Adapter<AdapterTrackStuden
 //        Glide.with(context).load(items.get(position).getAvatar()).into(holder.imgAvavarMember);
         holder.txtStudenttCode.setText(items.get(position).getCode());
         holder.txtNameStudent.setText(items.get(position).getLast_name()+" "+ items.get(position).getFirst_name());
-        holder.imgInfoStudent.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                DialogUtil.showInfoStudent(context,items.get(position));
-            }
-        });
-        holder.imgAddAction.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(context, "Done", Toast.LENGTH_SHORT).show();
-                DialogUtil.formAddViolation(context,items.get(position));
-            }
-        });
+        if (check == 1){
+            holder.imgInfoStudent.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    DialogUtil.showInfoStudent(context,items.get(position));
+                }
+            });
+            holder.imgAddAction.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    DialogUtil.formAddViolation(context,items.get(position));
+                }
+            });
+        }else if (check == 0){
+            holder.imgInfoStudent.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    DialogUtil.showInfoStudent(context,items.get(position));
+                }
+            });
+            holder.imgAddAction.setVisibility(View.GONE);
+        }
+
 
     }
 

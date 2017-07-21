@@ -102,6 +102,7 @@ public class ChannelActivity extends AppCompatActivity {
                 }else if (entityChannel.is_admin() && entityChannel.is_followed()){
                     btnFollowChannel.setVisibility(View.GONE);
                     btnMessagePage.setVisibility(View.GONE);
+                    fabCreateNotification.setVisibility(View.VISIBLE);
                 }else if (entityChannel.is_followed()){
                     btnFollowChannel.setText("Hủy theo dõi");
                     btnFollowChannel.setOnClickListener(new View.OnClickListener() {

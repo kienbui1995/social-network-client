@@ -5,7 +5,6 @@ import android.support.v4.app.FragmentPagerAdapter;
 
 import com.joker.thanglong.Fragment.Group.AboutGroupFragment;
 import com.joker.thanglong.Fragment.Group.HomeGroupFragment;
-import com.joker.thanglong.Fragment.Group.SettingGroupFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,11 +21,11 @@ public class GroupViewPagerAdapter extends FragmentPagerAdapter{
         super(fm);
         listFragment.add(new HomeGroupFragment());
         listFragment.add(new AboutGroupFragment());
-        listFragment.add(new SettingGroupFragment());
+//        listFragment.add(new SettingGroupFragment());
 
         listName.add("Trang chủ");
         listName.add("Thông tin");
-        listName.add("Cài đặt");
+//        listName.add("Cài đặt");
     }
 
     @Override

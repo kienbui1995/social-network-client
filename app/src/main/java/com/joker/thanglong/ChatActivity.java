@@ -12,6 +12,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -101,6 +102,13 @@ public class ChatActivity extends AppCompatActivity {
             @Override
             public void onSuccess(EntityUserProfile profile) {
                 userProfile=profile;
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        setupTabs();
+                    }
+                },1000);
             }
         });
         myId = ProfileInstance.getProfileInstance(this).getProfile().getuID();
@@ -136,7 +144,6 @@ public class ChatActivity extends AppCompatActivity {
         RecieveIntent();
         addControll();
         setupEmoji();
-        setupTabs();
         addPhoto();
         addChat();
 //        addEvent();
@@ -228,7 +235,7 @@ public class ChatActivity extends AppCompatActivity {
                     ViewHolderPhotoMe viewHolderPhotoMe = (ViewHolderPhotoMe) viewHolder;
                     viewHolderPhotoMe.txtDate.setText(convertTime((Long) model.getTimeStamp()));
                     Glide.with(getApplicationContext()).load(model.getPhoto())
-                            .crossFade().centerCrop().into(viewHolderPhotoMe.imgContentChat);
+                            .crossFade().into(viewHolderPhotoMe.imgContentChat);
                     viewHolderPhotoMe.imgContentChat.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
@@ -242,7 +249,7 @@ public class ChatActivity extends AppCompatActivity {
                     viewHolderFriend.txtMessageContent.setText(model.getContent());
                     viewHolderFriend.txtDate.setText(convertTime((Long) model.getTimeStamp()));
                     Glide.with(getApplicationContext()).load(userProfile.getAvatar())
-                            .crossFade().centerCrop().into(viewHolderFriend.imgAvatarChat);
+                            .crossFade().into(viewHolderFriend.imgAvatarChat);
                     return;
                 }else if (model.getId() != myId && model.getPhoto() != "")
                 {
@@ -252,7 +259,7 @@ public class ChatActivity extends AppCompatActivity {
                     Glide.with(getApplicationContext()).load(userProfile.getAvatar())
                             .crossFade().centerCrop().into(viewHolderPhotoFriend.imgAvartarChat);
                     Glide.with(getApplicationContext()).load(model.getPhoto())
-                            .crossFade().centerCrop().into(viewHolderPhotoFriend.imgContentChat);
+                            .crossFade().into(viewHolderPhotoFriend.imgContentChat);
                     viewHolderPhotoFriend.imgContentChat.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {

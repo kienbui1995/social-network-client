@@ -51,6 +51,7 @@ import Entity.EntityGroup;
 import Entity.EntityStudent;
 import Entity.EntityViolation;
 import adapter.AdapterDetailStudent;
+import adapter.AdapterTrackStudent;
 import gun0912.tedbottompicker.TedBottomPicker;
 
 import static com.facebook.FacebookSdk.getApplicationContext;
@@ -108,6 +109,41 @@ public class DialogUtil {
         settingsDialog.setContentView(view);
         settingsDialog.show();
     }
+
+    public static void showDetailClass(final Activity context, EntityClass item){
+        final Dialog settingsDialog = new Dialog(context);
+        settingsDialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+        settingsDialog.getWindow().setWindowAnimations(R.style.DialogAnimation);
+        final View view = context.getLayoutInflater().inflate(R.layout.detail_room,null);
+        TextView tvSubjectName = (TextView) view.findViewById(R.id.tvSubjectName);
+        TextView tvSemester = (TextView) view.findViewById(R.id.tvSemester);
+        TextView tvShift = (TextView) view.findViewById(R.id.tvShift);
+        TextView tvTeacherName = (TextView) view.findViewById(R.id.tvTeacherName);
+        int check = 0;
+       if (item.getTerm()!=null){
+           check = 1;
+           tvSemester.setText(item.getTerm().getName());
+       }
+        tvShift.setText(item.getDay()+"/"+item.getStart()+"-"+item.getEnd());
+        tvTeacherName.setText(item.getTeacher().getName());
+        tvSubjectName.setText(item.getSubject().getName());
+        TrackerModel trackerModel = new TrackerModel(context);
+        final int finalCheck = check;
+        trackerModel.getListStudent(item.getCode(), new TrackerModel.VolleyCallBackListStudent() {
+            @Override
+            public void onSuccess(ArrayList<EntityStudent> list) {
+                RecyclerView rcvListStudent = (RecyclerView) view.findViewById(R.id.rcvListStudent);
+                RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(context,LinearLayoutManager.VERTICAL,false);
+                AdapterTrackStudent adapterTrackStudent = new AdapterTrackStudent(context,list, finalCheck);
+                rcvListStudent.setLayoutManager(layoutManager);
+                rcvListStudent.setAdapter(adapterTrackStudent);
+                adapterTrackStudent.notifyDataSetChanged();
+            }
+        });
+        settingsDialog.setContentView(view);
+        settingsDialog.show();
+    }
+
     public static void showImageEnlarge(Activity context, String url){
         final Dialog settingsDialog = new Dialog(context);
         settingsDialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);

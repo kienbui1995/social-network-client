@@ -25,33 +25,48 @@ import Entity.EntityViolation;
  * Created by joker on 6/24/17.
  */
 
-public class AdapterDetailStudent extends RecyclerView.Adapter<AdapterDetailStudent.ViewHolder>{
+public class AdapterMyViolation extends RecyclerView.Adapter<AdapterMyViolation.ViewHolder>{
     Context context;
     ArrayList<EntityViolation> items;
-
-    public AdapterDetailStudent(Context context, ArrayList<EntityViolation> list)
+    int type;
+    public AdapterMyViolation(Context context, ArrayList<EntityViolation> list,int type)
     {
         this.context = context;
         this.items=list;
+        this.type=type;
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View view = inflater.inflate(R.layout.item_vipham,parent,false);
+        View view = inflater.inflate(R.layout.item_myviolation,parent,false);
         ViewHolder viewHolder = new ViewHolder(view);
         return viewHolder;
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        if (items.get(position).getPhoto() != null){
-            holder.imgPhoto.setVisibility(View.VISIBLE);
-            Glide.with(context).load(items.get(position).getPhoto()).into(holder.imgPhoto);
+        if (type == 1){
+            holder.txtDate.setText(SystemHelper.convertDate(items.get(position).getTime_at()));
+            holder.txtMessage.setText(items.get(position).getMessage());
+            holder.txtDateTime.setText(SystemHelper.convertTime(items.get(position).getTime_at()));
+            Glide.with(context).load(items.get(position).getPhoto()).crossFade().into(holder.imgPhoto);
+            if (items.get(position).getPlace()==null){
+                holder.txtPlace.setText(items.get(position).getPlace());
+            }
+        }else if (type==2){
+            holder.txtName.setVisibility(View.VISIBLE);
+            holder.txtName.setText(items.get(position).getOwner().getCode()+ " - "+ items.get(position).getOwner().getName());
+            holder.txtDate.setText(SystemHelper.convertDate(items.get(position).getTime_at()));
+            holder.txtMessage.setText(items.get(position).getMessage());
+            holder.txtDateTime.setText(SystemHelper.convertTime(items.get(position).getTime_at()));
+            Glide.with(context).load(items.get(position).getPhoto()).crossFade().into(holder.imgPhoto);
+            if (items.get(position).getPlace()==null){
+                holder.txtPlace.setText(items.get(position).getPlace());
+            }
         }
-        holder.txtMessage.setText(items.get(position).getMessage());
-        holder.txtPlace.setText(items.get(position).getPlace());
-        holder.txtDateTime.setText(SystemHelper.getTimeAgo(items.get(position).getTime_at()));
+
+
     }
 
     @Override
@@ -60,18 +75,23 @@ public class AdapterDetailStudent extends RecyclerView.Adapter<AdapterDetailStud
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
+        private TextView txtDate;
         private TextView txtMessage;
         private TextView txtPlace;
         private TextView txtDateTime;
         private ImageView imgPhoto;
+        private TextView txtName;
+
 
 
         public ViewHolder(View itemView) {
             super(itemView);
+            txtDate = (TextView) itemView.findViewById(R.id.txtDate);
             txtMessage = (TextView) itemView.findViewById(R.id.txtMessage);
             txtPlace = (TextView) itemView.findViewById(R.id.txtPlace);
             txtDateTime = (TextView) itemView.findViewById(R.id.txtDateTime);
             imgPhoto = (ImageView) itemView.findViewById(R.id.imgPhoto);
+            txtName = (TextView) itemView.findViewById(R.id.txtName);
         }
     }
     private void updateText(TextView textView, String actor, String message) {

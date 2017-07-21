@@ -17,6 +17,10 @@ public class EntityConversation {
     Object time;
     String lastMessage;
 
+
+    public EntityConversation() {
+    }
+
     public String getLastMessage() {
         return lastMessage;
     }

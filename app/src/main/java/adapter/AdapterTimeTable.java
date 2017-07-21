@@ -17,6 +17,8 @@ import java.util.ArrayList;
 
 import Entity.EntityClass;
 
+import static com.joker.thanglong.MainActivity.entityUserProfile;
+
 /**
  * Created by joker on 6/20/17.
  */
@@ -87,7 +89,12 @@ public class AdapterTimeTable extends PanelAdapter {
                     holder.view.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            DialogUtil.showInfoClass(context,items.get(finalI));
+                            if (entityUserProfile.getRole().equals("student")){
+                                DialogUtil.showInfoClass(context,items.get(finalI));
+                            }else {
+                                DialogUtil.showDetailClass(context,items.get(finalI));
+                            }
+
                         }
                     });
                     holder.view.setBackgroundColor(Color.parseColor(color[i]));

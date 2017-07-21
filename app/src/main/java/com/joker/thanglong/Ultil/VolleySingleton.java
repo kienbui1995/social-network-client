@@ -42,7 +42,6 @@ public class VolleySingleton {
         mBaseUrl = mCtx.getResources().getString(R.string.url);
         mRequestQueue = getRequestQueue();
         token =PreferenceManager.getDefaultSharedPreferences(mCtx).getString("token","");
-
     }
 
     public static synchronized VolleySingleton getInstance(Context context) {
@@ -193,7 +192,12 @@ public class VolleySingleton {
                 if (error.networkResponse.statusCode == 204){
                     Toast.makeText(activity, "Xóa thành công", Toast.LENGTH_SHORT).show();
                 }else {
-                    DialogUtil.alert("Lỗi hệ thống: "+ error.networkResponse.statusCode,activity);
+                    if (checkErrorCode(error)==414){
+                        DialogUtil.alert("Mã xác thực không hợp lệ hoặc đã hết hạn",activity);
+                    }else {
+                        DialogUtil.alert("Lỗi hệ thống: "+ error.networkResponse.statusCode,activity);
+                    }
+
                 }
             } else if (error instanceof NetworkError) {
                 //TODO

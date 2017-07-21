@@ -42,9 +42,9 @@ import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
 import com.joker.thanglong.Fragment.ChannelFragment;
 import com.joker.thanglong.Fragment.Group.GroupFragment;
+import com.joker.thanglong.Fragment.MyViolationFragment;
 import com.joker.thanglong.Fragment.TestScheduleFragment;
 import com.joker.thanglong.Model.UserModel;
-import com.joker.thanglong.Ultil.DeviceUltil;
 import com.joker.thanglong.Ultil.ProfileInstance;
 import com.joker.thanglong.Ultil.PutParamFacebook;
 import com.joker.thanglong.Ultil.VolleyHelper;
@@ -99,7 +99,7 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         //Khoi tao realm
-//        Realm.init(this);
+        Realm.init(this);
         //Khoi tao doi tuong Realm
         getInfoUser();
         addControl();
@@ -115,17 +115,24 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
 //                    item.setVisible(false);
 //                }
                 switch (id){
-                    case R.id.itHome:
-                        startActivity(new Intent(getApplicationContext(),TeacherActivity.class));
+                    case R.id.itViPham:
+                        getSupportFragmentManager().beginTransaction().add(R.id.frContentHome,new MyViolationFragment())
+                                .addToBackStack(null).commit();
+                        drawerLayout.closeDrawers();
                         break;
-//                    case R.id.itProfile:
-//                        startActivity(new Intent(getApplicationContext(),TrackerActivity.class));
-//                        break;
                     case R.id.itFollow:
                         startActivity(new Intent(getApplicationContext(),FollowActivity.class));
                         break;
                     case R.id.itTimeTable:
-                        startActivity(new Intent(getApplicationContext(),TimeTableActivity.class));
+                        Intent intent = new Intent(getApplicationContext(),TimeTableActivity.class);
+                        if (entityUserProfile.getRole().equals("student")){
+                            intent.putExtra("check",1);
+                            startActivity(intent);
+                        }else {
+                            intent.putExtra("check",2);
+                            startActivity(intent);
+                        }
+
                         break;
                     case R.id.itGroup:
                         manager = getSupportFragmentManager();
@@ -171,8 +178,6 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
         btnTakePicture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DeviceUltil deviceUltil = new DeviceUltil(activity);
-                deviceUltil.CheckPermissionStorage();
                 Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(destination));
                 startActivityForResult(intent, REQUEST_IMAGE);
@@ -280,7 +285,7 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
                     JSONObject jsonObject = response.getJSONObject("data");
                     realm.beginTransaction();
                     profile.setFull_name(jsonObject.getString("full_name"));
-                    profile.setAvatar(jsonObject.getString("avatar"));
+                    if (jsonObject.has("avatar")) profile.setAvatar(jsonObject.getString("avatar"));
                     realm.commitTransaction();
                     View header = nvMenu.getHeaderView(0);
                     final TextView full_name = (TextView) header.findViewById(R.id.txtFullNameNavibar);
@@ -309,6 +314,7 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
                                 menu2.findItem(R.id.itAdmin).setVisible(false);
                             }else if (entityUserProfile.getRole().equals("supervisior")){
                                 Menu menu2 = nvMenu.getMenu();
+                                menu2.findItem(R.id.itViPham).setVisible(false);
                                 menu2.findItem(R.id.itLink).setVisible(false);
                                 menu2.findItem(R.id.itAdmin).setVisible(false);
                                 menu2.findItem(R.id.itTimeTable).setVisible(false);
@@ -316,8 +322,16 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
                             }else if (entityUserProfile.getRole().equals("user"))
                             {
                                 Menu menu2 = nvMenu.getMenu();
+                                menu2.findItem(R.id.itViPham).setVisible(false);
                                 menu2.findItem(R.id.itAdmin).setVisible(false);
                                 menu2.findItem(R.id.itTimeTable).setVisible(false);
+                                menu2.findItem(R.id.itThanhTra).setVisible(false);
+                                menu2.findItem(R.id.itLichThi).setVisible(false);
+                            }else if (entityUserProfile.getRole().equals("teacher")){
+                                Menu menu2 = nvMenu.getMenu();
+                                menu2.findItem(R.id.itViPham).setVisible(false);
+                                menu2.findItem(R.id.itAdmin).setVisible(false);
+                                menu2.findItem(R.id.itLink).setVisible(false);
                                 menu2.findItem(R.id.itThanhTra).setVisible(false);
                                 menu2.findItem(R.id.itLichThi).setVisible(false);
                             }
@@ -372,6 +386,8 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
 //            LoginManager.getInstance().logOut();
 //            finish();
 //            startActivity(new Intent(this,SignUpIn.class));
+        }else if (vitri == R.id.it_search){
+            startActivity(new Intent(this,SearchActivity.class));
         }
         return true;
     }
@@ -403,6 +419,7 @@ public class MainActivity extends AppCompatActivity implements AppBarLayout.OnOf
                 realm.executeTransaction(new Realm.Transaction() {
                     @Override
                     public void execute(Realm realm) {
+                        finish();
                         getSharedPreferences("token", 0).edit().clear().apply();
                         realm.deleteAll();
                         VolleySingleton.mInstance = null;

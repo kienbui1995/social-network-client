@@ -15,6 +15,15 @@ public class EntityNotification {
     private Actor last_user;
     private long updatedAt;
     private long seen;
+    private EntityUserProfile user;
+
+    public EntityUserProfile getUser() {
+        return user;
+    }
+
+    public void setUser(EntityUserProfile user) {
+        this.user = user;
+    }
 
     public class Actor {
         private int id;
@@ -132,6 +141,8 @@ public class EntityNotification {
             this.message = message;
         }
     }
+
+
     public class Mention {
         private int id;
         private String message;
@@ -159,7 +170,7 @@ public class EntityNotification {
     }
 
     public EntityNotification(int id, Actor actor, int actionId, int totalAction
-            , Post last_post, Comment last_comment, Mention last_mention, Actor last_user, long updatedAt, long seen) {
+            , Post last_post, Comment last_comment, Mention last_mention, Actor last_user, long updatedAt, long seen, EntityUserProfile user) {
         this.id = id;
         this.actor = actor;
         this.actionId = actionId;
@@ -170,6 +181,7 @@ public class EntityNotification {
         this.last_user = last_user;
         this.updatedAt = updatedAt;
         this.seen = seen;
+        this.user = user;
     }
 
     public EntityNotification() {

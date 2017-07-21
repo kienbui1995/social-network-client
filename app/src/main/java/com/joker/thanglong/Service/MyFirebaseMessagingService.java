@@ -53,14 +53,20 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             }
             switch (Integer.parseInt(notication.get("action"))){
                 case LIKE:
-                    showNotification(post.getInt("id"),"Thông báo",actor.getString("full_name"),
-                            actor.getString("avatar"),"like bài viết của bạn",
-                            post.getString("message"), Integer.parseInt(notication.get("total_action")));
+                    if (PreferenceManager.getDefaultSharedPreferences(this).getInt("uId",1)!= actor.getInt("id"))
+                    {
+                        showNotification(post.getInt("id"),"Thông báo",actor.getString("full_name"),
+                                actor.getString("avatar"),"like bài viết của bạn",
+                                post.getString("message"), Integer.parseInt(notication.get("total_action")));
+                    }
                     break;
                 case COMMENT:
-                    showNotification(post.getInt("id"),"Thông báo",actor.getString("full_name"),
-                            actor.getString("avatar"),"bình luận bài viết của bạn",
-                            comment.getString("message"), Integer.parseInt(notication.get("total_action")));
+                    if (PreferenceManager.getDefaultSharedPreferences(this).getInt("uId",1)!= actor.getInt("id"))
+                    {
+                        showNotification(post.getInt("id"),"Thông báo",actor.getString("full_name"),
+                                actor.getString("avatar"),"bình luận bài viết của bạn",
+                                comment.getString("message"), Integer.parseInt(notication.get("total_action")));
+                    }
                     break;
                 case MENTION:
                     break;

@@ -30,7 +30,7 @@ public class GroupModel {
 
     public void getListGroup(final VolleyCallbackListGroup callback){
         final ArrayList<EntityGroup> lisGroups = new ArrayList<>();
-        VolleySingleton.getInstance(context).get("groups", null, new Response.Listener<JSONObject>() {
+        VolleySingleton.getInstance(context).get("groups?sort=-members", null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 try {

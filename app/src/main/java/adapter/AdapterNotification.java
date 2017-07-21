@@ -33,7 +33,7 @@ import Entity.EntityNotification;
 public class AdapterNotification extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
     public static final int LIKE = 1;
     public static final int COMMENT = 2;
-    public static final int FOLLOW = 6;
+//    public static final int FOLLOW = 6;
     public static final int NULL = 7;
     private Context context;
     private View view;
@@ -56,12 +56,14 @@ public class AdapterNotification extends RecyclerView.Adapter<RecyclerView.ViewH
                 view = inflater.inflate(R.layout.item_notification_like, parent, false);
                 ViewHolder viewHolderComment = new ViewHolder(view);
                 return viewHolderComment;
-            case FOLLOW:
-                view = inflater.inflate(R.layout.item_notification_like, parent, false);
-                ViewHolder viewHolderFollow = new ViewHolder(view);
-                return viewHolderFollow;
+//            case FOLLOW:
+//                view = inflater.inflate(R.layout.item_notification_like, parent, false);
+//                view.setVisibility(View.GONE);
+//                ViewHolder viewHolderFollow = new ViewHolder(view);
+//                return viewHolderFollow;
             case NULL:
-                view = inflater.inflate(R.layout.item_notification_like, parent, false);
+                view = inflater.inflate(R.layout.item_null, parent, false);
+                view.setVisibility(View.GONE);
                 ViewHolder viewHolderNull = new ViewHolder(view);
                 return viewHolderNull;
         }
@@ -93,7 +95,7 @@ public class AdapterNotification extends RecyclerView.Adapter<RecyclerView.ViewH
                     Glide.with(context).load(items.get(position).getLast_post().getPhoto()).centerCrop().crossFade()
                             .into(viewHolderLike.imgPost);
                 }
-                Glide.with(context).load(items.get(position).getActor().getAvatar()).centerCrop().placeholder(R.drawable.ic_user_default).crossFade()
+                Glide.with(context).load(items.get(position).getActor().getAvatar()).centerCrop().crossFade()
                         .into(viewHolderLike.imgAvatar);
                 updateText(viewHolderLike.txtMessage,items.get(position).getActor().getFullName(),
                         " đã thích bài viết của bạn: \"" + items.get(position).getLast_post().getMessage()+ "\"");
@@ -120,12 +122,17 @@ public class AdapterNotification extends RecyclerView.Adapter<RecyclerView.ViewH
                     Glide.with(context).load(items.get(position).getLast_post().getPhoto()).centerCrop().crossFade()
                             .into(viewHolderComment.imgPost);
                 }
-                Glide.with(context).load(items.get(position).getActor().getAvatar()).centerCrop().placeholder(R.drawable.ic_user_default).crossFade()
+                Glide.with(context).load(items.get(position).getActor().getAvatar()).centerCrop().crossFade()
                         .into(viewHolderComment.imgAvatar);
-                updateText(viewHolderComment.txtMessage,items.get(position).getActor().getFullName(),
-                        " đã bình luận bài viết của bạn: \"" + items.get(position).getLast_comment().getMessage()+ "\"");
+                if (items.get(position).getActor().getId() == items.get(position).getUser().getuID()){
+                    updateText(viewHolderComment.txtMessage,items.get(position).getActor().getFullName(),
+                            " đã bình luận bài viết của bạn: \"" + items.get(position).getLast_comment().getMessage()+ "\"");
+                }else {
+                    updateText(viewHolderComment.txtMessage,items.get(position).getActor().getFullName(),
+                            " đã bình luận bài viết của "+ items.get(position).getUser().getFull_name()+": \"" + items.get(position).getLast_comment().getMessage()+ "\"");
+                }
                 break;
-            case FOLLOW:
+//            case FOLLOW:
 //                ViewHolder viewHolderFollow = (ViewHolder) holder;
 //                viewHolderFollow.txtDateTime.setText(SystemHelper.getTimeAgo(items.get(position).getUpdatedAt()));
 //                viewHolderFollow.imgSticker.setImageResource(R.drawable.ic_following_16);
@@ -140,9 +147,9 @@ public class AdapterNotification extends RecyclerView.Adapter<RecyclerView.ViewH
 //                        " đã theo dõi: "+ items.get(position).getLast_user().getFullName());
 //                Glide.with(context).load(items.get(position).getActor().getAvatar()).centerCrop().placeholder(R.drawable.ic_user_default).crossFade()
 //                        .into(viewHolderFollow.imgAvatar);
-                break;
-            case NULL:
-                break;
+//                break;
+//            case NULL:
+//                break;
         }
     }
 
@@ -157,17 +164,24 @@ public class AdapterNotification extends RecyclerView.Adapter<RecyclerView.ViewH
 
     @Override
     public int getItemViewType(int position) {
-        switch (items.get(position).getActionId()){
-            case LIKE:
-                return LIKE;
-            case COMMENT:
-                return COMMENT;
-            case FOLLOW:
-                return FOLLOW;
-            case NULL:
-                return NULL;
+        if (items.get(position).getActionId() == LIKE)
+        {
+            return LIKE;
+        }else if (items.get(position).getActionId() == COMMENT){
+            return COMMENT;
         }
-        return FOLLOW;
+        return NULL;
+//        switch (items.get(position).getActionId()){
+//            case LIKE:
+//                return LIKE;
+//            case COMMENT:
+//                return COMMENT;
+//            case FOLLOW:
+//                return FOLLOW;
+//            case NULL:
+//                return NULL;
+//        }
+//        return FOLLOW;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

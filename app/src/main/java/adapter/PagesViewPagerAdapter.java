@@ -6,8 +6,6 @@ import android.support.v4.app.FragmentPagerAdapter;
 
 import com.joker.thanglong.Fragment.AboutChannelFragment;
 import com.joker.thanglong.Fragment.HomePagesFragment;
-import com.joker.thanglong.Fragment.PhotoPagesFragment;
-import com.joker.thanglong.Fragment.SettingPagesFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,13 +20,13 @@ public class PagesViewPagerAdapter extends FragmentPagerAdapter {
     public PagesViewPagerAdapter(FragmentManager fm) {
         super(fm);
         listFragment.add(new HomePagesFragment());
-        listFragment.add(new PhotoPagesFragment());
+//        listFragment.add(new PhotoPagesFragment());
         listFragment.add(new AboutChannelFragment());
-        listFragment.add(new SettingPagesFragment());
+//        listFragment.add(new SettingPagesFragment());
         listName.add("Trang chủ");
-        listName.add("Ảnh");
+//        listName.add("Ảnh");
         listName.add("Thông tin");
-        listName.add("Cài đặt");
+//        listName.add("Cài đặt");
     }
 
     @Override

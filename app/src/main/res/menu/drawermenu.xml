@@ -2,9 +2,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
    <item android:title="Xã hội">
        <menu>
-           <item android:title="Home"
-                 android:icon="@drawable/icon_home"
-                 android:id="@+id/itHome"/>
            <item android:title="Theo dõi"
                  android:id="@+id/itFollow"
                  android:icon="@drawable/ic_follow"/>

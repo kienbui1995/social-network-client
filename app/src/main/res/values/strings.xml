@@ -71,10 +71,17 @@
     <string name="demo">Chúng ta không thuộc về nhau\" là bài hát được thu âm bởi nam ca sĩ kiêm sáng tác nhạc Sơn Tùng M-TP. Bài hát được sáng tác bởi chính Sơn Tùng với sự đồng hỗ trợ của nhà sản xuất Triple D. Bài hát đã được phát hành trực tuyến vào ngày 2 tháng 8 năm 2016. Đoạn video quảng bá cho clip nhạc chính thức được đưa lên YouTube vào ngay 26 tháng 7 năm 2016. Bài hát được ra mắt chính thức trong một buổi biểu diễn ca nhạc vào ngày 2 tháng 8 năm 2016. Video âm nhạc chính thức của ca khúc được đăng tải lên YouTube vào lúc 0:00</string>
     <string-array name="optionAvatar">
         <item>Chọn hình ảnh</item>
-        <item>Chụp ảnh từ camera</item>
     </string-array>
     <string-array name="optionChangeImageGroup">
         <item>Thay ảnh đại diện</item>
         <item>Thay ảnh bìa</item>
+    </string-array>
+    <string-array name="day">
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
     </string-array>
 </resources>

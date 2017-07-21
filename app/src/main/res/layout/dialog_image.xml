@@ -6,7 +6,6 @@
               android:layout_height="400dp">
 <com.joker.thanglong.CustomView.TouchImageView
         android:id="@+id/imgLarge"
-        android:scaleType="centerCrop"
         android:layout_width="wrap_content"
         android:layout_height="400dp"/>
 </LinearLayout>

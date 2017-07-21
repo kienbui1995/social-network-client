@@ -51,14 +51,17 @@
             android:id="@+id/linearLayout4">
 
         <EditText
+                android:hint="Mời nhập mã sinh viên"
+                android:textColor="#000"
                 android:layout_weight="0.2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 tools:layout_editor_absoluteY="93dp"
                 tools:layout_editor_absoluteX="8dp"
-                android:id="@+id/editText2"/>
+                android:id="@+id/edtEmail"/>
 
         <Button
+                android:id="@+id/btnSend"
                 android:text="Gửi"
                 android:background="@drawable/btn_message"
                 android:layout_weight="0.8"
@@ -86,12 +89,14 @@
 
         <com.joker.thanglong.CustomView.DeleteEditText
                 android:hint="Họ và tên"
+                android:textColor="#000"
                 android:layout_marginBottom="20dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 
         <com.joker.thanglong.CustomView.DeleteEditText
                 android:hint="Mã sinh viên"
+                android:textColor="#000"
                 android:layout_marginBottom="20dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>

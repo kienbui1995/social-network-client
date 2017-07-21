@@ -179,6 +179,7 @@
             android:layout_height="wrap_content"
             android:clickable="true"
             app:fabSize="normal"
+            android:visibility="gone"
             android:layout_margin="10dp"
             app:srcCompat="@drawable/ic_add"
             android:id="@+id/fabCreateNotification"

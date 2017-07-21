@@ -16,6 +16,7 @@ import android.widget.Spinner;
 
 import com.joker.thanglong.Model.TimeTableModel;
 import com.joker.thanglong.R;
+import com.joker.thanglong.Ultil.ProfileInstance;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -61,7 +62,7 @@ public class TestScheduleFragment extends Fragment {
         toolbar = (Toolbar) view.findViewById(R.id.toolbar);
     }
     private void setupSpinner() {
-        timeTableModel.getTerm(new TimeTableModel.VolleyCallbackGetTerm() {
+        timeTableModel.getTerm(ProfileInstance.getProfileInstance(getApplicationContext()).getProfile().getCode(),new TimeTableModel.VolleyCallbackGetTerm() {
             @Override
             public void onSuccess(final ArrayList<EntityTerm> itemsTerm) {
                 ArrayList<String> listNameTerm = new ArrayList<String>();
@@ -78,7 +79,8 @@ public class TestScheduleFragment extends Fragment {
                 spnTerm.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
                     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                        timeTableModel.getLichThi(itemsTerm.get(i).getCode(), new TimeTableModel.VolleyCallbackGetLichThi() {
+                        timeTableModel.getLichThi(itemsTerm.get(i).getCode(), ProfileInstance.getProfileInstance(getApplicationContext()
+                        ).getProfile().getCode(), new TimeTableModel.VolleyCallbackGetLichThi() {
                             @Override
                             public void onSuccess(ArrayList<EntityExamSchedule> items) {
                                 adapterLichThi = new AdapterLichThi(getActivity(),items);

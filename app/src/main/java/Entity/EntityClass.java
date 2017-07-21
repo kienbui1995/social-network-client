@@ -16,11 +16,11 @@ public class EntityClass {
     private teacher teacher;
     private room room;
     private subject subject;
-
+    private term term;
     public EntityClass() {
     }
 
-    public EntityClass(int id, int code, String name, int day, int start, int end, int status, long created_at, EntityClass.teacher teacher, EntityClass.room room, EntityClass.subject subject) {
+    public EntityClass(int id, int code, String name, int day, int start, int end, int status, long created_at, EntityClass.teacher teacher, EntityClass.room room, EntityClass.subject subject, EntityClass.term term) {
         this.id = id;
         this.code = code;
         this.name = name;
@@ -32,6 +32,7 @@ public class EntityClass {
         this.teacher = teacher;
         this.room = room;
         this.subject = subject;
+        this.term = term;
     }
 
     public int getId() {
@@ -122,6 +123,14 @@ public class EntityClass {
         this.subject = subject;
     }
 
+    public EntityClass.term getTerm() {
+        return term;
+    }
+
+    public void setTerm(EntityClass.term term) {
+        this.term = term;
+    }
+
     public class teacher{
         private int id;
         private String code;
@@ -197,6 +206,45 @@ public class EntityClass {
         }
 
         public subject(int id, String code, String name) {
+            this.id = id;
+            this.code = code;
+            this.name = name;
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public void setId(int id) {
+            this.id = id;
+        }
+
+        public String getCode() {
+            return code;
+        }
+
+        public void setCode(String code) {
+            this.code = code;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+    }
+
+    public class term{
+        private int id;
+        private String code;
+        private String name;
+
+        public term() {
+        }
+
+        public term(int id, String code, String name) {
             this.id = id;
             this.code = code;
             this.name = name;
